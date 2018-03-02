@@ -11,8 +11,8 @@ class Game
 {
     sf::RenderWindow* window;
     EventHandler evHandler;
-    TextureLoader txtLoader;
-    World world;
+    TextureLoader* txtLoader;
+    World* world;
     sf::View view;
 public:
     Game(sf::RenderWindow& win);
