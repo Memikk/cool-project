@@ -8,16 +8,17 @@ class TextureLoader
 {
     sf::Texture* player;
     sf::Texture* sand;
+    sf::Texture* water;
 public:
     TextureLoader(){};
     void load()
     {
         player=new sf::Texture();
         sand=new sf::Texture();
-        cout<<"LADOWANIE TEKSTUR"<<endl;
+        water=new sf::Texture();
         if(player->loadFromFile("player.png")) cout<<"Wczytano teksture gracza"<<endl;
-        if(sand->loadFromFile("sand.png")) cout<<"Wczytano teksture piasku"<<endl;;
-        cout<<"KONIEC LADOWANIA TEKSTUR"<<endl;
+        if(sand->loadFromFile("sand.png")) cout<<"Wczytano teksture piasku"<<endl;
+        if(water->loadFromFile("water.png")) cout<<"Wczytano teksture wody"<<endl;
     }
     void setPlayerTexture(Player& p)
     {
@@ -26,12 +27,15 @@ public:
     }
     void setSandTexture(Block& s,int x)
     {
-        cout<<"set sand texture"<<endl;
         sf::IntRect temp(0,10*x,10,10);
         s.setTextureRect(temp);
         s.setTexture(sand);
-        //s.setScale(5,5);
-        cout<<"end"<<endl;
+    }
+    void setWaterTexture(Block& w)
+    {
+        sf::IntRect temp(0,0,10,10);
+        w.setTextureRect(temp);
+        w.setTexture(water);
     }
 };
 
