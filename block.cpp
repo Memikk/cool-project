@@ -5,6 +5,11 @@ Block::Block()
     setSize(sf::Vector2f(BLOCK_SIZE,BLOCK_SIZE));
     setFillColor(sf::Color::Transparent);
 }
+Block::Block(const Block& b)
+{
+    collision=b.collision;
+    base=b.base;
+}
 Block::Block(sf::Vector2f pos)
 {
     setSize(sf::Vector2f(BLOCK_SIZE,BLOCK_SIZE));
@@ -12,8 +17,34 @@ Block::Block(sf::Vector2f pos)
     setFillColor(sf::Color::Transparent);
 }
 
-Grass::Grass():Block()
+void Block::draw(sf::RenderWindow& window)
 {
+    window.draw(*this);
+}
+
+Grass::Grass(bool tree,bool plant):Block(),tree(tree),plant(plant)
+{
+    object.setScale(5,5);
+    if(tree) collision=true;
+}
+Grass::Grass(const Grass& g):Block(g)
+{
+    object=g.object;
+}
+
+void Grass::setObjectTexture(sf::Texture& t)
+{
+    object.setTexture(t);
+}
+
+void Grass::initialize()
+{
+    object.setPosition(getPosition());
+}
+
+void Grass::draw(sf::RenderWindow& window)
+{
+    window.draw(object);
 }
 
 Water::Water():Block()

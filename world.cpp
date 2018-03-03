@@ -2,6 +2,9 @@
 
 Chunk::Chunk(int offX,int offY,siv::PerlinNoise& perlin,TextureLoader* txtLoader):ix(offX),iy(offY),offsetX(offX*CHUNK_SIZE*BLOCK_SIZE),offsetY(offY*CHUNK_SIZE*BLOCK_SIZE)
 {
+    siv::PerlinNoise perlin2;
+    perlin2.reseed(123456);
+
     blocks = new Block** [CHUNK_SIZE];
     for(int i=0; i<CHUNK_SIZE; i++)
     {
@@ -10,6 +13,7 @@ Chunk::Chunk(int offX,int offY,siv::PerlinNoise& perlin,TextureLoader* txtLoader
         {
             int xp=offsetX+i*BLOCK_SIZE;
             int yp=offsetY+j*BLOCK_SIZE;
+            float perlin2choice=perlin2.noise0_1((float)xp*0.002,(float)yp*0.002);
             int xp1,xp2,xp3,xp4,xp5,xp6,xp7,xp8;
             int yp1,yp2,yp3,yp4,yp5,yp6,yp7,yp8;
 
@@ -47,39 +51,39 @@ Chunk::Chunk(int offX,int offY,siv::PerlinNoise& perlin,TextureLoader* txtLoader
                 blocks[i][j] = new Water();
                 txtLoader->setWaterTexture(*blocks[i][j]);
             }
-            else if(choice>0.60)
+            else if(choice>0.64)
             {
                 blocks[i][j] = new Sand();
 
-                if(t0<=0.60&&t1<=0.60&&t7<=0.60)
+                if(t0<=0.64&&t1<=0.64&&t7<=0.64)
                 {
                     txtLoader->setSandTexture(*blocks[i][j],5);
                 }
-                else if(t2<=0.60&&t1<=0.60&&t3<=0.60)
+                else if(t2<=0.64&&t1<=0.64&&t3<=0.64)
                 {
                     txtLoader->setSandTexture(*blocks[i][j],6);
                 }
-                else if(t3<=0.60&&t4<=0.60&&t5<=0.60)
+                else if(t3<=0.64&&t4<=0.64&&t5<=0.64)
                 {
                     txtLoader->setSandTexture(*blocks[i][j],8);
                 }
-                else if(t5<=0.60&&t6<=0.60&&t7<=0.60)
+                else if(t5<=0.64&&t6<=0.64&&t7<=0.64)
                 {
                     txtLoader->setSandTexture(*blocks[i][j],7);
                 }
-                else if(t1<=0.60)
+                else if(t1<=0.64)
                 {
                     txtLoader->setSandTexture(*blocks[i][j],4);
                 }
-                else if(t3<=0.60)
+                else if(t3<=0.64)
                 {
                     txtLoader->setSandTexture(*blocks[i][j],3);
                 }
-                else if(t5<=0.60)
+                else if(t5<=0.64)
                 {
                     txtLoader->setSandTexture(*blocks[i][j],2);
                 }
-                else if(t7<=0.60)
+                else if(t7<=0.64)
                 {
                     txtLoader->setSandTexture(*blocks[i][j],1);
                 }
@@ -90,7 +94,12 @@ Chunk::Chunk(int offX,int offY,siv::PerlinNoise& perlin,TextureLoader* txtLoader
             }
             else if(choice>0.32)
             {
-                blocks[i][j] = new Grass();
+                if(perlin2choice<0.60) blocks[i][j] = new Grass();
+                else
+                {
+                    blocks[i][j] = new Grass(true);
+                    txtLoader->setTreeTexture(*blocks[i][j]);
+                }
             }
             else
             {
@@ -134,6 +143,7 @@ Chunk::Chunk(int offX,int offY,siv::PerlinNoise& perlin,TextureLoader* txtLoader
             }
 
             blocks[i][j]->setPosition(sf::Vector2f(xp,yp));
+            blocks[i][j]->initialize();
         }
     }
 }
@@ -152,8 +162,7 @@ void Chunk::draw(sf::RenderWindow& window)
     {
         for(int j=0; j<CHUNK_SIZE; j++)
         {
-            if(!blocks[i][j]->base)
-                window.draw(*blocks[i][j]);
+            blocks[i][j]->draw(window);
             blocks[i][j]->animate();
         }
     }
