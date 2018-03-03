@@ -13,35 +13,50 @@ void Player::draw(sf::RenderWindow& window)
     window.draw(*this);
 }
 
-void Player::update()
+void Player::update(vector<bool> collisions)
 {
-    moving();
+    //cout<<"PLAYER UPDATE"<<endl;
+    moving(collisions);
+    //cout<<"PO RUCHU GRACZA"<<endl;
     animate();
+    //cout<<"PO ANIMACJI GRACZA"<<endl;
 }
 
-void Player::moving()
+void Player::moving(vector<bool> collisions)
 {
     if(!animating)
     {
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
         {
-            desiredPos.y+=BLOCK_SIZE;
-            animating=true;
+            if(!collisions[5])
+            {
+                desiredPos.y+=BLOCK_SIZE;
+                animating=true;
+            }
         }
         else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
         {
-            desiredPos.y-=BLOCK_SIZE;
-            animating=true;
+            if(!collisions[1])
+            {
+                desiredPos.y-=BLOCK_SIZE;
+                animating=true;
+            }
         }
         else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
         {
-            desiredPos.x-=BLOCK_SIZE;
-            animating=true;
+            if(!collisions[7])
+            {
+                desiredPos.x-=BLOCK_SIZE;
+                animating=true;
+            }
         }
         else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
         {
-            desiredPos.x+=BLOCK_SIZE;
-            animating=true;
+            if(!collisions[3])
+            {
+                desiredPos.x+=BLOCK_SIZE;
+                animating=true;
+            }
         }
     }
 }

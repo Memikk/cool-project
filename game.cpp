@@ -22,11 +22,18 @@ Game::Game(sf::RenderWindow& win)
 
 void Game::update()
 {
+    //cout<<"GENERUJE CHUNKI"<<endl;
+    world->generateChunks();
+
+    //cout<<"SPRAWDZAM EVENTY"<<endl;
     evHandler.checkEvents(*window);
+
+    //cout<<"AKTUALIZUJE SWIAT"<<endl;
     world->update();
+
+    //cout<<"USTAWIAM WIDOK"<<endl;
     view.setCenter(center(world->getPlayer()));
     window->setView(view);
-    world->generateChunks();
 }
 
 void Game::draw()

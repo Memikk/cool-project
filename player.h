@@ -7,15 +7,15 @@ using namespace std;
 
 class Player : public sf::Sprite
 {
-    bool animating=false;
     sf::RectangleShape background;
     sf::Vector2f desiredPos;
 public:
+    bool animating=false;
     Player();
     sf::RectangleShape& getBackground(){return background;};
     void draw(sf::RenderWindow& window);
-    void update();
-    void moving();
+    void update(vector<bool> collisions);
+    void moving(vector<bool> collisions);
     void animate();
 };
 

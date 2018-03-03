@@ -31,6 +31,15 @@ Chunk::Chunk(int offX,int offY,siv::PerlinNoise& perlin,TextureLoader* txtLoader
             yp7=offsetY+(j+1)*BLOCK_SIZE;
             yp8=offsetY+j    *BLOCK_SIZE;
 
+            float t0=perlin.noise0_1((float)xp1*0.002,(float)yp1*0.002);
+            float t1=perlin.noise0_1((float)xp2*0.002,(float)yp2*0.002);
+            float t2=perlin.noise0_1((float)xp3*0.002,(float)yp3*0.002);
+            float t3=perlin.noise0_1((float)xp4*0.002,(float)yp4*0.002);
+            float t4=perlin.noise0_1((float)xp5*0.002,(float)yp5*0.002);
+            float t5=perlin.noise0_1((float)xp6*0.002,(float)yp6*0.002);
+            float t6=perlin.noise0_1((float)xp7*0.002,(float)yp7*0.002);
+            float t7=perlin.noise0_1((float)xp8*0.002,(float)yp8*0.002);
+
             float choice=perlin.noise0_1((float)xp*0.002,(float)yp*0.002);
 
             if(choice>0.74)
@@ -41,14 +50,6 @@ Chunk::Chunk(int offX,int offY,siv::PerlinNoise& perlin,TextureLoader* txtLoader
             else if(choice>0.60)
             {
                 blocks[i][j] = new Sand();
-                float t0=perlin.noise0_1((float)xp1*0.002,(float)yp1*0.002);
-                float t1=perlin.noise0_1((float)xp2*0.002,(float)yp2*0.002);
-                float t2=perlin.noise0_1((float)xp3*0.002,(float)yp3*0.002);
-                float t3=perlin.noise0_1((float)xp4*0.002,(float)yp4*0.002);
-                float t4=perlin.noise0_1((float)xp5*0.002,(float)yp5*0.002);
-                float t5=perlin.noise0_1((float)xp6*0.002,(float)yp6*0.002);
-                float t6=perlin.noise0_1((float)xp7*0.002,(float)yp7*0.002);
-                float t7=perlin.noise0_1((float)xp8*0.002,(float)yp8*0.002);
 
                 if(t0<=0.60&&t1<=0.60&&t7<=0.60)
                 {
@@ -94,6 +95,42 @@ Chunk::Chunk(int offX,int offY,siv::PerlinNoise& perlin,TextureLoader* txtLoader
             else
             {
                 blocks[i][j] = new Stone();
+                if(t0>0.32&&t1>0.32&&t7>0.32)
+                {
+                    txtLoader->setStoneTexture(*blocks[i][j],8);
+                }
+                else if(t2>0.32&&t1>0.32&&t3>0.32)
+                {
+                    txtLoader->setStoneTexture(*blocks[i][j],7);
+                }
+                else if(t3>0.32&&t4>0.32&&t5>0.32)
+                {
+                    txtLoader->setStoneTexture(*blocks[i][j],6);
+                }
+                else if(t5>0.32&&t6>0.32&&t7>0.32)
+                {
+                    txtLoader->setStoneTexture(*blocks[i][j],5);
+                }
+                else if(t1>0.32)
+                {
+                    txtLoader->setStoneTexture(*blocks[i][j],4);
+                }
+                else if(t3>0.32)
+                {
+                    txtLoader->setStoneTexture(*blocks[i][j],3);
+                }
+                else if(t5>0.32)
+                {
+                    txtLoader->setStoneTexture(*blocks[i][j],2);
+                }
+                else if(t7>0.32)
+                {
+                    txtLoader->setStoneTexture(*blocks[i][j],1);
+                }
+                else
+                {
+                    txtLoader->setStoneTexture(*blocks[i][j],0);
+                }
             }
 
             blocks[i][j]->setPosition(sf::Vector2f(xp,yp));
@@ -159,7 +196,20 @@ void World::generateChunks()
 
 void World::update()
 {
-    player.update();
+    vector<bool> collisions;
+    if(!player.animating)
+    {
+        collisions.push_back(blockCollision(sf::Vector2f(player.getPosition().x-BLOCK_SIZE,player.getPosition().y-BLOCK_SIZE)));
+        collisions.push_back(blockCollision(sf::Vector2f(player.getPosition().x,player.getPosition().y-BLOCK_SIZE)));
+        collisions.push_back(blockCollision(sf::Vector2f(player.getPosition().x+BLOCK_SIZE,player.getPosition().y-BLOCK_SIZE)));
+        collisions.push_back(blockCollision(sf::Vector2f(player.getPosition().x+BLOCK_SIZE,player.getPosition().y)));
+        collisions.push_back(blockCollision(sf::Vector2f(player.getPosition().x+BLOCK_SIZE,player.getPosition().y+BLOCK_SIZE)));
+        collisions.push_back(blockCollision(sf::Vector2f(player.getPosition().x,player.getPosition().y+BLOCK_SIZE)));
+        collisions.push_back(blockCollision(sf::Vector2f(player.getPosition().x-BLOCK_SIZE,player.getPosition().y+BLOCK_SIZE)));
+        collisions.push_back(blockCollision(sf::Vector2f(player.getPosition().x-BLOCK_SIZE,player.getPosition().y)));
+    }
+
+    player.update(collisions);
 }
 
 bool World::exist(int x,int y)
@@ -172,6 +222,44 @@ bool World::exist(int x,int y)
     return false;
 }
 
+bool World::blockCollision(sf::Vector2f pos)
+{
+    int ox,oy;
+
+    if(pos.x>=0)
+        ox=pos.x/(CHUNK_SIZE*BLOCK_SIZE);
+    else
+        ox=floor(pos.x/(CHUNK_SIZE*BLOCK_SIZE));
+
+    if(pos.y>=0)
+        oy=pos.y/(CHUNK_SIZE*BLOCK_SIZE);
+    else
+        oy=floor(pos.y/(CHUNK_SIZE*BLOCK_SIZE));
+
+    int ix,iy;
+    int tx,ty;
+
+    tx=ox*CHUNK_SIZE*BLOCK_SIZE;
+    ty=oy*CHUNK_SIZE*BLOCK_SIZE;
+
+    ix=abs((pos.x-tx)/BLOCK_SIZE);
+    iy=abs((pos.y-ty)/BLOCK_SIZE);
+
+    if(getChunk(ox,oy).blocks[ix][iy]->collision)
+        return true;
+    else
+        return false;
+}
+
+Chunk& World::getChunk(int x,int y)
+{
+    for(auto &c:chunks)
+    {
+        if(c.ix==x&&c.iy==y)
+            return c;
+    }
+}
+
 void World::draw(sf::RenderWindow& window)
 {
     window.draw(player.getBackground());
@@ -179,5 +267,6 @@ void World::draw(sf::RenderWindow& window)
     {
         c.draw(window);
     }
+    if(animationClock.getElapsedTime().asMilliseconds()>500) animationClock.restart();
     player.draw(window);
 }

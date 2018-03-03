@@ -18,17 +18,16 @@ Grass::Grass():Block()
 
 Water::Water():Block()
 {
-    animationClock.restart();
     setFillColor(sf::Color::White);
     base=false;
+    collision=true;
 }
 
 void Water::animate()
 {
-    if(animationClock.getElapsedTime().asSeconds()>0.5)
+    if(animationClock.getElapsedTime().asMilliseconds()>500)
     {
         nextFrame();
-        animationClock.restart();
     }
 }
 
@@ -48,6 +47,7 @@ Sand::Sand():Block()
 
 Stone::Stone():Block()
 {
-    setFillColor(sf::Color(51,51,51));
+    setFillColor(sf::Color::White);
     base=false;
+    collision=true;
 }

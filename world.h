@@ -10,8 +10,8 @@ using namespace std;
 
 class Chunk
 {
-    Block*** blocks;
 public:
+    Block*** blocks;
     int ix,iy;
     int offsetX,offsetY;
     Chunk(int ix,int iy,siv::PerlinNoise& perlin,TextureLoader* tloader);
@@ -29,6 +29,8 @@ public:
     World(TextureLoader* tloader);
     Player& getPlayer(){return player;};
     bool exist(int x,int y);
+    bool blockCollision(sf::Vector2f pos);
+    Chunk& getChunk(int x,int y);
     void generateChunks();
     void update();
     void draw(sf::RenderWindow& window);

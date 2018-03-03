@@ -2,6 +2,8 @@
 
 unsigned BLOCK_SIZE=50;
 unsigned CHUNK_SIZE=16;
+sf::Clock animationClock;
+
 sf::Vector2f center(sf::RectangleShape r)
 {
     return sf::Vector2f(r.getPosition().x+r.getSize().x/2,

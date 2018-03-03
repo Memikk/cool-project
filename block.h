@@ -5,6 +5,7 @@
 class Block : public sf::RectangleShape
 {
 public:
+    bool collision=false;
     bool base=true;
     Block();
     Block(sf::Vector2f pos);
@@ -21,7 +22,6 @@ public:
 class Water : public Block
 {
     int frame=0;
-    sf::Clock animationClock;
 public:
     Water();
     void animate();
