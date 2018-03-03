@@ -10,7 +10,7 @@ public:
     Block();
     Block(const Block& b);
     Block(sf::Vector2f pos);
-    virtual void setObjectTexture(sf::Texture& t){};
+    virtual void setObjectTexture(sf::Texture& t,int offset=0){};
     virtual void initialize()=0;
     virtual void animate()=0;
     virtual void draw(sf::RenderWindow& window);
@@ -24,7 +24,7 @@ public:
     sf::Sprite object;
     Grass(bool tree=false,bool plant=false);
     Grass(const Grass& g);
-    void setObjectTexture(sf::Texture& t);
+    void setObjectTexture(sf::Texture& t,int offset=0);
     void initialize();
     void animate(){};
     void draw(sf::RenderWindow& window);

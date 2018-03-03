@@ -5,7 +5,7 @@ Player::Player()
     desiredPos=getPosition();
     background.setPosition(getPosition());
     background.setSize(sf::Vector2f(1920,1080));
-    background.setFillColor(sf::Color(0,120,0));
+    background.setFillColor(sf::Color(40,120,10));
 }
 
 void Player::draw(sf::RenderWindow& window)

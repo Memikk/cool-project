@@ -24,16 +24,29 @@ void Block::draw(sf::RenderWindow& window)
 
 Grass::Grass(bool tree,bool plant):Block(),tree(tree),plant(plant)
 {
-    object.setScale(5,5);
-    if(tree) collision=true;
+    //setFillColor(sf::Color::White);
+
+    if(tree)
+    {
+        object.setScale(5,5);
+        collision=true;
+    }
+    else
+    {
+        object.setScale(2.5,2.5);
+    }
 }
 Grass::Grass(const Grass& g):Block(g)
 {
     object=g.object;
 }
 
-void Grass::setObjectTexture(sf::Texture& t)
+void Grass::setObjectTexture(sf::Texture& t,int offset)
 {
+    sf::IntRect r;
+    if(plant) r=sf::IntRect(0,20*offset,20,20);
+    else r=sf::IntRect(0,10*offset,10,10);
+    object.setTextureRect(r);
     object.setTexture(t);
 }
 
@@ -44,6 +57,7 @@ void Grass::initialize()
 
 void Grass::draw(sf::RenderWindow& window)
 {
+    window.draw(*this);
     window.draw(object);
 }
 
@@ -72,7 +86,7 @@ void Water::nextFrame()
 
 Sand::Sand():Block()
 {
-    setFillColor(sf::Color(200,200,60));
+    setFillColor(sf::Color::White);
     base=false;
 }
 

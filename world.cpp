@@ -94,12 +94,22 @@ Chunk::Chunk(int offX,int offY,siv::PerlinNoise& perlin,TextureLoader* txtLoader
             }
             else if(choice>0.32)
             {
-                if(perlin2choice<0.60) blocks[i][j] = new Grass();
+                if(perlin2choice<0.60)
+                {
+                    if(rand()%20)
+                        blocks[i][j] = new Grass();
+                    else
+                    {
+                        blocks[i][j] = new Grass(false,true);
+                        txtLoader->setPlantTexture(*blocks[i][j]);
+                    }
+                }
                 else
                 {
                     blocks[i][j] = new Grass(true);
                     txtLoader->setTreeTexture(*blocks[i][j]);
                 }
+                //txtLoader->setGrassTexture(*blocks[i][j]);
             }
             else
             {
@@ -201,6 +211,16 @@ void World::generateChunks()
             }
         }
     }
+    popChunks(offsetX,offsetY);
+}
+
+void World::popChunks(int x,int y)
+{
+    for(int i=chunks.size()-1;i>=0;i--)
+    {
+        if(x+2<chunks[i].ix||x-2>chunks[i].ix) chunks.erase(chunks.begin()+i);
+        if(y+2<chunks[i].iy||y-2>chunks[i].iy) chunks.erase(chunks.begin()+i);
+    }
 }
 
 void World::update()
@@ -276,6 +296,7 @@ void World::draw(sf::RenderWindow& window)
     {
         c.draw(window);
     }
-    if(animationClock.getElapsedTime().asMilliseconds()>500) animationClock.restart();
+    if(animationClock.getElapsedTime().asMilliseconds()>500)
+        animationClock.restart();
     player.draw(window);
 }

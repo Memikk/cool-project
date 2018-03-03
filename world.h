@@ -32,9 +32,9 @@ public:
     bool blockCollision(sf::Vector2f pos);
     Chunk& getChunk(int x,int y);
     void generateChunks();
+    void popChunks(int x,int y);
     void update();
     void draw(sf::RenderWindow& window);
-    void setTextures();
 };
 
 #endif // WORLD_H_INCLUDED
