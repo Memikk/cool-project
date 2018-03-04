@@ -3,6 +3,8 @@
 unsigned BLOCK_SIZE=50;
 unsigned CHUNK_SIZE=16;
 sf::Clock animationClock;
+siv::PerlinNoise worldGenNoise;
+siv::PerlinNoise objectNoise;
 
 sf::Vector2f center(sf::RectangleShape r)
 {

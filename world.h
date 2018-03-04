@@ -10,6 +10,10 @@ using namespace std;
 
 class Chunk
 {
+    vector<Block*> water;
+    vector<Block*> sand;
+    vector<Grass*> grass;
+    vector<Block*> stone;
 public:
     Block*** blocks;
     int ix,iy;

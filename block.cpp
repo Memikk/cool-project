@@ -19,7 +19,7 @@ Block::Block(sf::Vector2f pos)
 
 void Block::draw(sf::RenderWindow& window)
 {
-    window.draw(*this);
+    window.draw(*this,tform);
 }
 
 Grass::Grass(bool tree,bool plant):Block(),tree(tree),plant(plant)

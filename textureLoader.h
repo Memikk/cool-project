@@ -39,7 +39,7 @@ public:
     }
     void setSandTexture(Block& s,int x)
     {
-        sf::IntRect temp(0,10*x,10,10);
+        sf::IntRect temp(0,50*x,50,50);
         s.setTextureRect(temp);
         s.setTexture(sand);
     }

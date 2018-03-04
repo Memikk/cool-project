@@ -5,6 +5,7 @@
 class Block : public sf::RectangleShape
 {
 public:
+    sf::Transform tform;
     bool collision=false;
     bool base=true;
     Block();

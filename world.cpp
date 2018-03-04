@@ -35,21 +35,22 @@ Chunk::Chunk(int offX,int offY,siv::PerlinNoise& perlin,TextureLoader* txtLoader
             yp7=offsetY+(j+1)*BLOCK_SIZE;
             yp8=offsetY+j    *BLOCK_SIZE;
 
-            float t0=perlin.noise0_1((float)xp1*0.002,(float)yp1*0.002);
-            float t1=perlin.noise0_1((float)xp2*0.002,(float)yp2*0.002);
-            float t2=perlin.noise0_1((float)xp3*0.002,(float)yp3*0.002);
-            float t3=perlin.noise0_1((float)xp4*0.002,(float)yp4*0.002);
-            float t4=perlin.noise0_1((float)xp5*0.002,(float)yp5*0.002);
-            float t5=perlin.noise0_1((float)xp6*0.002,(float)yp6*0.002);
-            float t6=perlin.noise0_1((float)xp7*0.002,(float)yp7*0.002);
-            float t7=perlin.noise0_1((float)xp8*0.002,(float)yp8*0.002);
+            float t0=worldGenNoise.noise0_1((float)xp1*0.002,(float)yp1*0.002);
+            float t1=worldGenNoise.noise0_1((float)xp2*0.002,(float)yp2*0.002);
+            float t2=worldGenNoise.noise0_1((float)xp3*0.002,(float)yp3*0.002);
+            float t3=worldGenNoise.noise0_1((float)xp4*0.002,(float)yp4*0.002);
+            float t4=worldGenNoise.noise0_1((float)xp5*0.002,(float)yp5*0.002);
+            float t5=worldGenNoise.noise0_1((float)xp6*0.002,(float)yp6*0.002);
+            float t6=worldGenNoise.noise0_1((float)xp7*0.002,(float)yp7*0.002);
+            float t7=worldGenNoise.noise0_1((float)xp8*0.002,(float)yp8*0.002);
 
-            float choice=perlin.noise0_1((float)xp*0.002,(float)yp*0.002);
+            float choice=worldGenNoise.noise0_1((float)xp*0.002,(float)yp*0.002);
 
             if(choice>0.74)
             {
                 blocks[i][j] = new Water();
                 txtLoader->setWaterTexture(*blocks[i][j]);
+                water.push_back(blocks[i][j]);
             }
             else if(choice>0.64)
             {
@@ -91,6 +92,7 @@ Chunk::Chunk(int offX,int offY,siv::PerlinNoise& perlin,TextureLoader* txtLoader
                 {
                     txtLoader->setSandTexture(*blocks[i][j],0);
                 }
+                sand.push_back(blocks[i][j]);
             }
             else if(choice>0.32)
             {
@@ -109,6 +111,7 @@ Chunk::Chunk(int offX,int offY,siv::PerlinNoise& perlin,TextureLoader* txtLoader
                     blocks[i][j] = new Grass(true);
                     txtLoader->setTreeTexture(*blocks[i][j]);
                 }
+                grass.push_back(static_cast<Grass*>(blocks[i][j]));
                 //txtLoader->setGrassTexture(*blocks[i][j]);
             }
             else
@@ -150,6 +153,7 @@ Chunk::Chunk(int offX,int offY,siv::PerlinNoise& perlin,TextureLoader* txtLoader
                 {
                     txtLoader->setStoneTexture(*blocks[i][j],0);
                 }
+                stone.push_back(blocks[i][j]);
             }
 
             blocks[i][j]->setPosition(sf::Vector2f(xp,yp));
@@ -168,14 +172,14 @@ bool Chunk::operator==(const Chunk& chunk)
 
 void Chunk::draw(sf::RenderWindow& window)
 {
-    for(int i=0; i<CHUNK_SIZE; i++)
+    for(auto &w:water)
     {
-        for(int j=0; j<CHUNK_SIZE; j++)
-        {
-            blocks[i][j]->draw(window);
-            blocks[i][j]->animate();
-        }
+        w->animate();
+        w->draw(window);
     }
+    for(auto &s:sand) s->draw(window);
+    for(auto &s:stone) s->draw(window);
+    for(auto &g:grass) window.draw(g->object);
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~WORLD~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
