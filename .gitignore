@@ -1,11 +1,8 @@
 #Codeblocks files
 
-*.[cbp]
-
-*.[depend]
-
-*.[layout]
-
+*.cbp
+*.depend
+*.layout
 /bin/*
 
 /obj/*
