@@ -112,7 +112,6 @@ Chunk::Chunk(int offX,int offY,siv::PerlinNoise& perlin,TextureLoader* txtLoader
                     txtLoader->setTreeTexture(*blocks[i][j]);
                 }
                 grass.push_back(static_cast<Grass*>(blocks[i][j]));
-                //txtLoader->setGrassTexture(*blocks[i][j]);
             }
             else
             {

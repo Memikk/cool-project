@@ -12,7 +12,6 @@ class TextureLoader
     sf::Texture* stone;
     sf::Texture* tree;
     sf::Texture* plants;
-    //sf::Texture* grass;
 public:
     TextureLoader(){};
     void load()
@@ -23,14 +22,12 @@ public:
         stone=new sf::Texture();
         tree=new sf::Texture();
         plants=new sf::Texture();
-        //grass=new sf::Texture();
         if(player->loadFromFile("player.png")) cout<<"Wczytano teksture gracza"<<endl;
         if(sand->loadFromFile("sand.png")) cout<<"Wczytano teksture piasku"<<endl;
         if(water->loadFromFile("water.png")) cout<<"Wczytano teksture wody"<<endl;
         if(stone->loadFromFile("stone.png")) cout<<"Wczytano teksture wody"<<endl;
         if(tree->loadFromFile("tree.png")) cout<<"Wczytano teksture drzewa"<<endl;
         if(plants->loadFromFile("plants.png")) cout<<"Wczytano teksture roslin"<<endl;
-        //if(grass->loadFromFile("grass.png")) cout<<"Wczytano teksture trawy"<<endl;
     }
     void setPlayerTexture(Player& p)
     {
@@ -63,10 +60,6 @@ public:
     {
         t.setObjectTexture(*plants,rand()%13);
     }
-//    void setGrassTexture(Block& g)
-//    {
-//        g.setTexture(grass);
-//    }
 };
 
 #endif // TEXTURELOADER_H_INCLUDED
