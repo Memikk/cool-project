@@ -78,10 +78,12 @@ void Water::animate()
 
 void Water::nextFrame()
 {
-    sf::IntRect tRect(0,10*frame,10,10);
+    sf::IntRect tRect(0,100*frame,100,100);
     frame++;
-    if(frame>4) frame=0;
+    if(frame>12) frame=0;
     setTextureRect(tRect);
+
+
 }
 
 Sand::Sand():Block()
