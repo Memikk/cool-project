@@ -9,7 +9,12 @@ extern siv::PerlinNoise objectNoise;
 extern sf::Clock animationClock;
 extern unsigned BLOCK_SIZE;
 extern unsigned CHUNK_SIZE;
-sf::Vector2f center(sf::RectangleShape);
-sf::Vector2f center(sf::Sprite);
+
+namespace vh
+{
+sf::Vector2f center(const sf::RectangleShape&);
+sf::Vector2f center(const sf::Sprite&);
+sf::Vector2f getSize(const sf::Sprite&);
+}
 
 #endif // GLOBALS_H_INCLUDED

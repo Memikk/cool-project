@@ -8,15 +8,16 @@ using namespace std;
 class Player : public sf::Sprite
 {
     sf::RectangleShape background;
-    sf::Vector2f desiredPos;
+    sf::FloatRect hitbox;
+    sf::Vector2f vel,acc;
 public:
     bool animating=false;
     Player();
     sf::RectangleShape& getBackground(){return background;};
     void draw(sf::RenderWindow& window);
-    void update(vector<bool> collisions);
-    void moving(vector<bool> collisions);
-    void animate();
+    void update(vector<bool>& collisions);
+    void moving();
+    void animate(vector<bool>& collisions);
 };
 
 #endif // PLAYER_H_INCLUDED

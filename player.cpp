@@ -2,10 +2,12 @@
 
 Player::Player()
 {
-    desiredPos=getPosition();
+    vel=sf::Vector2f();
+    acc=sf::Vector2f(0.05,0.05);
     background.setPosition(getPosition());
     background.setSize(sf::Vector2f(1920,1080));
     background.setFillColor(sf::Color(40,120,10));
+    hitbox=sf::FloatRect(getPosition().x/3,getPosition().y*2/3,vh::getSize(*this).x/3,vh::getSize(*this).y*2/3);
 }
 
 void Player::draw(sf::RenderWindow& window)
@@ -13,65 +15,78 @@ void Player::draw(sf::RenderWindow& window)
     window.draw(*this);
 }
 
-void Player::update(vector<bool> collisions)
+void Player::update(vector<bool>& collisions)
 {
     //cout<<"PLAYER UPDATE"<<endl;
-    moving(collisions);
+    moving();
     //cout<<"PO RUCHU GRACZA"<<endl;
-    animate();
+    animate(collisions);
     //cout<<"PO ANIMACJI GRACZA"<<endl;
 }
 
-void Player::moving(vector<bool> collisions)
+void Player::moving()
 {
-    if(!animating)
-    {
-        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
-        {
-            if(!collisions[5])
-            {
-                desiredPos.y+=BLOCK_SIZE;
-                animating=true;
-            }
-        }
-        else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-        {
-            if(!collisions[1])
-            {
-                desiredPos.y-=BLOCK_SIZE;
-                animating=true;
-            }
-        }
-        else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-        {
-            if(!collisions[7])
-            {
-                desiredPos.x-=BLOCK_SIZE;
-                animating=true;
-            }
-        }
-        else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-        {
-            if(!collisions[3])
-            {
-                desiredPos.x+=BLOCK_SIZE;
-                animating=true;
-            }
-        }
-    }
-}
+    bool movingX=true;
+    bool movingY=true;
 
-void Player::animate()
-{
-    if(desiredPos!=getPosition())
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
     {
-        int x=(desiredPos.x==getPosition().x)?0:(desiredPos.x<getPosition().x)?-5:5;
-        int y=(desiredPos.y==getPosition().y)?0:(desiredPos.y<getPosition().y)?-5:5;
-        move(x,y);
+        vel.y=5;
+    }
+    else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+    {
+        vel.y=-5;
     }
     else
     {
-        animating=false;
-        background.setPosition(getPosition()-background.getSize()/2.f);
+        if(vel.y) vel.y*=0.8;
+        if(movingY) movingY=false;
     }
+
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+    {
+        vel.x=-5;
+    }
+    else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+    {
+        vel.x=5;
+    }
+    else
+    {
+        if(vel.x) vel.x*=0.8;
+        if(movingX) movingX=false;
+    }
+
+    if(movingX&&movingY)
+    {
+        vel.x=vel.x/2*sqrt(2);
+        vel.y=vel.y/2*sqrt(2);
+    }
+}
+
+void Player::animate(vector<bool>& collisions)
+{
+    sf::Vector2f test=getPosition()+vel;
+    bool dontMove=false;
+//    for(auto& c:collisions)
+//    {
+//        if(c.getGlobalBounds().intersects(test))
+//        {
+//            dontMove=true;
+//            break;
+//        }
+//    }
+    if(!dontMove) move(vel);
+    background.setPosition(getPosition()-background.getSize()/2.f);
+//    if(desiredPos!=getPosition())
+//    {
+//        int x=(desiredPos.x==getPosition().x)?0:(desiredPos.x<getPosition().x)?-5:5;
+//        int y=(desiredPos.y==getPosition().y)?0:(desiredPos.y<getPosition().y)?-5:5;
+//        move(x,y);
+//    }
+//    else
+//    {
+//        animating=false;
+//        background.setPosition(getPosition()-background.getSize()/2.f);
+//    }
 }

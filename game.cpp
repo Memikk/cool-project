@@ -32,7 +32,7 @@ void Game::update()
     world->update();
 
     //cout<<"USTAWIAM WIDOK"<<endl;
-    view.setCenter(center(world->getPlayer()));
+    view.setCenter(vh::center(world->getPlayer()));
     window->setView(view);
 }
 
