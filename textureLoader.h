@@ -2,6 +2,7 @@
 #define TEXTURELOADER_H_INCLUDED
 #include <iostream>
 #include "globals.h"
+
 using namespace std;
 
 class TextureLoader
@@ -29,28 +30,12 @@ public:
         if(tree->loadFromFile("tree.png")) cout<<"Wczytano teksture drzewa"<<endl;
         if(plants->loadFromFile("plants.png")) cout<<"Wczytano teksture roslin"<<endl;
     }
+    void chooseTexture(Block& block,int i,int j,int offsetX,int offsetY,blockType type,float value);
+    void setTexture(Block& block,blockType type,int choice);
     void setPlayerTexture(Player& p)
     {
         p.setTexture(*player);
         p.setScale(50/20.0,50/20.0);
-    }
-    void setSandTexture(Block& s,int x)
-    {
-        sf::IntRect temp(0,50*x,50,50);
-        s.setTextureRect(temp);
-        s.setTexture(sand);
-    }
-    void setWaterTexture(Block& w)
-    {
-        sf::IntRect temp(0,0,10,10);
-        w.setTextureRect(temp);
-        w.setTexture(water);
-    }
-    void setStoneTexture(Block& s,int x)
-    {
-        sf::IntRect temp(0,50*x,50,50);
-        s.setTextureRect(temp);
-        s.setTexture(stone);
     }
     void setTreeTexture(Block& t)
     {

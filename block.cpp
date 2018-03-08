@@ -19,7 +19,7 @@ Block::Block(sf::Vector2f pos)
 
 void Block::draw(sf::RenderWindow& window)
 {
-    window.draw(*this,tform);
+    window.draw(*this);
 }
 
 Grass::Grass(bool tree,bool plant):Block(),tree(tree),plant(plant)
@@ -78,9 +78,9 @@ void Water::animate()
 
 void Water::nextFrame()
 {
-    sf::IntRect tRect(0,100*frame,100,100);
+    sf::IntRect tRect(BLOCK_SIZE*frame,BLOCK_SIZE*type,BLOCK_SIZE,BLOCK_SIZE);
     frame++;
-    if(frame>12) frame=0;
+    if(frame>5) frame=0;
     setTextureRect(tRect);
 
 

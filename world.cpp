@@ -2,9 +2,6 @@
 
 Chunk::Chunk(int offX,int offY,siv::PerlinNoise& perlin,TextureLoader* txtLoader):ix(offX),iy(offY),offsetX(offX*CHUNK_SIZE*BLOCK_SIZE),offsetY(offY*CHUNK_SIZE*BLOCK_SIZE)
 {
-    siv::PerlinNoise perlin2;
-    perlin2.reseed(123456);
-
     blocks = new Block** [CHUNK_SIZE];
     for(int i=0; i<CHUNK_SIZE; i++)
     {
@@ -13,92 +10,30 @@ Chunk::Chunk(int offX,int offY,siv::PerlinNoise& perlin,TextureLoader* txtLoader
         {
             int xp=offsetX+i*BLOCK_SIZE;
             int yp=offsetY+j*BLOCK_SIZE;
-            float perlin2choice=perlin2.noise0_1((float)xp*0.002,(float)yp*0.002);
-            int xp1,xp2,xp3,xp4,xp5,xp6,xp7,xp8;
-            int yp1,yp2,yp3,yp4,yp5,yp6,yp7,yp8;
 
-            xp1=offsetX+(i-1)*BLOCK_SIZE;
-            xp2=offsetX+i    *BLOCK_SIZE;
-            xp3=offsetX+(i+1)*BLOCK_SIZE;
-            xp4=offsetX+(i+1)*BLOCK_SIZE;
-            xp5=offsetX+(i+1)*BLOCK_SIZE;
-            xp6=offsetX+i    *BLOCK_SIZE;
-            xp7=offsetX+(i-1)*BLOCK_SIZE;
-            xp8=offsetX+(i-1)*BLOCK_SIZE;
-
-            yp1=offsetY+(j-1)*BLOCK_SIZE;
-            yp2=offsetY+(j-1)*BLOCK_SIZE;
-            yp3=offsetY+(j-1)*BLOCK_SIZE;
-            yp4=offsetY+j    *BLOCK_SIZE;
-            yp5=offsetY+(j+1)*BLOCK_SIZE;
-            yp6=offsetY+(j+1)*BLOCK_SIZE;
-            yp7=offsetY+(j+1)*BLOCK_SIZE;
-            yp8=offsetY+j    *BLOCK_SIZE;
-
-            float t0=worldGenNoise.noise0_1((float)xp1*0.002,(float)yp1*0.002);
-            float t1=worldGenNoise.noise0_1((float)xp2*0.002,(float)yp2*0.002);
-            float t2=worldGenNoise.noise0_1((float)xp3*0.002,(float)yp3*0.002);
-            float t3=worldGenNoise.noise0_1((float)xp4*0.002,(float)yp4*0.002);
-            float t4=worldGenNoise.noise0_1((float)xp5*0.002,(float)yp5*0.002);
-            float t5=worldGenNoise.noise0_1((float)xp6*0.002,(float)yp6*0.002);
-            float t6=worldGenNoise.noise0_1((float)xp7*0.002,(float)yp7*0.002);
-            float t7=worldGenNoise.noise0_1((float)xp8*0.002,(float)yp8*0.002);
+            float perlin2choice=objectNoise.noise0_1((float)xp*0.002,(float)yp*0.002);
 
             float choice=worldGenNoise.noise0_1((float)xp*0.002,(float)yp*0.002);
 
             if(choice>0.74)
             {
                 blocks[i][j] = new Water();
-                txtLoader->setWaterTexture(*blocks[i][j]);
+                txtLoader->chooseTexture(*blocks[i][j],i,j,offsetX,offsetY,WATER,0.74);
                 water.push_back(blocks[i][j]);
             }
             else if(choice>0.64)
             {
                 blocks[i][j] = new Sand();
 
-                if(t0<=0.64&&t1<=0.64&&t7<=0.64)
-                {
-                    txtLoader->setSandTexture(*blocks[i][j],5);
-                }
-                else if(t2<=0.64&&t1<=0.64&&t3<=0.64)
-                {
-                    txtLoader->setSandTexture(*blocks[i][j],6);
-                }
-                else if(t3<=0.64&&t4<=0.64&&t5<=0.64)
-                {
-                    txtLoader->setSandTexture(*blocks[i][j],8);
-                }
-                else if(t5<=0.64&&t6<=0.64&&t7<=0.64)
-                {
-                    txtLoader->setSandTexture(*blocks[i][j],7);
-                }
-                else if(t1<=0.64)
-                {
-                    txtLoader->setSandTexture(*blocks[i][j],4);
-                }
-                else if(t3<=0.64)
-                {
-                    txtLoader->setSandTexture(*blocks[i][j],3);
-                }
-                else if(t5<=0.64)
-                {
-                    txtLoader->setSandTexture(*blocks[i][j],2);
-                }
-                else if(t7<=0.64)
-                {
-                    txtLoader->setSandTexture(*blocks[i][j],1);
-                }
-                else
-                {
-                    txtLoader->setSandTexture(*blocks[i][j],0);
-                }
+                txtLoader->chooseTexture(*blocks[i][j],i,j,offsetX,offsetY,SAND,0.64);
+
                 sand.push_back(blocks[i][j]);
             }
             else if(choice>0.32)
             {
                 if(perlin2choice<0.60)
                 {
-                    if(rand()%20)
+                    if((static_cast<int>(perlin2choice*100)%5))
                         blocks[i][j] = new Grass();
                     else
                     {
@@ -116,42 +51,7 @@ Chunk::Chunk(int offX,int offY,siv::PerlinNoise& perlin,TextureLoader* txtLoader
             else
             {
                 blocks[i][j] = new Stone();
-                if(t0>0.32&&t1>0.32&&t7>0.32)
-                {
-                    txtLoader->setStoneTexture(*blocks[i][j],8);
-                }
-                else if(t2>0.32&&t1>0.32&&t3>0.32)
-                {
-                    txtLoader->setStoneTexture(*blocks[i][j],7);
-                }
-                else if(t3>0.32&&t4>0.32&&t5>0.32)
-                {
-                    txtLoader->setStoneTexture(*blocks[i][j],6);
-                }
-                else if(t5>0.32&&t6>0.32&&t7>0.32)
-                {
-                    txtLoader->setStoneTexture(*blocks[i][j],5);
-                }
-                else if(t1>0.32)
-                {
-                    txtLoader->setStoneTexture(*blocks[i][j],4);
-                }
-                else if(t3>0.32)
-                {
-                    txtLoader->setStoneTexture(*blocks[i][j],3);
-                }
-                else if(t5>0.32)
-                {
-                    txtLoader->setStoneTexture(*blocks[i][j],2);
-                }
-                else if(t7>0.32)
-                {
-                    txtLoader->setStoneTexture(*blocks[i][j],1);
-                }
-                else
-                {
-                    txtLoader->setStoneTexture(*blocks[i][j],0);
-                }
+                txtLoader->chooseTexture(*blocks[i][j],i,j,offsetX,offsetY,STONE,0.32);
                 stone.push_back(blocks[i][j]);
             }
 
