@@ -5,7 +5,7 @@
 int main()
 {
     srand(time(NULL));
-    sf::RenderWindow window(sf::VideoMode(1920, 1080),"",sf::Style::Default);
+    sf::RenderWindow window(sf::VideoMode(1920, 1080),"",sf::Style::Fullscreen);
     window.setFramerateLimit(60);
 
     Game game(window);

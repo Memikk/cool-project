@@ -9,6 +9,11 @@ enum gameState{MENU,INGAME};
 
 class Game
 {
+    sf::Text fps;
+    sf::Font font;
+    float mFrame;
+    int mFps;
+
     sf::RenderWindow* window;
     EventHandler evHandler;
     TextureLoader* txtLoader;

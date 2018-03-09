@@ -9,6 +9,7 @@ enum blockType{GRASS,SAND,STONE,WATER};
 extern siv::PerlinNoise worldGenNoise;
 extern siv::PerlinNoise objectNoise;
 extern sf::Clock animationClock;
+extern sf::Clock fpsClock;
 extern int speed;
 extern int BLOCK_SIZE;
 extern int CHUNK_SIZE;
