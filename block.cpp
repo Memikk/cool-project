@@ -24,7 +24,7 @@ void Block::draw(sf::RenderWindow& window)
 
 Grass::Grass(bool tree,bool plant):Block(),tree(tree),plant(plant)
 {
-    //setFillColor(sf::Color::White);
+    setFillColor(sf::Color::White);
 
     if(tree)
     {
