@@ -28,7 +28,7 @@ Grass::Grass(bool tree,bool plant):Block(),tree(tree),plant(plant)
 
     if(tree)
     {
-        object.setScale(5,5);
+        object.setScale(1,1);
         collision=true;
     }
     else
@@ -45,7 +45,7 @@ void Grass::setObjectTexture(sf::Texture& t,int offset)
 {
     sf::IntRect r;
     if(plant) r=sf::IntRect(0,20*offset,20,20);
-    else r=sf::IntRect(0,10*offset,10,10);
+    else r=sf::IntRect(0,BLOCK_SIZE*offset,BLOCK_SIZE,BLOCK_SIZE);
     object.setTextureRect(r);
     object.setTexture(t);
 }
@@ -80,7 +80,7 @@ void Water::nextFrame()
 {
     sf::IntRect tRect(BLOCK_SIZE*frame,BLOCK_SIZE*type,BLOCK_SIZE,BLOCK_SIZE);
     frame++;
-    if(frame>5) frame=0;
+    if(frame>4) frame=0;
     setTextureRect(tRect);
 
 

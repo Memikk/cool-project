@@ -31,6 +31,13 @@ void TextureLoader::chooseTexture(Block& block,int i,int j,int offsetX,int offse
     float t5=worldGenNoise.noise0_1((float)xp6*0.002,(float)yp6*0.002);
     float t6=worldGenNoise.noise0_1((float)xp7*0.002,(float)yp7*0.002);
     float t7=worldGenNoise.noise0_1((float)xp8*0.002,(float)yp8*0.002);
+    float t8=worldGenNoise.noise0_1((float)xp9*0.002,(float)yp7*0.002);
+    float t9=worldGenNoise.noise0_1((float)xp10*0.002,(float)yp8*0.002);
+    float t10=worldGenNoise.noise0_1((float)xp11*0.002,(float)yp7*0.002);
+    float t11=worldGenNoise.noise0_1((float)xp12*0.002,(float)yp8*0.002);
+    float t12=worldGenNoise.noise0_1((float)xp13*0.002,(float)yp8*0.002);
+    float t13=worldGenNoise.noise0_1((float)xp14*0.002,(float)yp8*0.002);
+    float t14=worldGenNoise.noise0_1((float)xp15*0.002,(float)yp8*0.002);
 
     if(t0<=value&&t1<=value&&t7<=value)
     {
@@ -38,15 +45,15 @@ void TextureLoader::chooseTexture(Block& block,int i,int j,int offsetX,int offse
     }
     else if(t2<=value&&t1<=value&&t3<=value)
     {
-        setTexture(block,type,6);
+        setTexture(block,type,8);
     }
     else if(t3<=value&&t4<=value&&t5<=value)
     {
-        setTexture(block,type,8);
+        setTexture(block,type,7);
     }
     else if(t5<=value&&t6<=value&&t7<=value)
     {
-        setTexture(block,type,7);
+        setTexture(block,type,6);
     }
     else if(t1<=value)
     {
@@ -64,10 +71,19 @@ void TextureLoader::chooseTexture(Block& block,int i,int j,int offsetX,int offse
     {
         setTexture(block,type,1);
     }
+
+
+
+
+
     else
     {
         setTexture(block,type,0);
     }
+
+
+
+
 }
 
 void TextureLoader::setTexture(Block& block,blockType type,int choice)
