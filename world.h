@@ -33,7 +33,7 @@ public:
     World(TextureLoader* tloader);
     Player& getPlayer(){return player;};
     bool exist(int x,int y);
-    bool blockCollision(sf::Vector2f pos);
+    Block* blockCollision(sf::Vector2f pos);
     Chunk& getChunk(int x,int y);
     void generateChunks();
     void popChunks(int x,int y);

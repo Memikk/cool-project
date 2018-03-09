@@ -102,6 +102,9 @@ void TextureLoader::setTexture(Block& block,blockType type,int choice)
     case STONE:
         block.setTexture(stone);
         break;
+    case GRASS:
+        block.setTexture(grass);
+        break;
     }
 }
 
