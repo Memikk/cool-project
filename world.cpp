@@ -128,7 +128,7 @@ void World::popChunks(int x,int y)
 
 void World::update()
 {
-    vector<bool> collisions;
+    vector<Block*> collisions;
     if(!player.animating)
     {
         collisions.push_back(blockCollision(sf::Vector2f(player.getPosition().x-BLOCK_SIZE,player.getPosition().y-BLOCK_SIZE)));
@@ -154,7 +154,7 @@ bool World::exist(int x,int y)
     return false;
 }
 
-bool World::blockCollision(sf::Vector2f pos)
+Block* World::blockCollision(sf::Vector2f pos)
 {
     int ox,oy;
 
@@ -177,10 +177,7 @@ bool World::blockCollision(sf::Vector2f pos)
     ix=abs((pos.x-tx)/BLOCK_SIZE);
     iy=abs((pos.y-ty)/BLOCK_SIZE);
 
-    if(getChunk(ox,oy).blocks[ix][iy]->collision)
-        return true;
-    else
-        return false;
+    return *getChunk(ox,oy).blocks[ix][iy];;
 }
 
 Chunk& World::getChunk(int x,int y)

@@ -15,7 +15,7 @@ void Player::draw(sf::RenderWindow& window)
     window.draw(*this);
 }
 
-void Player::update(vector<bool>& collisions)
+void Player::update(vector<Block*>& collisions)
 {
     //cout<<"PLAYER UPDATE"<<endl;
     moving();
@@ -64,18 +64,20 @@ void Player::moving()
     }
 }
 
-void Player::animate(vector<bool>& collisions)
+void Player::animate(vector<Block*>& collisions)
 {
-    sf::Vector2f test=getPosition()+vel;
+    sf::RectangleShape temp;
+    temp.setPosition(getPosition()+vel);
+
     bool dontMove=false;
-//    for(auto& c:collisions)
-//    {
-//        if(c.getGlobalBounds().intersects(test))
-//        {
-//            dontMove=true;
-//            break;
-//        }
-//    }
+    for(auto& c:collisions)
+    {
+        if(c->getGlobalBounds().intersects(temp.getGlobalBounds()))
+        {
+            dontMove=true;
+            break;
+        }
+    }
     if(!dontMove) move(vel);
     background.setPosition(getPosition()-background.getSize()/2.f);
 //    if(desiredPos!=getPosition())
