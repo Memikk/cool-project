@@ -2,8 +2,8 @@
 
 void TextureLoader::chooseTexture(Block& block,int i,int j,int offsetX,int offsetY,blockType type,float value)
 {
-    int xp1,xp2,xp3,xp4,xp5,xp6,xp7,xp8;
-    int yp1,yp2,yp3,yp4,yp5,yp6,yp7,yp8;
+    int xp1,xp2,xp3,xp4,xp5,xp6,xp7,xp8,xp9,xp10,xp11,xp12,xp13,xp14,xp15;
+    int yp1,yp2,yp3,yp4,yp5,yp6,yp7,yp8,yp9,yp10,yp11,yp12,yp13,yp14,yp15;
 
     xp1=offsetX+(i-1)*BLOCK_SIZE;
     xp2=offsetX+i    *BLOCK_SIZE;
@@ -31,13 +31,13 @@ void TextureLoader::chooseTexture(Block& block,int i,int j,int offsetX,int offse
     float t5=worldGenNoise.noise0_1((float)xp6*0.002,(float)yp6*0.002);
     float t6=worldGenNoise.noise0_1((float)xp7*0.002,(float)yp7*0.002);
     float t7=worldGenNoise.noise0_1((float)xp8*0.002,(float)yp8*0.002);
-    float t8=worldGenNoise.noise0_1((float)xp9*0.002,(float)yp7*0.002);
-    float t9=worldGenNoise.noise0_1((float)xp10*0.002,(float)yp8*0.002);
-    float t10=worldGenNoise.noise0_1((float)xp11*0.002,(float)yp7*0.002);
-    float t11=worldGenNoise.noise0_1((float)xp12*0.002,(float)yp8*0.002);
-    float t12=worldGenNoise.noise0_1((float)xp13*0.002,(float)yp8*0.002);
-    float t13=worldGenNoise.noise0_1((float)xp14*0.002,(float)yp8*0.002);
-    float t14=worldGenNoise.noise0_1((float)xp15*0.002,(float)yp8*0.002);
+    float t8=worldGenNoise.noise0_1((float)xp9*0.002,(float)yp9*0.002);
+    float t9=worldGenNoise.noise0_1((float)xp10*0.002,(float)yp10*0.002);
+    float t10=worldGenNoise.noise0_1((float)xp11*0.002,(float)yp11*0.002);
+    float t11=worldGenNoise.noise0_1((float)xp12*0.002,(float)yp12*0.002);
+    float t12=worldGenNoise.noise0_1((float)xp13*0.002,(float)yp13*0.002);
+    float t13=worldGenNoise.noise0_1((float)xp14*0.002,(float)yp14*0.002);
+    float t14=worldGenNoise.noise0_1((float)xp15*0.002,(float)yp15*0.002);
 
     if(t0<=value&&t1<=value&&t7<=value)
     {
