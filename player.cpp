@@ -31,11 +31,11 @@ void Player::moving()
 
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
     {
-        vel.y=5;
+        vel.y=speed;
     }
     else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
     {
-        vel.y=-5;
+        vel.y=-speed;
     }
     else
     {
@@ -45,11 +45,11 @@ void Player::moving()
 
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
     {
-        vel.x=-5;
+        vel.x=-speed;
     }
     else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
     {
-        vel.x=5;
+        vel.x=speed;
     }
     else
     {
