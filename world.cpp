@@ -76,23 +76,23 @@ void Chunk::draw(sf::RenderWindow& window)
     {
         w->animate();
         w->draw(window);
-        w->setFillColor(sf::Color::White);
+        //w->setFillColor(sf::Color::White);
     }
     for(auto &s:sand)
     {
         s->draw(window);
-        s->setFillColor(sf::Color::White);
+        //s->setFillColor(sf::Color::White);
     }
     for(auto &s:stone)
     {
         s->draw(window);
-        s->setFillColor(sf::Color::White);
+        //s->setFillColor(sf::Color::White);
     }
     for(auto &g:grass)
     {
         g->draw(window);
         window.draw(g->object);
-        g->setFillColor(sf::Color::White);
+        //g->setFillColor(sf::Color::White);
     }
 }
 
@@ -158,7 +158,7 @@ void World::update()
     collisions.push_back(blockCollision(sf::Vector2f(ppos.x-BLOCK_SIZE,ppos.y+BLOCK_SIZE)));
     collisions.push_back(blockCollision(sf::Vector2f(ppos.x-BLOCK_SIZE,ppos.y)));
 
-    for(auto& c:collisions) c->setFillColor(sf::Color::Red);
+    //for(auto& c:collisions) c->setFillColor(sf::Color::Red);
     player.update(collisions);
 }
 

@@ -2,7 +2,7 @@
 
 int BLOCK_SIZE=50;
 int CHUNK_SIZE=16;
-int speed=4;
+float speed=3.5;
 sf::Clock animationClock;
 sf::Clock fpsClock;
 siv::PerlinNoise worldGenNoise(rand());

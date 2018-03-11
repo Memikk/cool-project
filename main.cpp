@@ -5,7 +5,10 @@
 int main()
 {
     srand(time(NULL));
-    sf::RenderWindow window(sf::VideoMode(1920, 1080),"",sf::Style::Fullscreen);
+    sf::ContextSettings settings;
+    //settings.antialiasingLevel=8;
+    sf::RenderWindow window(sf::VideoMode(1920, 1080),"",sf::Style::Default,settings);
+    window.setVerticalSyncEnabled(true);
     window.setFramerateLimit(60);
 
     Game game(window);

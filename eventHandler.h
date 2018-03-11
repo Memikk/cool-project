@@ -1,5 +1,6 @@
 #ifndef EVENTHANDLER_H_INCLUDED
 #define EVENTHANDLER_H_INCLUDED
+#include "globals.h"
 
 struct EventHandler
 {

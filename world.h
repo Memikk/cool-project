@@ -31,6 +31,7 @@ class World
     TextureLoader* txtLoader;
 public:
     World(TextureLoader* tloader);
+    World(){};
     Player& getPlayer(){return player;};
     bool exist(int x,int y);
     Block* blockCollision(sf::Vector2f pos);

@@ -3,6 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include "perlinNoise.hpp"
 #include "block.h"
+#include "thread.h"
 
 class Block;
 enum blockType{GRASS,SAND,STONE,WATER};
@@ -10,7 +11,7 @@ extern siv::PerlinNoise worldGenNoise;
 extern siv::PerlinNoise objectNoise;
 extern sf::Clock animationClock;
 extern sf::Clock fpsClock;
-extern int speed;
+extern float speed;
 extern int BLOCK_SIZE;
 extern int CHUNK_SIZE;
 

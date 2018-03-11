@@ -1,9 +1,9 @@
 #ifndef GAME_H_INCLUDED
 #define GAME_H_INCLUDED
-#include <SFML/Graphics.hpp>
 #include "eventHandler.h"
 #include "world.h"
 #include "textureLoader.h"
+#include "globals.h"
 
 enum gameState{MENU,INGAME};
 
@@ -13,6 +13,7 @@ class Game
     sf::Font font;
     float mFrame;
     int mFps;
+    void countFPS();
 
     sf::RenderWindow* window;
     EventHandler evHandler;
