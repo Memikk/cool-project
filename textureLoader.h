@@ -14,6 +14,7 @@ class TextureLoader
     sf::Texture* water;
     sf::Texture* stone;
     sf::Texture* grass;
+    sf::Texture* dirt;
     sf::Texture* tree;
     sf::Texture* plants;
 
@@ -29,6 +30,7 @@ public:
         water=new sf::Texture();
         stone=new sf::Texture();
         grass=new sf::Texture();
+        dirt=new sf::Texture();
         tree=new sf::Texture();
         plants=new sf::Texture();
         sheep=new sf::Texture();
@@ -39,6 +41,7 @@ public:
         if(water->loadFromFile("resources/textures/water.png")) cout<<"Wczytano teksture wody"<<endl;
         if(stone->loadFromFile("resources/textures/stone.png")) cout<<"Wczytano teksture kamienia"<<endl;
         if(grass->loadFromFile("resources/textures/grass.png")) cout<<"Wczytano teksture trawy"<<endl;
+        if(dirt->loadFromFile("resources/textures/dirt.png")) cout<<"Wczytano teksture ziemi"<<endl;
         if(tree->loadFromFile("resources/textures/tree.png")) cout<<"Wczytano teksture drzewa"<<endl;
         if(plants->loadFromFile("resources/textures/plants.png")) cout<<"Wczytano teksture roslin"<<endl;
         if(sheep->loadFromFile("resources/textures/sheep.png")) cout<<"Wczytano teksture owcy"<<endl;

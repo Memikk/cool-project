@@ -2,7 +2,7 @@
 #define BLOCK_H_INCLUDED
 #include "globals.h"
 
-enum blockType{GRASS,SAND,WATER};
+enum blockType{NOBLOCK,GRASS,SAND,WATER,DIRT};
 enum objectType{NOTHING,TREE,STONE,PLANT};
 class Object : public sf::Sprite
 {
@@ -30,7 +30,7 @@ public:
     Object* object=nullptr;
     int i,j;
     float offsetX,offsetY;
-    blockType t;
+    blockType t=NOBLOCK;
     int type; // kolumna tekstury
     bool collision=false;
     bool base=true;
@@ -67,6 +67,14 @@ class Sand : public Block
 public:
     Sand();
     ~Sand(){};
+    void animate(){};
+};
+
+class Dirt : public Block
+{
+public:
+    Dirt();
+    ~Dirt(){};
     void animate(){};
 };
 

@@ -49,11 +49,18 @@ void Water::nextFrame()
     frame++;
     if(frame>4) frame=0;
     setTextureRect(tRect);
-
+    t=WATER;
 }
 
 Sand::Sand():Block()
 {
+    t=SAND;
     setFillColor(sf::Color::White);
-    base=false;
 }
+
+Dirt::Dirt():Block()
+{
+    t=DIRT;
+    setFillColor(sf::Color::White);
+}
+

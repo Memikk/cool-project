@@ -4,10 +4,9 @@ void Entity::wander()
 {
     int x=rand()%200*((rand()%2==0)?-1:1);
     int y=rand()%200*((rand()%2==0)?-1:1);
-    cout<<x<<" "<<y<<endl;
+
     desiredPos.x=x+getPosition().x;
     desiredPos.y=y+getPosition().y;
-    cout<<desiredPos.x<<" "<<desiredPos.y<<endl<<endl;
 }
 
 void Entity::moving()

@@ -8,11 +8,19 @@ Chunk::Chunk(int offX,int offY,siv::PerlinNoise& perlin,TextureLoader* txtLoader
         blocks[i] = new Block* [CHUNK_SIZE];
         for(int j=0; j<CHUNK_SIZE; j++)
         {
+            blocks[i][j] = nullptr;
             int xp=offsetX+i*BLOCK_SIZE;
             int yp=offsetY+j*BLOCK_SIZE;
 
             float objectPerlin=objectNoise.noise0_1((float)xp*0.002,(float)yp*0.002);
+            float dirtPerlin=dirtNoise.noise0_1((float)xp*0.002,(float)yp*0.002);
             float choice=worldGenNoise.noise0_1((float)xp*0.002,(float)yp*0.002);
+
+            if(dirtPerlin<0.30)
+            {
+                blocks[i][j] = new Dirt();
+                txtLoader->chooseTexture(*blocks[i][j],i,j,offsetX,offsetY,DIRT,0.20);
+            }
 
             if(choice>0.74)
             {
@@ -26,8 +34,11 @@ Chunk::Chunk(int offX,int offY,siv::PerlinNoise& perlin,TextureLoader* txtLoader
             }
             else
             {
-                blocks[i][j] = new Grass();
-                txtLoader->chooseTexture(*blocks[i][j],i,j,offsetX,offsetY,GRASS,0);
+                if(blocks[i][j]==nullptr)
+                {
+                    blocks[i][j] = new Grass();
+                    txtLoader->chooseTexture(*blocks[i][j],i,j,offsetX,offsetY,GRASS,0);
+                }
 
                 if(objectPerlin<0.45&&(int)(objectPerlin*100)%3)
                 {
@@ -201,7 +212,7 @@ void World::spawnEntities()
     {
         spawningClock.restart();
         cout<<"wrzucanie owcy"<<endl;
-        Entity *temp = new Sheep(player.getPosition());
+        Entity *temp = new Sheep(vh::randomPos(600,player));
         txtLoader->setTexture(*temp,SHEEP);
         entities.push_back(temp);
     }

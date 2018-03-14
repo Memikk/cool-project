@@ -14,6 +14,7 @@ class Player;
 enum direction{UP,RIGHT,DOWN,LEFT};
 extern siv::PerlinNoise worldGenNoise;
 extern siv::PerlinNoise objectNoise;
+extern siv::PerlinNoise dirtNoise;
 extern sf::Clock animationClock;
 extern sf::Clock fpsClock;
 extern sf::Clock spawningClock;
@@ -27,6 +28,7 @@ sf::Vector2f center(const sf::RectangleShape&);
 sf::Vector2f center(const sf::Sprite&);
 sf::Vector2f center(const Block& b);
 sf::Vector2f getSize(const sf::Sprite&);
+sf::Vector2f randomPos(int radius,const sf::Sprite& s);
 }
 #endif // GLOBALS_H_INCLUDED
 

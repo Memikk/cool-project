@@ -8,6 +8,7 @@ sf::Clock fpsClock;
 sf::Clock spawningClock;
 siv::PerlinNoise worldGenNoise;
 siv::PerlinNoise objectNoise;
+siv::PerlinNoise dirtNoise;
 
 sf::Vector2f vh::center(const sf::RectangleShape& r)
 {
@@ -28,4 +29,9 @@ sf::Vector2f vh::getSize(const sf::Sprite& s)
 {
     return sf::Vector2f(s.getGlobalBounds().left+s.getGlobalBounds().width,
                         s.getGlobalBounds().top+s.getGlobalBounds().height);
+}
+sf::Vector2f vh::randomPos(int radius,const sf::Sprite& s)
+{
+    return sf::Vector2f(s.getPosition().x+(rand()%radius)*((rand()%2)?-1:1),
+                        s.getPosition().y+(rand()%radius)*((rand()%2)?-1:1));
 }
