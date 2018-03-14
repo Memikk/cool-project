@@ -11,53 +11,40 @@ Chunk::Chunk(int offX,int offY,siv::PerlinNoise& perlin,TextureLoader* txtLoader
             int xp=offsetX+i*BLOCK_SIZE;
             int yp=offsetY+j*BLOCK_SIZE;
 
-            float perlin2choice=objectNoise.noise0_1((float)xp*0.002,(float)yp*0.002);
-
+            float objectPerlin=objectNoise.noise0_1((float)xp*0.002,(float)yp*0.002);
             float choice=worldGenNoise.noise0_1((float)xp*0.002,(float)yp*0.002);
 
             if(choice>0.74)
             {
                 blocks[i][j] = new Water();
                 txtLoader->chooseTexture(*blocks[i][j],i,j,offsetX,offsetY,WATER,0.74);
-                water.push_back(blocks[i][j]);
             }
             else if(choice>0.64)
             {
                 blocks[i][j] = new Sand();
-
                 txtLoader->chooseTexture(*blocks[i][j],i,j,offsetX,offsetY,SAND,0.64);
-
-                sand.push_back(blocks[i][j]);
-            }
-            else if(choice>0.32)
-            {
-                if(perlin2choice<0.60)
-                {
-                    if((static_cast<int>(perlin2choice*100)%5))
-                        blocks[i][j] = new Grass();
-                    else
-                    {
-                        blocks[i][j] = new Grass(false,true);
-                        txtLoader->setPlantTexture(*blocks[i][j]);
-                    }
-                }
-                else
-                {
-                    blocks[i][j] = new Grass(true);
-                    txtLoader->setTreeTexture(*blocks[i][j]);
-                }
-                txtLoader->chooseTexture(*blocks[i][j],i,j,offsetX,offsetY,GRASS,0.32);
-                grass.push_back(static_cast<Grass*>(blocks[i][j]));
             }
             else
             {
-                blocks[i][j] = new Stone();
-                txtLoader->chooseTexture(*blocks[i][j],i,j,offsetX,offsetY,STONE,0);
-                stone.push_back(blocks[i][j]);
+                blocks[i][j] = new Grass();
+                txtLoader->chooseTexture(*blocks[i][j],i,j,offsetX,offsetY,GRASS,0);
+
+                if(objectPerlin<0.45&&(int)(objectPerlin*100)%3)
+                {
+                    blocks[i][j]->object = new Tree();
+                    blocks[i][j]->collision=true;
+                    txtLoader->chooseTexture(*blocks[i][j]->object,i,j,offsetX,offsetY,TREE,0);
+                }
+                else if(objectPerlin>0.65)
+                {
+                    blocks[i][j]->object = new Stone();
+                    blocks[i][j]->collision=true;
+                    txtLoader->chooseTexture(*blocks[i][j]->object,i,j,offsetX,offsetY,STONE,0);
+                }
             }
 
             blocks[i][j]->setPosition(sf::Vector2f(xp,yp));
-            blocks[i][j]->initialize();
+            if(blocks[i][j]->object!=nullptr) blocks[i][j]->object->setPosition(sf::Vector2f(xp,yp));
         }
     }
 }
@@ -72,27 +59,17 @@ bool Chunk::operator==(const Chunk& chunk)
 
 void Chunk::draw(sf::RenderWindow& window)
 {
-    for(auto &w:water)
+    for(int i=0; i<CHUNK_SIZE; i++)
     {
-        w->animate();
-        w->draw(window);
-        //w->setFillColor(sf::Color::White);
-    }
-    for(auto &s:sand)
-    {
-        s->draw(window);
-        //s->setFillColor(sf::Color::White);
-    }
-    for(auto &s:stone)
-    {
-        s->draw(window);
-        //s->setFillColor(sf::Color::White);
-    }
-    for(auto &g:grass)
-    {
-        g->draw(window);
-        window.draw(g->object);
-        //g->setFillColor(sf::Color::White);
+        for(int j=0; j<CHUNK_SIZE; j++)
+        {
+            blocks[i][j]->draw(window);
+            if(blocks[i][j]->t==WATER)
+            {
+                blocks[i][j]->animate();
+            }
+            blocks[i][j]->setFillColor(sf::Color::White);
+        }
     }
 }
 
@@ -147,6 +124,7 @@ void World::popChunks(int x,int y)
 
 void World::update()
 {
+    //cout<<"TWORZENIE KOLIZJI"<<endl;
     vector<Block*> collisions;
     sf::Vector2f ppos=player.getPosition()+sf::Vector2f(BLOCK_SIZE/2.f,BLOCK_SIZE/2.f);
     collisions.push_back(blockCollision(sf::Vector2f(ppos.x-BLOCK_SIZE,ppos.y-BLOCK_SIZE)));
@@ -158,8 +136,18 @@ void World::update()
     collisions.push_back(blockCollision(sf::Vector2f(ppos.x-BLOCK_SIZE,ppos.y+BLOCK_SIZE)));
     collisions.push_back(blockCollision(sf::Vector2f(ppos.x-BLOCK_SIZE,ppos.y)));
 
-    //for(auto& c:collisions) c->setFillColor(sf::Color::Red);
+    for(auto& c:collisions)
+        c->setFillColor(sf::Color::Red);
+
+    //cout<<"PLAYER UPDATE"<<endl;
     player.update(collisions);
+    //cout<<"MINING"<<endl;
+    player.mine(collisions);
+
+    for(auto& e:entities)
+    {
+        e->update();
+    }
 }
 
 bool World::exist(int x,int y)
@@ -207,14 +195,33 @@ Chunk& World::getChunk(int x,int y)
     }
 }
 
+void World::spawnEntities()
+{
+    if(spawningClock.getElapsedTime().asSeconds()>3.0)
+    {
+        spawningClock.restart();
+        cout<<"wrzucanie owcy"<<endl;
+        Entity *temp = new Sheep(player.getPosition());
+        txtLoader->setTexture(*temp,SHEEP);
+        entities.push_back(temp);
+    }
+}
+
 void World::draw(sf::RenderWindow& window)
 {
     window.draw(player.getBackground());
-    for(auto c:chunks)
+    for(auto& c:chunks)
     {
+        //cout<<"RYSOWANIE CHUNKA"<<endl;
         c.draw(window);
+        //cout<<"PO RYSOWANIU CHUNKA"<<endl;
     }
+    //cout<<"PO WSZYSTKICH CHUNKACH"<<endl;
     if(animationClock.getElapsedTime().asMilliseconds()>500)
         animationClock.restart();
     player.draw(window);
+    for(auto& e:entities)
+    {
+        window.draw(*e);
+    }
 }

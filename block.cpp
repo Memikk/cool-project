@@ -17,52 +17,19 @@ Block::Block(sf::Vector2f pos)
     setFillColor(sf::Color::Transparent);
 }
 
-void Block::draw(sf::RenderWindow& window)
-{
-    window.draw(*this);
-}
-
-Grass::Grass(bool tree,bool plant):Block(),tree(tree),plant(plant)
+Grass::Grass():Block()
 {
     setFillColor(sf::Color::White);
-
-    if(tree)
-    {
-        object.setScale(1,1);
-        collision=true;
-    }
-    else
-    {
-        object.setScale(2.5,2.5);
-    }
+    type=GRASS;
 }
 Grass::Grass(const Grass& g):Block(g)
 {
     object=g.object;
 }
 
-void Grass::setObjectTexture(sf::Texture& t,int offset)
-{
-    sf::IntRect r;
-    if(plant) r=sf::IntRect(0,20*offset,20,20);
-    else r=sf::IntRect(0,BLOCK_SIZE*offset,BLOCK_SIZE,BLOCK_SIZE);
-    object.setTextureRect(r);
-    object.setTexture(t);
-}
-
-void Grass::initialize()
-{
-    object.setPosition(getPosition());
-}
-
-void Grass::draw(sf::RenderWindow& window)
-{
-    window.draw(*this);
-    window.draw(object);
-}
-
 Water::Water():Block()
 {
+    t=WATER;
     setFillColor(sf::Color::White);
     base=false;
     collision=true;
@@ -83,18 +50,10 @@ void Water::nextFrame()
     if(frame>4) frame=0;
     setTextureRect(tRect);
 
-
 }
 
 Sand::Sand():Block()
 {
     setFillColor(sf::Color::White);
     base=false;
-}
-
-Stone::Stone():Block()
-{
-    setFillColor(sf::Color::White);
-    base=false;
-    collision=true;
 }

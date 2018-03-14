@@ -10,10 +10,6 @@ using namespace std;
 
 class Chunk
 {
-    vector<Block*> water;
-    vector<Block*> sand;
-    vector<Grass*> grass;
-    vector<Block*> stone;
 public:
     Block*** blocks;
     int ix,iy;
@@ -28,6 +24,7 @@ class World
     siv::PerlinNoise perlin;
     Player player;
     vector<Chunk> chunks;
+    vector<Entity*> entities;
     TextureLoader* txtLoader;
 public:
     World(TextureLoader* tloader);
@@ -36,6 +33,7 @@ public:
     bool exist(int x,int y);
     Block* blockCollision(sf::Vector2f pos);
     Chunk& getChunk(int x,int y);
+    void spawnEntities();
     void generateChunks();
     void popChunks(int x,int y);
     void update();

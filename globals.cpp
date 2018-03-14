@@ -5,8 +5,9 @@ int CHUNK_SIZE=16;
 float speed=3.5;
 sf::Clock animationClock;
 sf::Clock fpsClock;
-siv::PerlinNoise worldGenNoise(rand());
-siv::PerlinNoise objectNoise(rand());
+sf::Clock spawningClock;
+siv::PerlinNoise worldGenNoise;
+siv::PerlinNoise objectNoise;
 
 sf::Vector2f vh::center(const sf::RectangleShape& r)
 {

@@ -2,14 +2,18 @@
 
 Game::Game(sf::RenderWindow& win)
 {
+    worldGenNoise.reseed(rand()*48325673492);
+    objectNoise.reseed(rand()*53580345638);
+    cout<<"wylosowano seed mapy"<<endl;
+
     txtLoader = new TextureLoader();
     world = new World(txtLoader);
     cout<<"txt loader i world stworzony"<<endl;
 
-    font.loadFromFile("arial.ttf");
+    font.loadFromFile("resources/fonts/arial.ttf");
     fps.setFont(font);
     fps.setCharacterSize(14);
-    fps.setColor(sf::Color(255,200,50));
+    fps.setFillColor(sf::Color(255,200,50));
     fps.setOutlineColor(sf::Color::Black);
     fps.setOutlineThickness(2);
 
@@ -44,20 +48,29 @@ void Game::update()
     view.setCenter(vh::center(world->getPlayer()));
     window->setView(view);
 
+    //cout<<"DOLACZAM WATEK"<<endl;
     chunkGeneratingThread.join();
 }
 
 void Game::draw()
 {
+    //cout<<"NOWY WATEK"<<endl;
     std::thread fpsThread(&Game::countFPS,this);
 
+    //cout<<"CZYSZCZENIE"<<endl;
     window->clear();
 
+    //cout<<"WRZUCANIE JEDNOSTEK"<<endl;
+    world->spawnEntities();
+
+    //cout<<"RYSOWANIE SWIATA"<<endl;
     world->draw(*window);
 
+    //cout<<"DOLACZENIE WATKU FPS"<<endl;
     fpsThread.join();
     window->draw(fps);
 
+    //cout<<"POKAZYWANIE"<<endl;
     window->display();
 }
 

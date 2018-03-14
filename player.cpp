@@ -23,6 +23,25 @@ void Player::update(vector<Block*>& collisions)
     //cout<<"PO ANIMACJI GRACZA"<<endl;
 }
 
+void Player::mine(vector<Block*>& collisions)
+{
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+    {
+        if(dir==LEFT&&collisions[7]->collision)
+        {
+            Block *temp = new Grass();
+            //cout<<"usuwanie kolizji"<<endl;
+            temp->setPosition(collisions[7]->getPosition());
+            temp->setSize(collisions[7]->getSize());
+            //cout<<"usuwanie wskaznika"<<endl;
+            Block *temp2 = collisions[7];
+            temp->collision=true;
+            collisions[7] = temp;
+            delete temp2;
+        }
+    }
+}
+
 void Player::moving(vector<Block*>& collisions)
 {
     bool movingX=true;
@@ -31,10 +50,12 @@ void Player::moving(vector<Block*>& collisions)
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
     {
         vel.y=speed;
+        dir=DOWN;
     }
     else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
     {
         vel.y=-speed;
+        dir=UP;
     }
     else
     {
@@ -49,10 +70,12 @@ void Player::moving(vector<Block*>& collisions)
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
     {
         vel.x=-speed;
+        dir=LEFT;
     }
     else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
     {
         vel.x=speed;
+        dir=RIGHT;
     }
     else
     {

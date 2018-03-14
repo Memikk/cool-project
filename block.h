@@ -2,33 +2,54 @@
 #define BLOCK_H_INCLUDED
 #include "globals.h"
 
+enum blockType{GRASS,SAND,WATER};
+enum objectType{NOTHING,TREE,STONE,PLANT};
+class Object : public sf::Sprite
+{
+    public:
+    objectType type=NOTHING;
+    Object(){};
+    objectType getType(){return type;};
+};
+
+class Tree : public Object
+{
+    public:
+    Tree():Object(){type=TREE;};
+};
+
+class Stone : public Object
+{
+    public:
+    Stone():Object(){type=STONE;};
+};
+
 class Block : public sf::RectangleShape
 {
 public:
-    int type;
+    Object* object=nullptr;
+    int i,j;
+    float offsetX,offsetY;
+    blockType t;
+    int type; // kolumna tekstury
     bool collision=false;
     bool base=true;
     Block();
     Block(const Block& b);
     Block(sf::Vector2f pos);
-    virtual void setObjectTexture(sf::Texture& t,int offset=0){};
-    virtual void initialize()=0;
+    virtual ~Block(){};
     virtual void animate()=0;
-    virtual void draw(sf::RenderWindow& window);
+    void draw(sf::RenderWindow& window){window.draw(*this);if(object!=nullptr)window.draw(*object);};
+    blockType getType(){return t;};
 };
 
 class Grass : public Block
 {
-    bool tree=false;
-    bool plant=false;
 public:
-    sf::Sprite object;
-    Grass(bool tree=false,bool plant=false);
+    Grass();
     Grass(const Grass& g);
-    void setObjectTexture(sf::Texture& t,int offset=0);
-    void initialize();
+    ~Grass(){};
     void animate(){};
-    void draw(sf::RenderWindow& window);
 };
 
 class Water : public Block
@@ -36,7 +57,7 @@ class Water : public Block
     int frame=0;
 public:
     Water();
-    void initialize(){};
+    ~Water(){};
     void animate();
     void nextFrame();
 };
@@ -45,15 +66,7 @@ class Sand : public Block
 {
 public:
     Sand();
-    void initialize(){};
-    void animate(){};
-};
-
-class Stone : public Block
-{
-public:
-    Stone();
-    void initialize(){};
+    ~Sand(){};
     void animate(){};
 };
 

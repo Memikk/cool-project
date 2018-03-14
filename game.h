@@ -2,7 +2,6 @@
 #define GAME_H_INCLUDED
 #include "eventHandler.h"
 #include "world.h"
-#include "textureLoader.h"
 #include "globals.h"
 
 enum gameState{MENU,INGAME};
