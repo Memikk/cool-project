@@ -27,14 +27,6 @@ Grass::Grass(const Grass& g):Block(g)
     object=g.object;
 }
 
-Water::Water():Block()
-{
-    t=WATER;
-    setFillColor(sf::Color::White);
-    base=false;
-    collision=true;
-}
-
 void Water::animate()
 {
     if(animationClock.getElapsedTime().asMilliseconds()>500)
@@ -45,22 +37,21 @@ void Water::animate()
 
 void Water::nextFrame()
 {
-    sf::IntRect tRect(BLOCK_SIZE*frame,BLOCK_SIZE*type,BLOCK_SIZE,BLOCK_SIZE);
+    sf::IntRect tRect(BLOCK_SIZE*frame,BLOCK_SIZE*column,BLOCK_SIZE,BLOCK_SIZE);
     frame++;
     if(frame>4) frame=0;
     setTextureRect(tRect);
-    t=WATER;
 }
 
 Sand::Sand():Block()
 {
-    t=SAND;
+    type=SAND;
     setFillColor(sf::Color::White);
 }
 
 Dirt::Dirt():Block()
 {
-    t=DIRT;
+    type=DIRT;
     setFillColor(sf::Color::White);
 }
 

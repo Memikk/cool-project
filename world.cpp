@@ -2,6 +2,7 @@
 
 Chunk::Chunk(int offX,int offY,siv::PerlinNoise& perlin,TextureLoader* txtLoader):ix(offX),iy(offY),offsetX(offX*CHUNK_SIZE*BLOCK_SIZE),offsetY(offY*CHUNK_SIZE*BLOCK_SIZE)
 {
+
     blocks = new Block** [CHUNK_SIZE];
     for(int i=0; i<CHUNK_SIZE; i++)
     {
@@ -16,21 +17,27 @@ Chunk::Chunk(int offX,int offY,siv::PerlinNoise& perlin,TextureLoader* txtLoader
             float dirtPerlin=dirtNoise.noise0_1((float)xp*0.002,(float)yp*0.002);
             float choice=worldGenNoise.noise0_1((float)xp*0.002,(float)yp*0.002);
 
-            if(dirtPerlin<0.30)
+            if(dirtPerlin<0.30&&choice<=0.64)
             {
                 blocks[i][j] = new Dirt();
                 txtLoader->chooseTexture(*blocks[i][j],i,j,offsetX,offsetY,DIRT,0.20);
             }
 
-            if(choice>0.74)
-            {
-                blocks[i][j] = new Water();
-                txtLoader->chooseTexture(*blocks[i][j],i,j,offsetX,offsetY,WATER,0.74);
-            }
+//            if(choice>0.74)
+//            {
+//                blocks[i][j] = new Water();
+//                txtLoader->chooseTexture(*blocks[i][j],i,j,offsetX,offsetY,WATER,0.74);
+//            }
             else if(choice>0.64)
             {
                 blocks[i][j] = new Sand();
                 txtLoader->chooseTexture(*blocks[i][j],i,j,offsetX,offsetY,SAND,0.64);
+                if(choice>0.75)
+                {
+                    blocks[i][j]->object = new Water();
+                    blocks[i][j]->collision = true;
+                    txtLoader->chooseTexture(*blocks[i][j]->object,i,j,offsetX,offsetY,WATER,0.75);
+                }
             }
             else
             {
@@ -55,7 +62,8 @@ Chunk::Chunk(int offX,int offY,siv::PerlinNoise& perlin,TextureLoader* txtLoader
             }
 
             blocks[i][j]->setPosition(sf::Vector2f(xp,yp));
-            if(blocks[i][j]->object!=nullptr) blocks[i][j]->object->setPosition(sf::Vector2f(xp,yp));
+            if(blocks[i][j]->object!=nullptr)
+                blocks[i][j]->object->setPosition(sf::Vector2f(xp,yp));
         }
     }
 }
@@ -74,10 +82,12 @@ void Chunk::draw(sf::RenderWindow& window)
     {
         for(int j=0; j<CHUNK_SIZE; j++)
         {
+            //if(i==0||j==0)
+                //blocks[i][j]->setFillColor(sf::Color::Black);
             blocks[i][j]->draw(window);
-            if(blocks[i][j]->t==WATER)
+            if(blocks[i][j]->object&&blocks[i][j]->object->type==WATER)
             {
-                blocks[i][j]->animate();
+                blocks[i][j]->object->animate();
             }
             blocks[i][j]->setFillColor(sf::Color::White);
         }
@@ -109,9 +119,9 @@ void World::generateChunks()
     player.ci=offsetX;
     player.cj=offsetY;
 
-    for(int i=-1; i<2; i++)
+    for(int i=-2; i<3; i++)
     {
-        for(int j=-1; j<2; j++)
+        for(int j=-2; j<3; j++)
         {
             if(!exist(offsetX+i,offsetY+j))
             {
@@ -161,7 +171,7 @@ void World::update()
     }
 }
 
-bool World::exist(int x,int y)
+bool World::exist(int x,int y) const
 {
     for(auto c:chunks)
     {
@@ -194,16 +204,17 @@ Block* World::blockCollision(sf::Vector2f pos)
     ix=abs((pos.x-tx)/BLOCK_SIZE);
     iy=abs((pos.y-ty)/BLOCK_SIZE);
 
-    return getChunk(ox,oy).blocks[ix][iy];;
+    return getChunk(ox,oy)->blocks[ix][iy];
 }
 
-Chunk& World::getChunk(int x,int y)
+Chunk* World::getChunk(int x,int y)
 {
     for(auto &c:chunks)
     {
         if(c.ix==x&&c.iy==y)
-            return c;
+            return &c;
     }
+    return nullptr;
 }
 
 void World::spawnEntities()

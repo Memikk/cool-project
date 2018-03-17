@@ -1,5 +1,69 @@
 #include "world.h"
 
+void TextureLoader::chooseTexture(Block& block,vector<Block*> n)
+{
+    blockType type=block.type;
+    if(n[0]->type!=type&&n[1]->type!=type&&n[7]->type!=type&&n[6]->type!=type&&n[5]->type!=type)
+    {
+        setTexture(block,type,10);
+    }
+    else if(n[7]->type!=type&&n[6]->type!=type&&n[5]->type!=type&&n[4]->type!=type&&n[3]->type!=type)
+    {
+        setTexture(block,type,11);
+    }
+    else if(n[5]->type!=type&&n[4]->type!=type&&n[3]->type!=type&&n[2]->type!=type&&n[1]->type!=type)
+    {
+        setTexture(block,type,12);
+    }
+    else if(n[3]->type!=type&&n[2]->type!=type&&n[1]->type!=type&&n[0]->type!=type&&n[7]->type!=type)
+    {
+        setTexture(block,type,9);
+    }
+    else if(n[7]->type!=type&&n[3]->type!=type)
+    {
+        setTexture(block,type,14);
+    }
+    else if(n[1]->type!=type&&n[5]->type!=type)
+    {
+        setTexture(block,type,15);
+    }
+    else if(n[0]->type!=type&&n[1]->type!=type&&n[7]->type!=type)
+    {
+        setTexture(block,type,5);
+    }
+    else if(n[2]->type!=type&&n[1]->type!=type&&n[3]->type!=type)
+    {
+        setTexture(block,type,8);
+    }
+    else if(n[3]->type!=type&&n[4]->type!=type&&n[5]->type!=type)
+    {
+        setTexture(block,type,7);
+    }
+    else if(n[5]->type!=type&&n[6]->type!=type&&n[7]->type!=type)
+    {
+        setTexture(block,type,6);
+    }
+    else if(n[1]->type!=type)
+    {
+        setTexture(block,type,4);
+    }
+    else if(n[3]->type!=type)
+    {
+        setTexture(block,type,3);
+    }
+    else if(n[5]->type!=type)
+    {
+        setTexture(block,type,2);
+    }
+    else if(n[7]->type!=type)
+    {
+        setTexture(block,type,1);
+    }
+    else
+    {
+        setTexture(block,type,0);
+    }
+}
 void TextureLoader::chooseTexture(Block& block,int i,int j,int offsetX,int offsetY,blockType type,float value)
 {
     block.i=i;
@@ -197,17 +261,14 @@ void TextureLoader::setTexture(Block& block,blockType type,int choice)
 {
     //cout<<"USTAWIENIE"<<endl;
     sf::IntRect textureRect(0,choice*BLOCK_SIZE,BLOCK_SIZE,BLOCK_SIZE);
-    block.type=choice;
-    block.t=type;
+    block.column=choice;
+    block.type=type;
     block.setTextureRect(textureRect);
     switch(type)
     {
     case SAND:
         block.setTexture(sand);
         break;
-    case WATER:
-        block.setTexture(water);
-        break;;
     case GRASS:
         block.setTexture(grass);
         break;
@@ -221,6 +282,7 @@ void TextureLoader::setTexture(Object& object,objectType type,int choice)
 {
     sf::IntRect textureRect(0,choice*BLOCK_SIZE,BLOCK_SIZE,BLOCK_SIZE);
     object.type=type;
+    object.column=choice;
     object.setTextureRect(textureRect);
     switch(type)
     {
@@ -230,8 +292,8 @@ void TextureLoader::setTexture(Object& object,objectType type,int choice)
     case STONE:
         object.setTexture(*stone);
         break;;
-    case PLANT:
-        object.setTexture(*plants);
+    case WATER:
+        object.setTexture(*water);
         break;
     }
 }

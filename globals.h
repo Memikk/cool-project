@@ -11,6 +11,7 @@ using namespace std;
 class Block;
 class TextureLoader;
 class Player;
+class World;
 enum direction{UP,RIGHT,DOWN,LEFT};
 extern siv::PerlinNoise worldGenNoise;
 extern siv::PerlinNoise objectNoise;

@@ -62,7 +62,7 @@ void Player::moving(vector<Block*>& collisions)
         if(vel.y<0.01&&vel.y>-0.01)
             vel.y=0;
         else if(vel.y)
-            vel.y*=0.7;
+            vel.y*=0.85;
         if(movingY)
             movingY=false;
     }
@@ -82,7 +82,7 @@ void Player::moving(vector<Block*>& collisions)
         if(vel.x<0.01&&vel.x>-0.01)
             vel.x=0;
         else if(vel.x)
-            vel.x*=0.7;
+            vel.x*=0.85;
         if(movingX)
             movingX=false;
     }

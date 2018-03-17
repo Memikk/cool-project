@@ -54,6 +54,8 @@ public:
     void chooseTexture(Object& object,int i,int j,int offsetX,int offsetY,objectType type,float value);
     void setTexture(Object& object,objectType type,int choice);
 
+    void chooseTexture(Block& block,vector<Block*> n);
+
     void setTexture(Entity& entity,entityType);
 
     void setPlayerTexture(Player& p)
