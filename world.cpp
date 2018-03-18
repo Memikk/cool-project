@@ -116,6 +116,8 @@ void World::generateChunks()
     else
         offsetY=floor(player.getPosition().y/(CHUNK_SIZE*BLOCK_SIZE));
 
+    std::thread popChunksThread(&World::popChunks,*this,offsetX,offsetY);
+
     player.ci=offsetX;
     player.cj=offsetY;
 
@@ -129,7 +131,7 @@ void World::generateChunks()
             }
         }
     }
-    popChunks(offsetX,offsetY);
+    popChunksThread.join();
 }
 
 void World::popChunks(int x,int y)
@@ -143,9 +145,18 @@ void World::popChunks(int x,int y)
     }
 }
 
+void World::updateEntities()
+{
+    for(auto& e:entities)
+    {
+        e->update();
+    }
+}
+
 void World::update()
 {
     //cout<<"TWORZENIE KOLIZJI"<<endl;
+    std::thread ue(&World::updateEntities,*this);
     vector<Block*> collisions;
     sf::Vector2f ppos=player.getPosition()+sf::Vector2f(BLOCK_SIZE/2.f,BLOCK_SIZE/2.f);
     collisions.push_back(blockCollision(sf::Vector2f(ppos.x-BLOCK_SIZE,ppos.y-BLOCK_SIZE)));
@@ -162,13 +173,8 @@ void World::update()
 
     //cout<<"PLAYER UPDATE"<<endl;
     player.update(collisions);
-    //cout<<"MINING"<<endl;
-    player.mine(collisions);
 
-    for(auto& e:entities)
-    {
-        e->update();
-    }
+    ue.join();
 }
 
 bool World::exist(int x,int y) const

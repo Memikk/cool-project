@@ -36,6 +36,7 @@ public:
     void spawnEntities();
     void generateChunks();
     void popChunks(int x,int y);
+    void updateEntities();
     void update();
     void draw(sf::RenderWindow& window);
 };

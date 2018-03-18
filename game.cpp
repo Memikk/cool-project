@@ -85,6 +85,6 @@ void Game::countFPS()
 
     ++mFrame;
 
-    fps.setString("FPS="+to_string(mFps));
+    fps.setString("FPS="+std::to_string(mFps));
     fps.setPosition(world->getPlayer().getPosition().x-460,world->getPlayer().getPosition().y-260);
 }
