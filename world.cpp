@@ -119,9 +119,9 @@ void World::generateChunks()
     player.ci=offsetX;
     player.cj=offsetY;
 
-    for(int i=-2; i<3; i++)
+    for(int i=-1; i<2; i++)
     {
-        for(int j=-2; j<3; j++)
+        for(int j=-1; j<2; j++)
         {
             if(!exist(offsetX+i,offsetY+j))
             {
@@ -219,7 +219,7 @@ Chunk* World::getChunk(int x,int y)
 
 void World::spawnEntities()
 {
-    if(spawningClock.getElapsedTime().asSeconds()>3.0)
+    if(spawningClock.getElapsedTime().asSeconds()>1.0)
     {
         spawningClock.restart();
         cout<<"wrzucanie owcy"<<endl;

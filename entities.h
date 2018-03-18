@@ -7,7 +7,7 @@ class Entity : public sf::Sprite
 {
 public:
     sf::Clock wanderClock;
-    Entity(){};
+    Entity(){changeTextureRect(0);};
     Entity(sf::Vector2f pos){setPosition(pos);desiredPos=pos;};
     entityType type;
     sf::Vector2f vel,desiredPos;
@@ -15,6 +15,7 @@ public:
     void moving();
     void update();
     void animate();
+    void changeTextureRect(int value);
 };
 
 class Sheep : public Entity

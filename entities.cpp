@@ -11,16 +11,28 @@ void Entity::wander()
 
 void Entity::moving()
 {
-    vel.x=(desiredPos.x>getPosition().x)?1:-1;
-    vel.y=(desiredPos.y>getPosition().y)?1:-1;
-
     if(abs(desiredPos.x-getPosition().x)<2)
     {
         vel.x=0;
     }
+    else vel.x=(desiredPos.x>getPosition().x)?1:-1;
     if(abs(desiredPos.y-getPosition().y)<2)
     {
         vel.y=0;
+    }
+    else vel.y=(desiredPos.y>getPosition().y)?1:-1;
+
+    if(vel.y<0)
+    {
+        if(vel.x<0) changeTextureRect(1);
+        else if(vel.x>0) changeTextureRect(3);
+        else changeTextureRect(2);
+    }
+    else
+    {
+        if(vel.x<0) changeTextureRect(1);
+        else if(vel.x>0) changeTextureRect(3);
+        else changeTextureRect(0);
     }
 
 //    for(auto& c:collisions)
@@ -35,6 +47,12 @@ void Entity::moving()
 //    }
 
     move(vel);
+}
+
+void Entity::changeTextureRect(int value)
+{
+    sf::IntRect t(0,BLOCK_SIZE*value,BLOCK_SIZE,BLOCK_SIZE);
+    setTextureRect(t);
 }
 
 void Entity::update()
