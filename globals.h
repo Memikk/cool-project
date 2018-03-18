@@ -6,6 +6,7 @@
 #include "block.h"
 #include <vector>
 #include <iostream>
+#include <sstream>
 using namespace std;
 
 class Block;
@@ -22,6 +23,7 @@ extern sf::Clock spawningClock;
 extern float speed;
 extern int BLOCK_SIZE;
 extern int CHUNK_SIZE;
+extern string to_string(int value);
 
 namespace vh
 {

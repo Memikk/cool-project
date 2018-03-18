@@ -10,6 +10,13 @@ siv::PerlinNoise worldGenNoise;
 siv::PerlinNoise objectNoise;
 siv::PerlinNoise dirtNoise;
 
+extern string to_string(int value)
+{
+    stringstream ss;
+    ss<<value;
+    return ss.str();
+}
+
 sf::Vector2f vh::center(const sf::RectangleShape& r)
 {
     return sf::Vector2f(r.getPosition().x+r.getSize().x/2,
