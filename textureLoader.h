@@ -61,7 +61,7 @@ public:
     void setPlayerTexture(Player& p)
     {
         p.setTexture(*player);
-        p.setScale(25/20.0,25/20.0);
+        p.setScale(0.85,0.85);
     }
 };
 

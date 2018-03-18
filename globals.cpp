@@ -42,3 +42,11 @@ sf::Vector2f vh::randomPos(int radius,const sf::Sprite& s)
     return sf::Vector2f(s.getPosition().x+(rand()%radius)*((rand()%2)?-1:1),
                         s.getPosition().y+(rand()%radius)*((rand()%2)?-1:1));
 }
+float vh::distance(sf::Vector2f x,sf::Vector2f y)
+{
+    return sqrt((x.x-y.x)*(x.x-y.x)+(x.y-y.y)*(x.y-y.y));
+}
+float vh::distance(float xa,float ya,float xb,float yb)
+{
+    return sqrt((xa-xb)*(xa-xb)+(ya-yb)*(ya-yb));
+}

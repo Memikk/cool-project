@@ -307,6 +307,7 @@ void TextureLoader::setTexture(Entity& entity,entityType type)
     {
     case SHEEP:
         entity.setTexture(*sheep,true);
+        entity.setScale(0.75,0.75);
         break;
     case COW:
         entity.setTexture(*cow);

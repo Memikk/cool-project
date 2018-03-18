@@ -22,7 +22,7 @@ public:
     void update(vector<Block*>& collisions);
     void moving(vector<Block*>& collisions);
     void animate(vector<Block*>& collisions);
-    void mine(vector<Block*>& cllisions);
+    void changeTextureRect(int value);
 };
 
 #endif // PLAYER_H_INCLUDED

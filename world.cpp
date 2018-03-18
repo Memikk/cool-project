@@ -225,11 +225,11 @@ Chunk* World::getChunk(int x,int y)
 
 void World::spawnEntities()
 {
-    if(spawningClock.getElapsedTime().asSeconds()>1.0)
+    if(spawningClock.getElapsedTime().asMilliseconds()>rand()%2000+2000)
     {
         spawningClock.restart();
         cout<<"wrzucanie owcy"<<endl;
-        Entity *temp = new Sheep(vh::randomPos(600,player));
+        Entity *temp = new Sheep(vh::randomPos(600,player),rand()%9999);
         txtLoader->setTexture(*temp,SHEEP);
         entities.push_back(temp);
     }

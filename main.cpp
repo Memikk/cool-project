@@ -1,10 +1,10 @@
 #include "game.h"
-#include <time.h>
+#include <ctime>
 #include <cstdlib>
 
 int main()
 {
-    srand(time(NULL));
+    srand( (unsigned) time(NULL) * getpid());
     sf::ContextSettings settings;
     //settings.antialiasingLevel=8;
     sf::RenderWindow window(sf::VideoMode(1920, 1080),"",sf::Style::Fullscreen,settings);
