@@ -4,15 +4,34 @@
 
 struct EventHandler
 {
-    EventHandler(){};
+    EventHandler(sf::RenderWindow& w):window(&w){};
     sf::Event event;
-    void checkEvents(sf::RenderWindow& window)
+    sf::RenderWindow* window;
+    void checkEvents(sf::View& view)
     {
-        while(window.pollEvent(event))
+        while(window->pollEvent(event))
         {
             if(event.type == sf::Event::Closed||
               (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape))
-                window.close();
+                window->close();
+            else if(event.type == sf::Event::MouseWheelScrolled)
+            {
+                cout<<event.mouseWheelScroll.delta<<endl;
+                if(event.mouseWheelScroll.delta>0)
+                {
+                    if(view.getSize().x>400) zoom=-5;
+                    else zoom=0;
+                }
+                else if(event.mouseWheelScroll.delta<0)
+                {
+                    if(view.getSize().x<1500) zoom=5;
+                    else zoom=0;
+                }
+                else zoom=0;
+                view.setSize(view.getSize()+sf::Vector2f(zoom*16,zoom*9));
+                cout<<view.getSize().x<<" "<<view.getSize().y<<endl;
+                window->setView(view);
+            }
         }
     }
 };

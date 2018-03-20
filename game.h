@@ -15,10 +15,10 @@ class Game
     void countFPS();
 
     sf::RenderWindow* window;
-    EventHandler evHandler;
+    EventHandler* evHandler;
     TextureLoader* txtLoader;
     World* world;
-    sf::View view;
+    sf::View* view;
 public:
     Game(sf::RenderWindow& win);
     void update();

@@ -8,6 +8,8 @@ Game::Game(sf::RenderWindow& win)
 
     txtLoader = new TextureLoader();
     world = new World(txtLoader);
+    evHandler = new EventHandler(win);
+    view = new sf::View();
     cout<<"txt loader i world stworzony"<<endl;
 
     font.loadFromFile("resources/fonts/arial.ttf");
@@ -25,9 +27,9 @@ Game::Game(sf::RenderWindow& win)
     txtLoader->setPlayerTexture(world->getPlayer());
     cout<<"ustawiono teksture gracza"<<endl;
 
-    view.setCenter(world->getPlayer().getPosition().x+BLOCK_SIZE/2,world->getPlayer().getPosition().y+BLOCK_SIZE/2);
-    view.setSize(sf::Vector2f(1920/2,1080/2));
-    window->setView(view);
+    view->setCenter(world->getPlayer().getPosition().x+BLOCK_SIZE/2,world->getPlayer().getPosition().y+BLOCK_SIZE/2);
+    view->setSize(sf::Vector2f(1920/2,1080/2));
+    window->setView(*view);
     cout<<"gra stworzona"<<endl;
 
     world->generateChunks();
@@ -39,14 +41,14 @@ void Game::update()
     std::thread chunkGeneratingThread(&World::generateChunks,world);
 
     //cout<<"SPRAWDZAM EVENTY"<<endl;
-    evHandler.checkEvents(*window);
+    evHandler->checkEvents(*view);
 
     //cout<<"AKTUALIZUJE SWIAT"<<endl;
     world->update();
 
     //cout<<"USTAWIAM WIDOK"<<endl;
-    view.setCenter(vh::center(world->getPlayer()));
-    window->setView(view);
+    view->setCenter(vh::center(world->getPlayer()));
+    window->setView(*view);
 
     //cout<<"DOLACZAM WATEK"<<endl;
     chunkGeneratingThread.join();
@@ -86,5 +88,6 @@ void Game::countFPS()
     ++mFrame;
 
     fps.setString("FPS="+std::to_string(mFps));
-    fps.setPosition(world->getPlayer().getPosition().x-460,world->getPlayer().getPosition().y-260);
+    fps.setPosition(window->getView().getCenter().x-window->getView().getSize().x/2,
+                    window->getView().getCenter().y-window->getView().getSize().y/2);
 }

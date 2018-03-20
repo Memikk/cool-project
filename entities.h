@@ -6,9 +6,9 @@ enum entityType{SHEEP,COW,PIG};
 class Entity : public sf::Sprite
 {
 public:
+    int counter=0;
     int id;
     bool wandering=false;
-    sf::Clock wanderClock;
     Entity(int id):id(id){changeTextureRect(0);};
     Entity(sf::Vector2f pos,int id):id(id){setPosition(pos);desiredPos=pos;};
     entityType type;

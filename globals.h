@@ -24,6 +24,7 @@ extern sf::Clock animationClock;
 extern sf::Clock fpsClock;
 extern sf::Clock spawningClock;
 extern float speed;
+extern float zoom;
 extern int BLOCK_SIZE;
 extern int CHUNK_SIZE;
 

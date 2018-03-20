@@ -228,7 +228,6 @@ void World::spawnEntities()
     if(spawningClock.getElapsedTime().asMilliseconds()>rand()%2000+2000)
     {
         spawningClock.restart();
-        cout<<"wrzucanie owcy"<<endl;
         Entity *temp = new Sheep(vh::randomPos(600,player),rand()%9999);
         txtLoader->setTexture(*temp,SHEEP);
         entities.push_back(temp);

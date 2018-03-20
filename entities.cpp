@@ -2,11 +2,11 @@
 
 void Entity::wander()
 {
-    int x=(rand()*id)%200;
+    int x,y;
+    x=(rand()*id)%200;
     x*=((rand()%2==0)?-1:1);
-    int y=(rand()*id)%200;
+    y=(rand()*id)%200;
     y*=((rand()%2==0)?-1:1);
-    cout<<x<<" "<<y<<endl;
 
     desiredPos.x=x+getPosition().x;
     desiredPos.y=y+getPosition().y;
@@ -19,24 +19,32 @@ void Entity::moving()
     {
         vel.x=0;
     }
-    else vel.x=(desiredPos.x>getPosition().x)?1:-1;
+    else
+        vel.x=(desiredPos.x>getPosition().x)?1:-1;
     if(abs(desiredPos.y-getPosition().y)<2)
     {
         vel.y=0;
     }
-    else vel.y=(desiredPos.y>getPosition().y)?1:-1;
+    else
+        vel.y=(desiredPos.y>getPosition().y)?1:-1;
 
     if(vel.y<0)
     {
-        if(vel.x<0) changeTextureRect(1);
-        else if(vel.x>0) changeTextureRect(3);
-        else changeTextureRect(2);
+        if(vel.x<0)
+            changeTextureRect(1);
+        else if(vel.x>0)
+            changeTextureRect(3);
+        else
+            changeTextureRect(2);
     }
     else
     {
-        if(vel.x<0) changeTextureRect(1);
-        else if(vel.x>0) changeTextureRect(3);
-        else changeTextureRect(0);
+        if(vel.x<0)
+            changeTextureRect(1);
+        else if(vel.x>0)
+            changeTextureRect(3);
+        else
+            changeTextureRect(0);
     }
 
 //    for(auto& c:collisions)
@@ -50,15 +58,24 @@ void Entity::moving()
 //        if(c->collision&&temp2.getGlobalBounds().intersects(c->getGlobalBounds())) vel.y=0;
 //    }
 
+    //JUMPING
     if(vh::distance(desiredPos,getPosition())>10)
     {
-        if(vel.y<0) vel.y-=offsetY/2;
-        else if(vel.y>0) vel.y+=offsetY/2;
-        if(vel.x>0) vel.x-=abs(vel.y)/2;
-        else if(vel.x<0) vel.x+=abs(vel.y)/2;
+        if(vel.y<0)
+            vel.y-=offsetY/2;
+        else if(vel.y>0)
+            vel.y+=offsetY/2;
+        else
+            vel.y+=offsetY/2.4;
+        if(vel.x>0)
+            vel.x-=abs(vel.y)/2.4;
+        else if(vel.x<0)
+            vel.x+=abs(vel.y)/2.4;
     }
-    if(vel.x==0&&vel.y==0) wandering=false;
-    else wandering=true;
+    if(vel.x==0&&vel.y==0)
+        wandering=false;
+    else
+        wandering=true;
     move(vel.x,vel.y);
 }
 
@@ -70,9 +87,11 @@ void Entity::changeTextureRect(int value)
 
 void Entity::update()
 {
-    if(!wandering&&wanderClock.getElapsedTime().asMilliseconds()>3275)
+    counter++;
+    if(!wandering&&counter>300+rand()%180)
     {
-        wanderClock.restart();
+        //wanderClock.restart();
+        counter=0;
         wander();
     }
     moving();
