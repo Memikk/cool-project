@@ -12,7 +12,7 @@ void Entity::wander()
     desiredPos.y=y+getPosition().y;
 }
 
-void Entity::moving()
+void Entity::moving(vector<Block*> collisions)
 {
     float offsetY = (sin(vh::distance(desiredPos,getPosition())*16*M_PI/180));
     if(abs(desiredPos.x-getPosition().x)<2)
@@ -47,16 +47,24 @@ void Entity::moving()
             changeTextureRect(0);
     }
 
-//    for(auto& c:collisions)
-//    {
-//        sf::Sprite temp1=*this;
-//        sf::Sprite temp2=*this;
-//
-//        temp1.move(vel.x,0);
-//        if(c->collision&&temp1.getGlobalBounds().intersects(c->getGlobalBounds())) vel.x=0;
-//        temp2.move(0,vel.y);
-//        if(c->collision&&temp2.getGlobalBounds().intersects(c->getGlobalBounds())) vel.y=0;
-//    }
+    for(auto& c:collisions)
+    {
+        sf::Sprite temp1=*this;
+        sf::Sprite temp2=*this;
+
+        temp1.move(vel.x,0);
+        if(c->collision&&temp1.getGlobalBounds().intersects(c->getGlobalBounds()))
+        {
+            vel.x=0;
+            desiredPos=getPosition();
+        }
+        temp2.move(0,vel.y);
+        if(c->collision&&temp2.getGlobalBounds().intersects(c->getGlobalBounds()))
+        {
+            vel.y=0;
+            desiredPos=getPosition();
+        }
+    }
 
     //JUMPING
     if(vh::distance(desiredPos,getPosition())>10)
@@ -85,7 +93,7 @@ void Entity::changeTextureRect(int value)
     setTextureRect(t);
 }
 
-void Entity::update()
+void Entity::update(vector<Block*> collisions)
 {
     counter++;
     if(!wandering&&counter>300+rand()%180)
@@ -94,5 +102,5 @@ void Entity::update()
         counter=0;
         wander();
     }
-    moving();
+    moving(collisions);
 }

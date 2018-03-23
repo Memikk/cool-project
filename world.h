@@ -33,11 +33,13 @@ public:
     bool exist(int x,int y) const;
     Block* blockCollision(sf::Vector2f pos);
     Chunk* getChunk(int x,int y);
+    vector<Block*> getCollisions(sf::Vector2f pos);
     void spawnEntities();
     void generateChunks();
     void popChunks(int x,int y);
-    void updateEntities();
-    void update();
+    void updateEntities(const sf::View& view);
+    void updateChunks();
+    void update(sf::RenderWindow& window);
     void draw(sf::RenderWindow& window);
 };
 

@@ -44,7 +44,7 @@ void Game::update()
     evHandler->checkEvents(*view);
 
     //cout<<"AKTUALIZUJE SWIAT"<<endl;
-    world->update();
+    world->update(*window);
 
     //cout<<"USTAWIAM WIDOK"<<endl;
     view->setCenter(vh::center(world->getPlayer()));

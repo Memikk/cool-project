@@ -14,8 +14,8 @@ public:
     entityType type;
     sf::Vector2f vel,desiredPos;
     void wander();
-    void moving();
-    void update();
+    void moving(vector<Block*> collisions);
+    void update(vector<Block*> collisions);
     void animate();
     void changeTextureRect(int value);
 };

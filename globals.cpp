@@ -9,7 +9,7 @@ sf::Clock fpsClock;
 sf::Clock spawningClock;
 siv::PerlinNoise worldGenNoise;
 siv::PerlinNoise objectNoise;
-siv::PerlinNoise dirtNoise;
+siv::PerlinNoise objectNoise2;
 
 extern string to_string(int value)
 {

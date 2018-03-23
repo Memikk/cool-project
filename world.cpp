@@ -13,57 +13,54 @@ Chunk::Chunk(int offX,int offY,siv::PerlinNoise& perlin,TextureLoader* txtLoader
             int xp=offsetX+i*BLOCK_SIZE;
             int yp=offsetY+j*BLOCK_SIZE;
 
-            float objectPerlin=objectNoise.noise0_1((float)xp*0.002,(float)yp*0.002);
-            float dirtPerlin=dirtNoise.noise0_1((float)xp*0.002,(float)yp*0.002);
             float choice=worldGenNoise.noise0_1((float)xp*0.002,(float)yp*0.002);
+            float choice2=objectNoise.noise0_1((float)xp*0.002,(float)yp*0.002);
+            float choice3=objectNoise2.noise0_1((float)xp*0.002,(float)yp*0.002);
 
-            if(dirtPerlin<0.30&&choice<=0.64)
+            blocks[i][j] = new Dirt();
+            txtLoader->chooseTexture(*blocks[i][j],i,j,offsetX,offsetY,DIRT,0.0);
+
+            if(choice>0.25)
             {
-                blocks[i][j] = new Dirt();
-                txtLoader->chooseTexture(*blocks[i][j],i,j,offsetX,offsetY,DIRT,0.20);
+                blocks[i][j]->grass = new Grass();
+                txtLoader->chooseTexture(*blocks[i][j]->grass,i,j,offsetX,offsetY,GRASS,0.25,worldGenNoise);
             }
 
-//            if(choice>0.74)
-//            {
-//                blocks[i][j] = new Water();
-//                txtLoader->chooseTexture(*blocks[i][j],i,j,offsetX,offsetY,WATER,0.74);
-//            }
-            else if(choice>0.64)
+            if(choice>0.75)
             {
-                blocks[i][j] = new Sand();
-                txtLoader->chooseTexture(*blocks[i][j],i,j,offsetX,offsetY,SAND,0.64);
-                if(choice>0.75)
-                {
-                    blocks[i][j]->object = new Water();
-                    blocks[i][j]->collision = true;
-                    txtLoader->chooseTexture(*blocks[i][j]->object,i,j,offsetX,offsetY,WATER,0.75);
-                }
+                blocks[i][j]->object = new Water();
+                blocks[i][j]->collision = true;
+                txtLoader->chooseTexture(*blocks[i][j]->object,i,j,offsetX,offsetY,WATER,0.75,worldGenNoise);
             }
-            else
-            {
-                if(blocks[i][j]==nullptr)
-                {
-                    blocks[i][j] = new Grass();
-                    txtLoader->chooseTexture(*blocks[i][j],i,j,offsetX,offsetY,GRASS,0);
-                }
 
-                if(objectPerlin<0.45&&(int)(objectPerlin*100)%3)
+
+
+            if(blocks[i][j]->object==nullptr)
+            {
+                if(choice3>0.64)
                 {
-                    blocks[i][j]->object = new Tree();
-                    blocks[i][j]->collision=true;
-                    txtLoader->chooseTexture(*blocks[i][j]->object,i,j,offsetX,offsetY,TREE,0);
+                    blocks[i][j]->object = new Sand();
+                    txtLoader->chooseTexture(*blocks[i][j]->object,i,j,offsetX,offsetY,SAND,0.64,objectNoise2);
                 }
-                else if(objectPerlin>0.65)
+                else if(choice2>0.64)
                 {
                     blocks[i][j]->object = new Stone();
                     blocks[i][j]->collision=true;
-                    txtLoader->chooseTexture(*blocks[i][j]->object,i,j,offsetX,offsetY,STONE,0);
+                    txtLoader->chooseTexture(*blocks[i][j]->object,i,j,offsetX,offsetY,STONE,0.64,objectNoise);
+                }
+                else if(choice2<0.35&&(int)(choice2*100)%3)
+                {
+                    blocks[i][j]->object = new Tree();
+                    blocks[i][j]->collision=true;
+                    txtLoader->chooseTexture(*blocks[i][j]->object,i,j,offsetX,offsetY,TREE,0,objectNoise);
                 }
             }
 
             blocks[i][j]->setPosition(sf::Vector2f(xp,yp));
             if(blocks[i][j]->object!=nullptr)
                 blocks[i][j]->object->setPosition(sf::Vector2f(xp,yp));
+            if(blocks[i][j]->grass!=nullptr)
+                blocks[i][j]->grass->setPosition(sf::Vector2f(xp,yp));
         }
     }
 }
@@ -83,13 +80,15 @@ void Chunk::draw(sf::RenderWindow& window)
         for(int j=0; j<CHUNK_SIZE; j++)
         {
             //if(i==0||j==0)
-                //blocks[i][j]->setFillColor(sf::Color::Black);
+            //blocks[i][j]->setFillColor(sf::Color::Black);
             blocks[i][j]->draw(window);
             if(blocks[i][j]->object&&blocks[i][j]->object->type==WATER)
             {
                 blocks[i][j]->object->animate();
             }
             blocks[i][j]->setFillColor(sf::Color::White);
+            if(blocks[i][j]->object!=nullptr) blocks[i][j]->object->setColor(sf::Color::White);
+            if(blocks[i][j]->grass!=nullptr) blocks[i][j]->grass->setColor(sf::Color::White);
         }
     }
 }
@@ -145,46 +144,26 @@ void World::popChunks(int x,int y)
     }
 }
 
-void World::updateEntities()
+void World::updateEntities(const sf::View& view)
 {
     for(auto& e:entities)
     {
-        e->update();
+        sf::FloatRect f(view.getCenter().x-view.getSize().x/2,view.getCenter().y-view.getSize().y/2,
+                        view.getSize().x,view.getSize().y);
+        if(f.contains(e->getPosition())) e->update(getCollisions(e->getPosition()));
     }
 }
 
-void World::update()
+void World::update(sf::RenderWindow& window)
 {
     //cout<<"TWORZENIE KOLIZJI"<<endl;
-    std::thread ue(&World::updateEntities,*this);
-    vector<Block*> collisions;
-    sf::Vector2f ppos=player.getPosition()+sf::Vector2f(BLOCK_SIZE/2.f,BLOCK_SIZE/2.f);
-    collisions.push_back(blockCollision(sf::Vector2f(ppos.x-BLOCK_SIZE,ppos.y-BLOCK_SIZE)));
-    collisions.push_back(blockCollision(sf::Vector2f(ppos.x,ppos.y-BLOCK_SIZE)));
-    collisions.push_back(blockCollision(sf::Vector2f(ppos.x+BLOCK_SIZE,ppos.y-BLOCK_SIZE)));
-    collisions.push_back(blockCollision(sf::Vector2f(ppos.x+BLOCK_SIZE,ppos.y)));
-    collisions.push_back(blockCollision(sf::Vector2f(ppos.x+BLOCK_SIZE,ppos.y+BLOCK_SIZE)));
-    collisions.push_back(blockCollision(sf::Vector2f(ppos.x,ppos.y+BLOCK_SIZE)));
-    collisions.push_back(blockCollision(sf::Vector2f(ppos.x-BLOCK_SIZE,ppos.y+BLOCK_SIZE)));
-    collisions.push_back(blockCollision(sf::Vector2f(ppos.x-BLOCK_SIZE,ppos.y)));
-
-    for(auto& c:collisions)
-        c->setFillColor(sf::Color::Red);
+    std::thread ue(&World::updateEntities,*this,window.getView());
 
     //cout<<"PLAYER UPDATE"<<endl;
-    player.update(collisions);
+    vector<Block*> c=getCollisions(player.getPosition());
+    player.update(c);
 
     ue.join();
-}
-
-bool World::exist(int x,int y) const
-{
-    for(auto c:chunks)
-    {
-        if(c.ix==x&&c.iy==y)
-            return true;
-    }
-    return false;
 }
 
 Block* World::blockCollision(sf::Vector2f pos)
@@ -213,6 +192,40 @@ Block* World::blockCollision(sf::Vector2f pos)
     return getChunk(ox,oy)->blocks[ix][iy];
 }
 
+
+vector<Block*> World::getCollisions(sf::Vector2f ppos)
+{
+    vector<Block*> collisions;
+    ppos+=sf::Vector2f(25,25);
+    collisions.push_back(blockCollision(sf::Vector2f(ppos.x-BLOCK_SIZE,ppos.y-BLOCK_SIZE)));
+    collisions.push_back(blockCollision(sf::Vector2f(ppos.x,ppos.y-BLOCK_SIZE)));
+    collisions.push_back(blockCollision(sf::Vector2f(ppos.x+BLOCK_SIZE,ppos.y-BLOCK_SIZE)));
+    collisions.push_back(blockCollision(sf::Vector2f(ppos.x+BLOCK_SIZE,ppos.y)));
+    collisions.push_back(blockCollision(sf::Vector2f(ppos.x+BLOCK_SIZE,ppos.y+BLOCK_SIZE)));
+    collisions.push_back(blockCollision(sf::Vector2f(ppos.x,ppos.y+BLOCK_SIZE)));
+    collisions.push_back(blockCollision(sf::Vector2f(ppos.x-BLOCK_SIZE,ppos.y+BLOCK_SIZE)));
+    collisions.push_back(blockCollision(sf::Vector2f(ppos.x-BLOCK_SIZE,ppos.y)));
+
+    for(auto& c:collisions)
+    {
+        c->setFillColor(sf::Color::Red);
+        if(c->object!=nullptr) c->object->setColor(sf::Color::Blue);
+        //if(c->grass!=nullptr) c->grass->setColor(sf::Color::Blue);
+    }
+
+    return collisions;
+}
+
+bool World::exist(int x,int y) const
+{
+    for(auto c:chunks)
+    {
+        if(c.ix==x&&c.iy==y)
+            return true;
+    }
+    return false;
+}
+
 Chunk* World::getChunk(int x,int y)
 {
     for(auto &c:chunks)
@@ -232,6 +245,11 @@ void World::spawnEntities()
         txtLoader->setTexture(*temp,SHEEP);
         entities.push_back(temp);
     }
+}
+
+void World::updateChunks()
+{
+
 }
 
 void World::draw(sf::RenderWindow& window)

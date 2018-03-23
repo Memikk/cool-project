@@ -17,16 +17,6 @@ Block::Block(sf::Vector2f pos)
     setFillColor(sf::Color::Transparent);
 }
 
-Grass::Grass():Block()
-{
-    setFillColor(sf::Color::White);
-    type=GRASS;
-}
-Grass::Grass(const Grass& g):Block(g)
-{
-    object=g.object;
-}
-
 void Water::animate()
 {
     if(animationClock.getElapsedTime().asMilliseconds()>500)
@@ -41,12 +31,6 @@ void Water::nextFrame()
     frame++;
     if(frame>4) frame=0;
     setTextureRect(tRect);
-}
-
-Sand::Sand():Block()
-{
-    type=SAND;
-    setFillColor(sf::Color::White);
 }
 
 Dirt::Dirt():Block()

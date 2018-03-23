@@ -19,7 +19,7 @@ class World;
 enum direction{UP,RIGHT,DOWN,LEFT};
 extern siv::PerlinNoise worldGenNoise;
 extern siv::PerlinNoise objectNoise;
-extern siv::PerlinNoise dirtNoise;
+extern siv::PerlinNoise objectNoise2;
 extern sf::Clock animationClock;
 extern sf::Clock fpsClock;
 extern sf::Clock spawningClock;

@@ -2,13 +2,15 @@
 #define BLOCK_H_INCLUDED
 #include "globals.h"
 #include <vector>
+#include <iostream>
 using namespace std;
 
-enum blockType {NOBLOCK,GRASS,SAND,DIRT};
-enum objectType {NOTHING,TREE,STONE,PLANT,WATER};
+enum blockType {NOBLOCK,DIRT};
+enum objectType {NOTHING,TREE,STONE,PLANT,WATER,SAND,GRASS};
 class Object : public sf::Sprite
 {
 public:
+    bool side=true;
     int column; // kolumna tekstury
     objectType type=NOTHING;
     Object() {};
@@ -16,6 +18,15 @@ public:
     objectType getType()
     {
         return type;
+    };
+};
+
+class Grass : public Object
+{
+public:
+    Grass():Object()
+    {
+        type=GRASS;
     };
 };
 
@@ -49,11 +60,22 @@ public:
     void nextFrame();
 };
 
+class Sand : public Object
+{
+    public:
+    Sand():Object()
+    {
+        type=SAND;
+    };
+};
+
 class Block : public sf::RectangleShape
 {
 public:
     vector<Block*> collisions;
+    bool side=true;
     Object* object=nullptr;
+    Object* grass=nullptr;
     int i,j;
     float offsetX,offsetY;
     blockType type=NOBLOCK;
@@ -67,7 +89,12 @@ public:
     virtual void animate()=0;
     virtual void draw(sf::RenderWindow& window)
     {
-        window.draw(*this);
+        if(grass!=nullptr)
+        {
+            if(grass->side) window.draw(*this);
+            window.draw(*grass);
+        }
+        else window.draw(*this);
         if(object!=nullptr)
             window.draw(*object);
     };
@@ -75,29 +102,6 @@ public:
     {
         return type;
     };
-};
-
-class Grass : public Block
-{
-public:
-    Grass();
-    Grass(const Grass& g);
-    ~Grass() {};
-    void animate() {};
-    void draw(sf::RenderWindow& window)
-    {
-        window.draw(*this);
-        if(object!=nullptr)
-            window.draw(*object);
-    };
-};
-
-class Sand : public Block
-{
-public:
-    Sand();
-    ~Sand() {};
-    void animate() {};
 };
 
 class Dirt : public Block

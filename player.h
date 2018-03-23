@@ -8,11 +8,13 @@ using namespace std;
 
 class Player : public sf::Sprite
 {
+    int hp=100;
     sf::RectangleShape background;
     sf::Vector2f vel,acc;
     direction dir=DOWN;
     TextureLoader* txtLoader;
 public:
+    sf::Sprite hpBar;
     int ci,cj;
     sf::Vector2f centerOfBlock;
     bool animating=false;

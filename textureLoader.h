@@ -21,6 +21,8 @@ class TextureLoader
     sf::Texture* sheep;
     sf::Texture* cow;
     sf::Texture* pig;
+
+    sf::Texture* hpBar;
 public:
     TextureLoader(){};
     void load()
@@ -36,6 +38,7 @@ public:
         sheep=new sf::Texture();
         cow=new sf::Texture();
         pig=new sf::Texture();
+        hpBar=new sf::Texture();
         if(player->loadFromFile("resources/textures/player.png")) cout<<"Wczytano teksture gracza"<<endl;
         if(sand->loadFromFile("resources/textures/sand.png")) cout<<"Wczytano teksture piasku"<<endl;
         if(water->loadFromFile("resources/textures/water.png")) cout<<"Wczytano teksture wody"<<endl;
@@ -47,11 +50,12 @@ public:
         if(sheep->loadFromFile("resources/textures/sheep.png")) cout<<"Wczytano teksture owcy"<<endl;
         if(cow->loadFromFile("resources/textures/cow.png")) cout<<"Wczytano teksture krowy"<<endl;
         if(pig->loadFromFile("resources/textures/pig.png")) cout<<"Wczytano teksture swini"<<endl;
+        if(hpBar->loadFromFile("resources/textures/hpBar.png")) cout<<"Wczytano teksture paska zycia"<<endl;
     }
 
     void chooseTexture(Block& block,int i,int j,int offsetX,int offsetY,blockType type,float value);
     void setTexture(Block& block,blockType type,int choice);
-    void chooseTexture(Object& object,int i,int j,int offsetX,int offsetY,objectType type,float value);
+    void chooseTexture(Object& object,int i,int j,int offsetX,int offsetY,objectType type,float value,siv::PerlinNoise& perlin);
     void setTexture(Object& object,objectType type,int choice);
 
     void chooseTexture(Block& block,vector<Block*> n);
@@ -61,6 +65,7 @@ public:
     void setPlayerTexture(Player& p)
     {
         p.setTexture(*player);
+        p.hpBar.setTexture(*hpBar);
         p.setScale(0.85,0.85);
     }
 };

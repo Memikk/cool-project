@@ -8,10 +8,14 @@ Player::Player()
     background.setSize(sf::Vector2f(1920,1080));
     background.setFillColor(sf::Color(0,72,0));
     changeTextureRect(0);
+    hpBar.setScale(3,3);
 }
 
 void Player::draw(sf::RenderWindow& window)
 {
+    hpBar.setPosition(window.getView().getCenter().x-window.getView().getSize().x/2+30,
+                    window.getView().getCenter().y-window.getView().getSize().y/2+30);
+    window.draw(hpBar);
     window.draw(*this);
 }
 
