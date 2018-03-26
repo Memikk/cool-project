@@ -76,6 +76,7 @@ public:
     bool side=true;
     Object* object=nullptr;
     Object* grass=nullptr;
+    Object* cover=nullptr;
     int i,j;
     float offsetX,offsetY;
     blockType type=NOBLOCK;
@@ -92,9 +93,11 @@ public:
         if(grass!=nullptr)
         {
             if(grass->side) window.draw(*this);
-            window.draw(*grass);
+            if(cover!=nullptr&&cover->side) window.draw(*grass);
+            else if(cover==nullptr) window.draw(*grass);
         }
         else window.draw(*this);
+        if(cover!=nullptr) window.draw(*cover);
         if(object!=nullptr)
             window.draw(*object);
     };

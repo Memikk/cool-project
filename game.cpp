@@ -9,15 +9,9 @@ Game::Game(sf::RenderWindow& win)
     txtLoader = new TextureLoader();
     world = new World(txtLoader);
     evHandler = new EventHandler(win);
+    iface = new Interface();
     view = new sf::View();
     cout<<"txt loader i world stworzony"<<endl;
-
-    font.loadFromFile("resources/fonts/arial.ttf");
-    fps.setFont(font);
-    fps.setCharacterSize(14);
-    fps.setFillColor(sf::Color(255,200,50));
-    fps.setOutlineColor(sf::Color::Black);
-    fps.setOutlineThickness(2);
 
     window=&win;
     cout<<"ustawiono wskaznik na okno"<<endl;
@@ -57,7 +51,7 @@ void Game::update()
 void Game::draw()
 {
     //cout<<"NOWY WATEK"<<endl;
-    std::thread fpsThread(&Game::countFPS,this);
+    std::thread fpsThread(&Interface::update,iface);
 
     //cout<<"CZYSZCZENIE"<<endl;
     window->clear();
@@ -70,24 +64,9 @@ void Game::draw()
 
     //cout<<"DOLACZENIE WATKU FPS"<<endl;
     fpsThread.join();
-    window->draw(fps);
+
+    iface->draw(world->getPlayer(),*window);
 
     //cout<<"POKAZYWANIE"<<endl;
     window->display();
-}
-
-void Game::countFPS()
-{
-    if(fpsClock.getElapsedTime().asSeconds() >= 1.f)
-    {
-			mFps=mFrame;
-			mFrame=0;
-			fpsClock.restart();
-    }
-
-    ++mFrame;
-
-    fps.setString("FPS="+std::to_string(mFps));
-    fps.setPosition(window->getView().getCenter().x-window->getView().getSize().x/2,
-                    window->getView().getCenter().y-window->getView().getSize().y/2);
 }

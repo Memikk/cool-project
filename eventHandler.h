@@ -29,7 +29,6 @@ struct EventHandler
                 }
                 else zoom=0;
                 view.setSize(view.getSize()+sf::Vector2f(zoom*16,zoom*9));
-                cout<<view.getSize().x<<" "<<view.getSize().y<<endl;
                 window->setView(view);
             }
         }

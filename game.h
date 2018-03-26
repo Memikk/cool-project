@@ -3,20 +3,16 @@
 #include "eventHandler.h"
 #include "world.h"
 #include "globals.h"
+#include "interface.h"
 
 enum gameState{MENU,INGAME};
 
 class Game
 {
-    sf::Text fps;
-    sf::Font font;
-    float mFrame;
-    int mFps;
-    void countFPS();
-
     sf::RenderWindow* window;
     EventHandler* evHandler;
     TextureLoader* txtLoader;
+    Interface* iface;
     World* world;
     sf::View* view;
 public:

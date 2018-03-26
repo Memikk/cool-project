@@ -6,6 +6,7 @@
 #include <iostream>
 #include "perlinNoise.hpp"
 #include "textureLoader.h"
+
 using namespace std;
 
 class Chunk
@@ -21,6 +22,9 @@ public:
 
 class World
 {
+    sf::RectangleShape daynight;
+    int dayCounter=0;
+    int adder=2;
     siv::PerlinNoise perlin;
     Player player;
     vector<Chunk> chunks;

@@ -13,9 +13,6 @@ Player::Player()
 
 void Player::draw(sf::RenderWindow& window)
 {
-    hpBar.setPosition(window.getView().getCenter().x-window.getView().getSize().x/2+30,
-                    window.getView().getCenter().y-window.getView().getSize().y/2+30);
-    window.draw(hpBar);
     window.draw(*this);
 }
 

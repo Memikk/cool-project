@@ -10,7 +10,7 @@ public:
     int id;
     bool wandering=false;
     Entity(int id):id(id){changeTextureRect(0);};
-    Entity(sf::Vector2f pos,int id):id(id){setPosition(pos);desiredPos=pos;};
+    Entity(sf::Vector2f pos,int id):id(id){changeTextureRect(0);setPosition(pos);desiredPos=pos;};
     entityType type;
     sf::Vector2f vel,desiredPos;
     void wander();

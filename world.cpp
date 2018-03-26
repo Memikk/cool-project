@@ -20,6 +20,11 @@ Chunk::Chunk(int offX,int offY,siv::PerlinNoise& perlin,TextureLoader* txtLoader
             blocks[i][j] = new Dirt();
             txtLoader->chooseTexture(*blocks[i][j],i,j,offsetX,offsetY,DIRT,0.0);
 
+            if(choice3>0.64)
+            {
+                blocks[i][j]->cover = new Sand();
+                txtLoader->chooseTexture(*blocks[i][j]->cover,i,j,offsetX,offsetY,SAND,0.64,objectNoise2);
+            }
             if(choice>0.25)
             {
                 blocks[i][j]->grass = new Grass();
@@ -37,12 +42,7 @@ Chunk::Chunk(int offX,int offY,siv::PerlinNoise& perlin,TextureLoader* txtLoader
 
             if(blocks[i][j]->object==nullptr)
             {
-                if(choice3>0.64)
-                {
-                    blocks[i][j]->object = new Sand();
-                    txtLoader->chooseTexture(*blocks[i][j]->object,i,j,offsetX,offsetY,SAND,0.64,objectNoise2);
-                }
-                else if(choice2>0.64)
+                if(choice2>0.64)
                 {
                     blocks[i][j]->object = new Stone();
                     blocks[i][j]->collision=true;
@@ -61,6 +61,8 @@ Chunk::Chunk(int offX,int offY,siv::PerlinNoise& perlin,TextureLoader* txtLoader
                 blocks[i][j]->object->setPosition(sf::Vector2f(xp,yp));
             if(blocks[i][j]->grass!=nullptr)
                 blocks[i][j]->grass->setPosition(sf::Vector2f(xp,yp));
+            if(blocks[i][j]->cover!=nullptr)
+                blocks[i][j]->cover->setPosition(sf::Vector2f(xp,yp));
         }
     }
 }
@@ -88,7 +90,8 @@ void Chunk::draw(sf::RenderWindow& window)
             }
             blocks[i][j]->setFillColor(sf::Color::White);
             if(blocks[i][j]->object!=nullptr) blocks[i][j]->object->setColor(sf::Color::White);
-            if(blocks[i][j]->grass!=nullptr) blocks[i][j]->grass->setColor(sf::Color::White);
+            //if(blocks[i][j]->grass!=nullptr) blocks[i][j]->grass->setColor(sf::Color::White);
+            if(blocks[i][j]->cover!=nullptr) blocks[i][j]->cover->setColor(sf::Color::White);
         }
     }
 }
@@ -99,6 +102,8 @@ World::World(TextureLoader* tloader)
 {
     txtLoader=tloader;
     player.setPosition(0,0);
+    daynight.setFillColor(sf::Color(0,0,0,0));
+    daynight.setSize(sf::Vector2f(1920,1080));
 }
 
 void World::generateChunks()
@@ -162,6 +167,22 @@ void World::update(sf::RenderWindow& window)
     //cout<<"PLAYER UPDATE"<<endl;
     vector<Block*> c=getCollisions(player.getPosition());
     player.update(c);
+
+    daynight.setPosition(player.getPosition()-(sf::Vector2f)window.getSize()/2.f);
+    if(dayClock.getElapsedTime().asSeconds()>=1.f)
+    {
+        dayClock.restart();
+        dayCounter+=adder;
+        if(dayCounter>=190)
+        {
+            adder=-2;
+        }
+        else if(dayCounter<=0)
+        {
+            adder=2;
+        }
+    }
+    daynight.setFillColor(sf::Color(0,0,0,dayCounter));
 
     ue.join();
 }
@@ -238,7 +259,7 @@ Chunk* World::getChunk(int x,int y)
 
 void World::spawnEntities()
 {
-    if(spawningClock.getElapsedTime().asMilliseconds()>rand()%2000+2000)
+    if(spawningClock.getElapsedTime().asMilliseconds()>3000)
     {
         spawningClock.restart();
         Entity *temp = new Sheep(vh::randomPos(600,player),rand()%9999);
@@ -269,4 +290,5 @@ void World::draw(sf::RenderWindow& window)
     {
         window.draw(*e);
     }
+    window.draw(daynight);
 }

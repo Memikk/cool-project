@@ -7,6 +7,7 @@ float zoom=1.0;
 sf::Clock animationClock;
 sf::Clock fpsClock;
 sf::Clock spawningClock;
+sf::Clock dayClock;
 siv::PerlinNoise worldGenNoise;
 siv::PerlinNoise objectNoise;
 siv::PerlinNoise objectNoise2;

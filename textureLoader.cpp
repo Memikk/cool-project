@@ -269,9 +269,6 @@ void TextureLoader::setTexture(Block& block,blockType type,int choice)
     block.setTextureRect(textureRect);
     switch(type)
     {
-    case GRASS:
-        block.setTexture(grass);
-        break;
     case DIRT:
         block.setTexture(dirt);
         break;
