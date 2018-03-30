@@ -1,6 +1,7 @@
 #ifndef PLAYER_H_INCLUDED
 #define PLAYER_H_INCLUDED
 #include "globals.h"
+#include "equipment.h"
 #include <math.h>
 #include <iostream>
 
@@ -12,8 +13,8 @@ class Player : public sf::Sprite
     sf::RectangleShape background;
     sf::Vector2f vel,acc;
     direction dir=DOWN;
-    TextureLoader* txtLoader;
 public:
+    Equipment eq;
     sf::Sprite hpBar;
     int ci,cj;
     sf::Vector2f centerOfBlock;

@@ -14,6 +14,7 @@ public:
     void countFPS();
     void update();
 };
+
 class Interface
 {
 public:

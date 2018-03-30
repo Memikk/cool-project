@@ -29,9 +29,36 @@ void Water::nextFrame()
 {
     sf::IntRect tRect(BLOCK_SIZE*frame,BLOCK_SIZE*column,BLOCK_SIZE,BLOCK_SIZE);
     frame++;
-    if(frame>4) frame=0;
+    if(frame>4)
+        frame=0;
     setTextureRect(tRect);
 }
+
+void Block::draw(sf::RenderWindow& window)
+{
+    if(grass!=nullptr)
+    {
+        if(grass->side)
+            window.draw(*this);
+        if(cover!=nullptr&&cover->side)
+            window.draw(*grass);
+        else if(cover==nullptr)
+            window.draw(*grass);
+    }
+    else
+        window.draw(*this);
+    if(cover!=nullptr)
+        window.draw(*cover);
+    if(object!=nullptr)
+        window.draw(*object);
+    else
+    {
+        for(auto& i:items)
+        {
+            i->draw(window);
+        }
+    }
+};
 
 Dirt::Dirt():Block()
 {

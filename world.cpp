@@ -56,6 +56,21 @@ Chunk::Chunk(int offX,int offY,siv::PerlinNoise& perlin,TextureLoader* txtLoader
                 }
             }
 
+            if(blocks[i][j]->object==nullptr)
+            {
+                int c = rand()%100;
+                if(c==0)
+                {
+                    blocks[i][j]->items.push_back(new Item(0));
+                    txtLoader->setItemTexture(*blocks[i][j]->items.back(),0);
+                }
+                else if(c==1)
+                {
+                    blocks[i][j]->items.push_back(new Item(1));
+                    txtLoader->setItemTexture(*blocks[i][j]->items.back(),1);
+                }
+            }
+
             blocks[i][j]->setPosition(sf::Vector2f(xp,yp));
             if(blocks[i][j]->object!=nullptr)
                 blocks[i][j]->object->setPosition(sf::Vector2f(xp,yp));
@@ -63,6 +78,8 @@ Chunk::Chunk(int offX,int offY,siv::PerlinNoise& perlin,TextureLoader* txtLoader
                 blocks[i][j]->grass->setPosition(sf::Vector2f(xp,yp));
             if(blocks[i][j]->cover!=nullptr)
                 blocks[i][j]->cover->setPosition(sf::Vector2f(xp,yp));
+            if(blocks[i][j]->items.size()>0&&blocks[i][j]->items.back()!=nullptr)
+                blocks[i][j]->items.back()->setPosition(sf::Vector2f(xp,yp));
         }
     }
 }
@@ -187,6 +204,20 @@ void World::update(sf::RenderWindow& window)
     ue.join();
 }
 
+sf::Vector2i World::blockID(sf::Vector2f chunk,sf::Vector2f pos)
+{
+    int ix,iy;
+    int tx,ty;
+
+    tx=chunk.x*CHUNK_SIZE*BLOCK_SIZE;
+    ty=chunk.y*CHUNK_SIZE*BLOCK_SIZE;
+
+    ix=abs((pos.x-tx)/BLOCK_SIZE);
+    iy=abs((pos.y-ty)/BLOCK_SIZE);
+
+    return sf::Vector2i(ix,iy);
+}
+
 Block* World::blockCollision(sf::Vector2f pos)
 {
     int ox,oy;
@@ -201,16 +232,8 @@ Block* World::blockCollision(sf::Vector2f pos)
     else
         oy=floor(pos.y/(CHUNK_SIZE*BLOCK_SIZE));
 
-    int ix,iy;
-    int tx,ty;
-
-    tx=ox*CHUNK_SIZE*BLOCK_SIZE;
-    ty=oy*CHUNK_SIZE*BLOCK_SIZE;
-
-    ix=abs((pos.x-tx)/BLOCK_SIZE);
-    iy=abs((pos.y-ty)/BLOCK_SIZE);
-
-    return getChunk(ox,oy)->blocks[ix][iy];
+    sf::Vector2i idx = blockID(sf::Vector2f(ox,oy),pos);
+    return getChunk(ox,oy)->blocks[idx.x][idx.y];
 }
 
 
@@ -255,6 +278,29 @@ Chunk* World::getChunk(int x,int y)
             return &c;
     }
     return nullptr;
+}
+
+void World::pickUpItem()
+{
+    Item* item=nullptr;
+    Block* b = nullptr;
+    Chunk* c = nullptr;
+
+    sf::Vector2i ids = blockID(sf::Vector2f(player.ci,player.cj),player.getPosition()+sf::Vector2f(15,25));
+
+    c = getChunk(player.ci,player.cj);
+    if(c!=nullptr&&ids.x>=0&&ids.x<16&&ids.x>=0&&ids.y<16) b = c->blocks[ids.x][ids.y];
+    else return;
+    if(b==nullptr) return;
+    b->setFillColor(sf::Color::Cyan);
+    if(b->cover!=nullptr) b->cover->setColor(sf::Color::Cyan);
+    if(b->items.size()>0) item = b->items.back();
+    else return;
+    if(item!=nullptr)
+    {
+        b->items.pop_back();
+        player.eq.add(item);
+    }
 }
 
 void World::spawnEntities()

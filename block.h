@@ -1,10 +1,12 @@
 #ifndef BLOCK_H_INCLUDED
 #define BLOCK_H_INCLUDED
 #include "globals.h"
+#include "equipment.h"
 #include <vector>
 #include <iostream>
 using namespace std;
 
+class Item;
 enum blockType {NOBLOCK,DIRT};
 enum objectType {NOTHING,TREE,STONE,PLANT,WATER,SAND,GRASS};
 class Object : public sf::Sprite
@@ -77,6 +79,7 @@ public:
     Object* object=nullptr;
     Object* grass=nullptr;
     Object* cover=nullptr;
+    vector<Item*> items;
     int i,j;
     float offsetX,offsetY;
     blockType type=NOBLOCK;
@@ -88,19 +91,7 @@ public:
     Block(sf::Vector2f pos);
     virtual ~Block() {};
     virtual void animate()=0;
-    virtual void draw(sf::RenderWindow& window)
-    {
-        if(grass!=nullptr)
-        {
-            if(grass->side) window.draw(*this);
-            if(cover!=nullptr&&cover->side) window.draw(*grass);
-            else if(cover==nullptr) window.draw(*grass);
-        }
-        else window.draw(*this);
-        if(cover!=nullptr) window.draw(*cover);
-        if(object!=nullptr)
-            window.draw(*object);
-    };
+    virtual void draw(sf::RenderWindow& window);
     blockType getType()
     {
         return type;

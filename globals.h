@@ -4,7 +4,10 @@
 #include <SFML/Graphics.hpp>
 #include "perlinNoise.hpp"
 #include "thread.h"
+#ifndef BLOCK_H_INCLUDED
 #include "block.h"
+#endif // BLOCK_H_INCLUDED
+#include "equipment.h"
 #include <vector>
 #include <iostream>
 #include <sstream>

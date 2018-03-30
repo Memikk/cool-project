@@ -23,6 +23,9 @@ class TextureLoader
     sf::Texture* pig;
 
     sf::Texture* hpBar;
+
+    sf::Texture* branch;
+    sf::Texture* rock;
 public:
     TextureLoader(){};
     void load()
@@ -39,6 +42,8 @@ public:
         cow=new sf::Texture();
         pig=new sf::Texture();
         hpBar=new sf::Texture();
+        branch=new sf::Texture();
+        rock=new sf::Texture();
         if(player->loadFromFile("resources/textures/player.png")) cout<<"Wczytano teksture gracza"<<endl;
         if(sand->loadFromFile("resources/textures/sand.png")) cout<<"Wczytano teksture piasku"<<endl;
         if(water->loadFromFile("resources/textures/water.png")) cout<<"Wczytano teksture wody"<<endl;
@@ -51,6 +56,8 @@ public:
         if(cow->loadFromFile("resources/textures/cow.png")) cout<<"Wczytano teksture krowy"<<endl;
         if(pig->loadFromFile("resources/textures/pig.png")) cout<<"Wczytano teksture swini"<<endl;
         if(hpBar->loadFromFile("resources/textures/hpBar.png")) cout<<"Wczytano teksture paska zycia"<<endl;
+        if(branch->loadFromFile("resources/textures/branch.png")) cout<<"Wczytano teksture galazki"<<endl;
+        if(rock->loadFromFile("resources/textures/rock.png")) cout<<"Wczytano teksture kamyka"<<endl;
     }
 
     void chooseTexture(Block& block,int i,int j,int offsetX,int offsetY,blockType type,float value);
@@ -67,6 +74,19 @@ public:
         p.setTexture(*player);
         p.hpBar.setTexture(*hpBar);
         p.setScale(0.85,0.85);
+    }
+
+    void setItemTexture(Item& i,int choice)
+    {
+        switch(choice)
+        {
+        case 0:
+            i.setTexture(*branch);
+            break;
+        case 1:
+            i.setTexture(*rock);
+            break;
+        }
     }
 };
 

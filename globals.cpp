@@ -2,7 +2,7 @@
 
 int BLOCK_SIZE=50;
 int CHUNK_SIZE=16;
-float speed=3.5;
+float speed=2.5;
 float zoom=1.0;
 sf::Clock animationClock;
 sf::Clock fpsClock;
@@ -12,7 +12,7 @@ siv::PerlinNoise worldGenNoise;
 siv::PerlinNoise objectNoise;
 siv::PerlinNoise objectNoise2;
 
-extern string to_string(int value)
+string to_string(int value)
 {
     stringstream ss;
     ss<<value;

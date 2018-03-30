@@ -35,7 +35,7 @@ void Game::update()
     std::thread chunkGeneratingThread(&World::generateChunks,world);
 
     //cout<<"SPRAWDZAM EVENTY"<<endl;
-    evHandler->checkEvents(*view);
+    evHandler->checkEvents(*world,*view);
 
     //cout<<"AKTUALIZUJE SWIAT"<<endl;
     world->update(*window);
