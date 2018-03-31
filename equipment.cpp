@@ -2,7 +2,7 @@
 
 Equipment::Equipment()
 {
-    items.reserve(20);
+    items.reserve(50);
 }
 
 void Equipment::add(Item* item)

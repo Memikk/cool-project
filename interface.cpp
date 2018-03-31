@@ -42,7 +42,12 @@ void Interface::draw(Player& p,sf::RenderWindow& window)
                         window.getView().getCenter().y-window.getView().getSize().y/2);
     fps.fps.setScale(window.getView().getSize().x/window.getSize().x,
                      window.getView().getSize().y/window.getSize().y);
+    p.eq.setScale(window.getView().getSize().x/window.getSize().x*10,
+                  window.getView().getSize().y/window.getSize().y*10);
+    p.eq.setPosition(window.getView().getCenter().x-205,
+                     window.getView().getCenter().y-105);
 
     window.draw(p.hpBar);
     window.draw(fps.fps);
+    if(p.eq.on) window.draw(p.eq);
 }

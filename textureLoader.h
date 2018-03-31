@@ -10,12 +10,15 @@ using namespace std;
 class TextureLoader
 {
     sf::Texture* player;
+    sf::Texture* eq;
+
     sf::Texture* sand;
     sf::Texture* water;
     sf::Texture* stone;
     sf::Texture* grass;
     sf::Texture* dirt;
     sf::Texture* tree;
+    sf::Texture* bush;
     sf::Texture* plants;
 
     sf::Texture* sheep;
@@ -31,6 +34,7 @@ public:
     void load()
     {
         player=new sf::Texture();
+        eq=new sf::Texture();
         sand=new sf::Texture();
         water=new sf::Texture();
         stone=new sf::Texture();
@@ -44,7 +48,9 @@ public:
         hpBar=new sf::Texture();
         branch=new sf::Texture();
         rock=new sf::Texture();
+        bush=new sf::Texture();
         if(player->loadFromFile("resources/textures/player.png")) cout<<"Wczytano teksture gracza"<<endl;
+        if(eq->loadFromFile("resources/textures/eq.png")) cout<<"Wczytano teksture ekwipunku"<<endl;
         if(sand->loadFromFile("resources/textures/sand.png")) cout<<"Wczytano teksture piasku"<<endl;
         if(water->loadFromFile("resources/textures/water.png")) cout<<"Wczytano teksture wody"<<endl;
         if(stone->loadFromFile("resources/textures/stone.png")) cout<<"Wczytano teksture kamienia"<<endl;
@@ -58,6 +64,7 @@ public:
         if(hpBar->loadFromFile("resources/textures/hpBar.png")) cout<<"Wczytano teksture paska zycia"<<endl;
         if(branch->loadFromFile("resources/textures/branch.png")) cout<<"Wczytano teksture galazki"<<endl;
         if(rock->loadFromFile("resources/textures/rock.png")) cout<<"Wczytano teksture kamyka"<<endl;
+        if(bush->loadFromFile("resources/textures/bush.png")) cout<<"Wczytano teksture krzaka"<<endl;
     }
 
     void chooseTexture(Block& block,int i,int j,int offsetX,int offsetY,blockType type,float value);
@@ -73,6 +80,7 @@ public:
     {
         p.setTexture(*player);
         p.hpBar.setTexture(*hpBar);
+        p.eq.setTexture(*eq);
         p.setScale(0.85,0.85);
     }
 

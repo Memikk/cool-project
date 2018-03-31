@@ -48,11 +48,26 @@ Chunk::Chunk(int offX,int offY,siv::PerlinNoise& perlin,TextureLoader* txtLoader
                     blocks[i][j]->collision=true;
                     txtLoader->chooseTexture(*blocks[i][j]->object,i,j,offsetX,offsetY,STONE,0.64,objectNoise);
                 }
-                else if(choice2<0.35&&(int)(choice2*100)%3)
+                else if((choice2<0.35||(choice2>=0.35&&(int)(choice2*234)%25==0))&&choice3<=0.64)
                 {
-                    blocks[i][j]->object = new Tree();
+                    if((int)(choice2*100)%3)
+                    {
+                        blocks[i][j]->object = new Tree();
+                        blocks[i][j]->collision=true;
+                        txtLoader->chooseTexture(*blocks[i][j]->object,i,j,offsetX,offsetY,TREE,0,objectNoise);
+                    }
+                    else if((int)(choice2*10)%2)
+                    {
+                        blocks[i][j]->object = new Bush();
+                        blocks[i][j]->collision=true;
+                        txtLoader->chooseTexture(*blocks[i][j]->object,i,j,offsetX,offsetY,BUSH,0,objectNoise);
+                    }
+                }
+                else if(((choice3<0.25&&(int)(choice3*100)%3)||(choice3>=0.25&&(int)(choice3*187)%37==0))&&choice3<=0.64)
+                {
+                    blocks[i][j]->object = new Bush();
                     blocks[i][j]->collision=true;
-                    txtLoader->chooseTexture(*blocks[i][j]->object,i,j,offsetX,offsetY,TREE,0,objectNoise);
+                    txtLoader->chooseTexture(*blocks[i][j]->object,i,j,offsetX,offsetY,BUSH,0,objectNoise);
                 }
             }
 

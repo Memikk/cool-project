@@ -33,5 +33,9 @@ void EventHandler::checkEvents(World& world,sf::View& view)
         {
             world.pickUpItem();
         }
+        else if(event.type == sf::Event::KeyPressed&&event.key.code == sf::Keyboard::E)
+        {
+            world.getPlayer().eq.on=!world.getPlayer().eq.on;
+        }
     }
 }

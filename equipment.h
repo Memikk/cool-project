@@ -12,10 +12,11 @@ public:
     void draw(sf::RenderWindow& window){window.draw(*this);};
 };
 
-class Equipment
+class Equipment : public sf::Sprite
 {
     vector<Item*> items;
 public:
+    bool on=false;
     Equipment();
     void add(Item* item);
     void rmv(Item* item);
