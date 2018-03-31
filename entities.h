@@ -26,5 +26,17 @@ public:
     Sheep(int id):Entity(id){};
     Sheep(sf::Vector2f pos,int id):Entity(pos,id){};
 };
+class Cow : public Entity
+{
+public:
+    Cow(int id):Entity(id){};
+    Cow(sf::Vector2f pos,int id):Entity(pos,id){};
+};
+class Pig : public Entity
+{
+public:
+    Pig(int id):Entity(id){};
+    Pig(sf::Vector2f pos,int id):Entity(pos,id){};
+};
 
 #endif // ENTITIES_H_INCLUDED

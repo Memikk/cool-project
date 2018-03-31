@@ -326,6 +326,12 @@ void World::spawnEntities()
         Entity *temp = new Sheep(vh::randomPos(600,player),rand()%9999);
         txtLoader->setTexture(*temp,SHEEP);
         entities.push_back(temp);
+        Entity *temp2 = new Cow(vh::randomPos(600,player),rand()%9999);
+        txtLoader->setTexture(*temp2,COW);
+        entities.push_back(temp2);
+        Entity *temp3 = new Pig(vh::randomPos(600,player),rand()%9999);
+        txtLoader->setTexture(*temp3,PIG);
+        entities.push_back(temp3);
     }
 }
 
