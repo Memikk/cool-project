@@ -73,7 +73,7 @@ Chunk::Chunk(int offX,int offY,siv::PerlinNoise& perlin,TextureLoader* txtLoader
 
             if(blocks[i][j]->object==nullptr)
             {
-                int c = rand()%100;
+                int c = rand()%3;
                 if(c==0)
                 {
                     blocks[i][j]->items.push_back(new Item(0));
@@ -205,7 +205,7 @@ void World::update(sf::RenderWindow& window)
     {
         dayClock.restart();
         dayCounter+=adder;
-        if(dayCounter>=190)
+        if(dayCounter>=100)
         {
             adder=-2;
         }
@@ -323,13 +323,13 @@ void World::spawnEntities()
     if(spawningClock.getElapsedTime().asMilliseconds()>3000)
     {
         spawningClock.restart();
-        Entity *temp = new Sheep(vh::randomPos(600,player),rand()%9999);
+        Entity *temp = new Sheep(vh::randomPos(600,player));
         txtLoader->setTexture(*temp,SHEEP);
         entities.push_back(temp);
-        Entity *temp2 = new Cow(vh::randomPos(600,player),rand()%9999);
+        Entity *temp2 = new Cow(vh::randomPos(600,player));
         txtLoader->setTexture(*temp2,COW);
         entities.push_back(temp2);
-        Entity *temp3 = new Pig(vh::randomPos(600,player),rand()%9999);
+        Entity *temp3 = new Pig(vh::randomPos(600,player));
         txtLoader->setTexture(*temp3,PIG);
         entities.push_back(temp3);
     }

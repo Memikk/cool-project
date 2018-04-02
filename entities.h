@@ -7,10 +7,9 @@ class Entity : public sf::Sprite
 {
 public:
     int counter=0;
-    int id;
     bool wandering=false;
-    Entity(int id):id(id){changeTextureRect(0);};
-    Entity(sf::Vector2f pos,int id):id(id){changeTextureRect(0);setPosition(pos);desiredPos=pos;};
+    Entity(){changeTextureRect(0);};
+    Entity(sf::Vector2f pos){changeTextureRect(0);setPosition(pos);desiredPos=pos;};
     entityType type;
     sf::Vector2f vel,desiredPos;
     void wander();
@@ -23,20 +22,20 @@ public:
 class Sheep : public Entity
 {
 public:
-    Sheep(int id):Entity(id){};
-    Sheep(sf::Vector2f pos,int id):Entity(pos,id){};
+    Sheep():Entity(){};
+    Sheep(sf::Vector2f pos):Entity(pos){};
 };
 class Cow : public Entity
 {
 public:
-    Cow(int id):Entity(id){};
-    Cow(sf::Vector2f pos,int id):Entity(pos,id){};
+    Cow():Entity(){};
+    Cow(sf::Vector2f pos):Entity(pos){};
 };
 class Pig : public Entity
 {
 public:
-    Pig(int id):Entity(id){};
-    Pig(sf::Vector2f pos,int id):Entity(pos,id){};
+    Pig():Entity(){};
+    Pig(sf::Vector2f pos):Entity(pos){};
 };
 
 #endif // ENTITIES_H_INCLUDED

@@ -31,7 +31,7 @@ void EventHandler::checkEvents(World& world,sf::View& view)
         }
         else if(event.type == sf::Event::KeyPressed&&event.key.code == sf::Keyboard::Space)
         {
-            world.pickUpItem();
+            if(world.getPlayer().eq.items.size()<20) world.pickUpItem();
         }
         else if(event.type == sf::Event::KeyPressed&&event.key.code == sf::Keyboard::E)
         {

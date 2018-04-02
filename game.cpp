@@ -26,6 +26,8 @@ Game::Game(sf::RenderWindow& win)
     window->setView(*view);
     cout<<"gra stworzona"<<endl;
 
+    iface->update(world->getPlayer(),*window);
+
     world->generateChunks();
 }
 
@@ -40,18 +42,19 @@ void Game::update()
     //cout<<"AKTUALIZUJE SWIAT"<<endl;
     world->update(*window);
 
+    std::thread upThread(&Interface::update,iface,world->getPlayer(),*window);
+
     //cout<<"USTAWIAM WIDOK"<<endl;
     view->setCenter(vh::center(world->getPlayer()));
     window->setView(*view);
 
     //cout<<"DOLACZAM WATEK"<<endl;
+    upThread.join();
     chunkGeneratingThread.join();
 }
 
 void Game::draw()
 {
-    //cout<<"NOWY WATEK"<<endl;
-    std::thread fpsThread(&Interface::update,iface);
 
     //cout<<"CZYSZCZENIE"<<endl;
     window->clear();
@@ -61,9 +64,6 @@ void Game::draw()
 
     //cout<<"RYSOWANIE SWIATA"<<endl;
     world->draw(*window);
-
-    //cout<<"DOLACZENIE WATKU FPS"<<endl;
-    fpsThread.join();
 
     iface->draw(world->getPlayer(),*window);
 

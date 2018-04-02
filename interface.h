@@ -20,7 +20,7 @@ class Interface
 public:
     FPS fps;
     Interface() {};
-    void update();
+    void update(Player& p,sf::RenderWindow& window);
     void draw(Player& p,sf::RenderWindow& window);
 };
 

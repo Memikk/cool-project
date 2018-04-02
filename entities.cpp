@@ -3,9 +3,9 @@
 void Entity::wander()
 {
     int x,y;
-    x=(rand()*id)%200;
+    x=(rand())%200;
     x*=((rand()%2==0)?-1:1);
-    y=(rand()*id)%200;
+    y=(rand())%200;
     y*=((rand()%2==0)?-1:1);
 
     desiredPos.x=x+getPosition().x;
