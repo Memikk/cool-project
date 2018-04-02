@@ -18,8 +18,11 @@ public:
 class Interface
 {
 public:
+    sf::Font font;
+    sf::Text gTime;
     FPS fps;
-    Interface() {};
+    Interface();
+    void setTime(int t);
     void update(Player& p,sf::RenderWindow& window);
     void draw(Player& p,sf::RenderWindow& window);
 };

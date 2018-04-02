@@ -323,6 +323,10 @@ void TextureLoader::setTexture(Entity& entity,entityType type)
         entity.setTexture(*pig,true);
         entity.setScale(0.75,0.75);
         break;
+    default:
+        entity.setTexture(*sheep,true);
+        entity.setScale(0.5,0.5);
+        break;
     }
 }
 

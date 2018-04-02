@@ -27,6 +27,21 @@ void FPS::update()
     countFPS();
 }
 
+Interface::Interface()
+{
+    font.loadFromFile("resources/fonts/arial.ttf");
+    gTime.setFont(font);
+    gTime.setCharacterSize(40);
+    gTime.setOutlineColor(sf::Color::Black);
+    gTime.setOutlineThickness(2);
+    gTime.setString("6:00");
+}
+
+void Interface::setTime(int t)
+{
+    gTime.setString(std::to_string(t)+":00");
+}
+
 void Interface::update(Player& p,sf::RenderWindow& window)
 {
     fps.update();
@@ -37,6 +52,10 @@ void Interface::update(Player& p,sf::RenderWindow& window)
     fps.fps.setPosition(window.getView().getCenter().x-window.getView().getSize().x/2,
                         window.getView().getCenter().y-window.getView().getSize().y/2);
     fps.fps.setScale(window.getView().getSize().x/window.getSize().x,
+                     window.getView().getSize().y/window.getSize().y);
+    gTime.setPosition(window.getView().getCenter().x-gTime.getGlobalBounds().width/2,
+                      window.getView().getCenter().y-window.getView().getSize().y/2);
+    gTime.setScale(window.getView().getSize().x/window.getSize().x,
                      window.getView().getSize().y/window.getSize().y);
     p.eq.setScale(window.getView().getSize().x/window.getSize().x*5,
                   window.getView().getSize().y/window.getSize().y*5);
@@ -74,6 +93,7 @@ void Interface::draw(Player& p,sf::RenderWindow& window)
             window.draw(*i);
         }
     }
+    window.draw(gTime);
 }
 
 

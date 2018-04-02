@@ -121,9 +121,11 @@ void Chunk::draw(sf::RenderWindow& window)
                 blocks[i][j]->object->animate();
             }
             blocks[i][j]->setFillColor(sf::Color::White);
-            if(blocks[i][j]->object!=nullptr) blocks[i][j]->object->setColor(sf::Color::White);
+            if(blocks[i][j]->object!=nullptr)
+                blocks[i][j]->object->setColor(sf::Color::White);
             //if(blocks[i][j]->grass!=nullptr) blocks[i][j]->grass->setColor(sf::Color::White);
-            if(blocks[i][j]->cover!=nullptr) blocks[i][j]->cover->setColor(sf::Color::White);
+            if(blocks[i][j]->cover!=nullptr)
+                blocks[i][j]->cover->setColor(sf::Color::White);
         }
     }
 }
@@ -187,7 +189,12 @@ void World::updateEntities(const sf::View& view)
     {
         sf::FloatRect f(view.getCenter().x-view.getSize().x/2,view.getCenter().y-view.getSize().y/2,
                         view.getSize().x,view.getSize().y);
-        if(f.contains(e->getPosition())) e->update(getCollisions(e->getPosition()));
+        if(e->type==WOLF)
+        {
+            static_cast<Wolf*>(e)->update(getCollisions(e->getPosition()),entities);
+        }
+        else if(f.contains(e->getPosition()))
+            e->update(getCollisions(e->getPosition()));
     }
 }
 
@@ -201,20 +208,22 @@ void World::update(sf::RenderWindow& window)
     player.update(c);
 
     daynight.setPosition(player.getPosition()-(sf::Vector2f)window.getSize()/2.f);
-    if(dayClock.getElapsedTime().asSeconds()>=1.f)
+    if(dayClock.getElapsedTime().asSeconds()>=10.f)
     {
         dayClock.restart();
-        dayCounter+=adder;
-        if(dayCounter>=100)
-        {
-            adder=-2;
-        }
-        else if(dayCounter<=0)
-        {
-            adder=2;
-        }
+        gameTime++;
+        if(gameTime>23)
+            gameTime=0;
+        cout<<gameTime<<":00"<<endl;
     }
-    daynight.setFillColor(sf::Color(0,0,0,dayCounter));
+    if((gameTime>21||gameTime<3)&&dayCounter<140)
+    {
+        dayCounter+=0.2;
+    }
+    else if(gameTime<6&&dayCounter>0)
+        dayCounter-=0.2;
+    if(gameTime==6) dayCounter=0;
+    daynight.setFillColor(sf::Color(0,dayCounter/20,0,dayCounter));
 
     ue.join();
 }
@@ -268,7 +277,8 @@ vector<Block*> World::getCollisions(sf::Vector2f ppos)
     for(auto& c:collisions)
     {
         c->setFillColor(sf::Color::Red);
-        if(c->object!=nullptr) c->object->setColor(sf::Color::Blue);
+        if(c->object!=nullptr)
+            c->object->setColor(sf::Color::Blue);
         //if(c->grass!=nullptr) c->grass->setColor(sf::Color::Blue);
     }
 
@@ -304,13 +314,19 @@ void World::pickUpItem()
     sf::Vector2i ids = blockID(sf::Vector2f(player.ci,player.cj),player.getPosition()+sf::Vector2f(15,25));
 
     c = getChunk(player.ci,player.cj);
-    if(c!=nullptr&&ids.x>=0&&ids.x<16&&ids.x>=0&&ids.y<16) b = c->blocks[ids.x][ids.y];
-    else return;
-    if(b==nullptr) return;
+    if(c!=nullptr&&ids.x>=0&&ids.x<16&&ids.x>=0&&ids.y<16)
+        b = c->blocks[ids.x][ids.y];
+    else
+        return;
+    if(b==nullptr)
+        return;
     b->setFillColor(sf::Color::Cyan);
-    if(b->cover!=nullptr) b->cover->setColor(sf::Color::Cyan);
-    if(b->items.size()>0) item = b->items.back();
-    else return;
+    if(b->cover!=nullptr)
+        b->cover->setColor(sf::Color::Cyan);
+    if(b->items.size()>0)
+        item = b->items.back();
+    else
+        return;
     if(item!=nullptr)
     {
         b->items.pop_back();
@@ -332,6 +348,10 @@ void World::spawnEntities()
         Entity *temp3 = new Pig(vh::randomPos(600,player));
         txtLoader->setTexture(*temp3,PIG);
         entities.push_back(temp3);
+        Entity *temp4 = new Wolf(vh::randomPos(600,player));
+        txtLoader->setTexture(*temp4,WOLF);
+        temp4->setColor(sf::Color::Red);
+        entities.push_back(temp4);
     }
 }
 

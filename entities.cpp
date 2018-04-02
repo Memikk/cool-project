@@ -104,3 +104,22 @@ void Entity::update(vector<Block*> collisions)
     }
     moving(collisions);
 }
+
+void Wolf::update(vector<Block*> collisions,vector<Entity*> entities)
+{
+    float tempD=999999;
+    sf::Vector2f desiredTemp;
+    for(auto& e:entities)
+    {
+        float d=-1;
+        if(e->type!=WOLF) d=vh::distance(getPosition(),e->getPosition());
+        else continue;
+        if(d<tempD)
+        {
+            tempD=d;
+            desiredTemp=e->getPosition();
+        }
+    }
+    desiredPos=desiredTemp;
+    moving(collisions);
+}

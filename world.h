@@ -23,7 +23,7 @@ public:
 class World
 {
     sf::RectangleShape daynight;
-    int dayCounter=0;
+    float dayCounter=0;
     int adder=2;
     siv::PerlinNoise perlin;
     Player player;
@@ -31,6 +31,7 @@ class World
     vector<Entity*> entities;
     TextureLoader* txtLoader;
 public:
+    int gameTime=18;
     World(TextureLoader* tloader);
     World(){};
     Player& getPlayer(){return player;};
