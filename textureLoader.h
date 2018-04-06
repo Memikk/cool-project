@@ -27,6 +27,8 @@ class TextureLoader
     sf::Texture* pig;
 
     sf::Texture* hpBar;
+    sf::Texture* hungerBar;
+    sf::Texture* thirstBar;
 
     sf::Texture* branch;
     sf::Texture* rock;
@@ -49,6 +51,8 @@ public:
         cow=new sf::Texture();
         pig=new sf::Texture();
         hpBar=new sf::Texture();
+        hungerBar=new sf::Texture();
+        thirstBar=new sf::Texture();
         branch=new sf::Texture();
         rock=new sf::Texture();
         bush=new sf::Texture();
@@ -66,6 +70,8 @@ public:
         if(cow->loadFromFile("resources/textures/cow.png")) cout<<"Wczytano teksture krowy"<<endl;
         if(pig->loadFromFile("resources/textures/pig.png")) cout<<"Wczytano teksture swini"<<endl;
         if(hpBar->loadFromFile("resources/textures/hpBar.png")) cout<<"Wczytano teksture paska zycia"<<endl;
+        if(hungerBar->loadFromFile("resources/textures/hungerBar.png")) cout<<"Wczytano teksture paska g³odu"<<endl;
+        if(thirstBar->loadFromFile("resources/textures/thirstBar.png")) cout<<"Wczytano teksture paska pragnienia"<<endl;
         if(branch->loadFromFile("resources/textures/branch.png")) cout<<"Wczytano teksture galazki"<<endl;
         if(rock->loadFromFile("resources/textures/rock.png")) cout<<"Wczytano teksture kamyka"<<endl;
         if(bush->loadFromFile("resources/textures/bush.png")) cout<<"Wczytano teksture krzaka"<<endl;
@@ -86,6 +92,8 @@ public:
     {
         p.setTexture(*player);
         p.hpBar.setTexture(*hpBar);
+        p.hungerBar.setTexture(*hungerBar);
+        p.thirstBar.setTexture(*thirstBar);
         p.eq.setTexture(*eq);
         p.setScale(0.85,0.85);
     }

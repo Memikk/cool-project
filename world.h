@@ -40,6 +40,7 @@ public:
     Player& getPlayer(){return player;};
     sf::Vector2i blockID(sf::Vector2f chunk,sf::Vector2f pos);
     void pickUpItem();
+    void dropItem(sf::Vector2f mpos);
     bool exist(int x,int y) const;
     Block* blockCollision(sf::Vector2f pos);
     Chunk* getChunk(int x,int y);

@@ -65,6 +65,14 @@ void Interface::update(Player& p,sf::RenderWindow& window)
                         window.getView().getCenter().y-window.getView().getSize().y/2+window.getView().getSize().y/20);
     p.hpBar.setScale(window.getView().getSize().x/window.getSize().x*5,
                      window.getView().getSize().y/window.getSize().y*5);
+    p.hungerBar.setPosition(window.getView().getCenter().x-window.getView().getSize().x/2+window.getView().getSize().x/40,
+                            window.getView().getCenter().y-window.getView().getSize().y/2+window.getView().getSize().y/10);
+    p.hungerBar.setScale(window.getView().getSize().x/window.getSize().x*5,
+                         window.getView().getSize().y/window.getSize().y*5);
+    p.thirstBar.setPosition(window.getView().getCenter().x-window.getView().getSize().x/2+window.getView().getSize().x/40,
+                            window.getView().getCenter().y-window.getView().getSize().y/2+window.getView().getSize().y/6.7);
+    p.thirstBar.setScale(window.getView().getSize().x/window.getSize().x*5,
+                         window.getView().getSize().y/window.getSize().y*5);
     fps.fps.setPosition(window.getView().getCenter().x-window.getView().getSize().x/2,
                         window.getView().getCenter().y-window.getView().getSize().y/2);
     fps.fps.setScale(window.getView().getSize().x/window.getSize().x,
@@ -72,7 +80,7 @@ void Interface::update(Player& p,sf::RenderWindow& window)
     gTime.setPosition(window.getView().getCenter().x-gTime.getGlobalBounds().width/2,
                       window.getView().getCenter().y-window.getView().getSize().y/2);
     gTime.setScale(window.getView().getSize().x/window.getSize().x,
-                     window.getView().getSize().y/window.getSize().y);
+                   window.getView().getSize().y/window.getSize().y);
     p.eq.setScale(window.getView().getSize().x/window.getSize().x*5,
                   window.getView().getSize().y/window.getSize().y*5);
     p.eq.setPosition(window.getView().getCenter().x-p.eq.getGlobalBounds().width/2.f,
@@ -129,6 +137,8 @@ void Interface::popUp(int id)
 void Interface::draw(Player& p,sf::RenderWindow& window)
 {
     window.draw(p.hpBar);
+    window.draw(p.hungerBar);
+    window.draw(p.thirstBar);
     window.draw(fps.fps);
     if(p.eq.on)
     {

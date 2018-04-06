@@ -323,7 +323,7 @@ Chunk* World::getChunk(int x,int y)
 
 void World::pickUpItem()
 {
-    Item* item=nullptr;
+    Item* item =nullptr;
     Block* b = nullptr;
     Chunk* c = nullptr;
 
@@ -348,6 +348,36 @@ void World::pickUpItem()
         iface->popUp(b->items.back()->id);
         b->items.pop_back();
         player.eq.add(item);
+    }
+}
+
+void World::dropItem(sf::Vector2f mpos)
+{
+    cout<<"DROP ITEM"<<endl;
+    Chunk *c = nullptr;
+    Block *b = nullptr;
+    sf::Vector2i ids = blockID(sf::Vector2f(player.ci,player.cj),player.getPosition()+sf::Vector2f(15,25));
+
+    c = getChunk(player.ci,player.cj);
+    if(c!=nullptr&&ids.x>=0&&ids.x<16&&ids.x>=0&&ids.y<16)
+        b = c->blocks[ids.x][ids.y];
+    if(b==nullptr)
+        return;
+    cout<<"PRZESZLO"<<endl;
+    for(int i=0;i<player.eq.items.size();i++)
+    {
+        cout<<"PETLA"<<endl;
+        cout<<"item="<<player.eq.items[i]->getPosition().x<<" "<<player.eq.items[i]->getPosition().y<<endl;
+        cout<<"myszka="<<mpos.x<<" "<<mpos.y<<endl;
+        if(player.eq.items[i]->getGlobalBounds().contains(sf::Vector2f(mpos.x,mpos.y)))
+        {
+            cout<<"ZAWIERA"<<endl;
+            Item * temp = player.eq.items[i];
+            player.eq.items.erase(player.eq.items.begin()+i);
+            temp->setScale(10/6,10/6);
+            temp->setPosition(b->getPosition());
+            b->items.push_back(temp);
+        }
     }
 }
 

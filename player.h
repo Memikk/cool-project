@@ -16,6 +16,8 @@ class Player : public sf::Sprite
 public:
     Equipment eq;
     sf::Sprite hpBar;
+    sf::Sprite hungerBar;
+    sf::Sprite thirstBar;
     int ci,cj;
     sf::Vector2f centerOfBlock;
     bool animating=false;
