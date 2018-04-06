@@ -6,8 +6,8 @@ using namespace std;
 
 class Item : public sf::Sprite
 {
-    int id;
 public:
+    int id;
     Item(int id):id(id){};
     void draw(sf::RenderWindow& window){window.draw(*this);};
 };

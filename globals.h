@@ -16,9 +16,11 @@
 using namespace std;
 
 class Block;
-class TextureLoader;
+//class TextureLoader;
 class Player;
+class Chunk;
 class World;
+class PopUp;
 //class Interface;
 enum direction{UP,RIGHT,DOWN,LEFT};
 extern siv::PerlinNoise worldGenNoise;
@@ -37,6 +39,11 @@ extern string to_string(int value);
 
 namespace vh
 {
+template<typename T>
+T& randElement(vector<T>& v)
+{
+    return v[rand()%v.size()];
+}
 sf::Vector2f center(const sf::RectangleShape&);
 sf::Vector2f center(const sf::Sprite&);
 sf::Vector2f center(const Block& b);

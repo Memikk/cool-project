@@ -40,8 +40,8 @@ public:
 class Wolf : public Entity
 {
 public:
-    void hunt(vector<Entity*> entities);
-    void update(vector<Block*> collisions,vector<Entity*> entities);
+    void hunt(vector<Entity*>& entities);
+    void update(vector<Block*> collisions,vector<Entity*>& entities);
     Wolf():Entity(WOLF){};
     Wolf(sf::Vector2f pos):Entity(pos,WOLF){};
 };

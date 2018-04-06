@@ -1,5 +1,19 @@
 #include "interface.h"
 
+PopUp::PopUp(sf::Texture* t)
+{
+    setScale(2,2);
+}
+
+void PopUp::update()
+{
+    desiredPos=sf::Vector2f(base.x,base.y-40);
+    if(desiredPos.y<getPosition().y)
+    {
+        offset++;
+    }
+}
+
 FPS::FPS()
 {
     font.loadFromFile("resources/fonts/arial.ttf");
@@ -27,13 +41,15 @@ void FPS::update()
     countFPS();
 }
 
-Interface::Interface()
+Interface::Interface(TextureLoader* tLoader)
 {
-    font.loadFromFile("resources/fonts/arial.ttf");
+    txtLoader=tLoader;
+    font.loadFromFile("resources/fonts/sub.ttf");
     gTime.setFont(font);
-    gTime.setCharacterSize(40);
-    gTime.setOutlineColor(sf::Color::Black);
-    gTime.setOutlineThickness(2);
+    gTime.setCharacterSize(45);
+    gTime.setColor(sf::Color(222, 191, 94));
+    gTime.setOutlineColor(sf::Color(103, 87, 25));
+    gTime.setOutlineThickness(4);
     gTime.setString("6:00");
 }
 
@@ -78,11 +94,40 @@ void Interface::update(Player& p,sf::RenderWindow& window)
                                        window.getView().getSize().y/16.4*yo);
         }
     }
+    for(auto& pp:popUps)
+    {
+        pp.base=sf::Vector2f(window.getView().getCenter().x+400,window.getView().getCenter().y+270);
+        pp.setPosition(window.getView().getCenter().x+400,window.getView().getCenter().y+270-pp.offset);
+        pp.item.setPosition(window.getView().getCenter().x+408,window.getView().getCenter().y+275-pp.offset);
+        pp.update();
+    }
+}
+
+void Interface::popUp(int id)
+{
+    switch(id)
+    {
+    case 0:
+        popUps.push_back(PopUp(txtLoader->items[0]));
+        popUps.back().setTexture(*txtLoader->getPopUpTexture());
+        popUps.back().item.setTexture(*txtLoader->getItemTexture(0));
+        popUps.back().item.setScale(0.60,0.60);
+        break;
+    case 1:
+        popUps.push_back(PopUp(txtLoader->items[1]));
+        popUps.back().setTexture(*txtLoader->getPopUpTexture());
+        popUps.back().item.setTexture(*txtLoader->getItemTexture(1));
+        popUps.back().item.setScale(0.60,0.60);
+        break;
+    default:
+        popUps.push_back(PopUp(txtLoader->items[0]));
+        popUps.back().setTexture(*txtLoader->getPopUpTexture());
+        break;
+    }
 }
 
 void Interface::draw(Player& p,sf::RenderWindow& window)
 {
-
     window.draw(p.hpBar);
     window.draw(fps.fps);
     if(p.eq.on)
@@ -94,6 +139,11 @@ void Interface::draw(Player& p,sf::RenderWindow& window)
         }
     }
     window.draw(gTime);
+    for(auto& p:popUps)
+    {
+        window.draw(p);
+        window.draw(p.item);
+    }
 }
 
 

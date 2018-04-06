@@ -11,6 +11,7 @@ class TextureLoader
 {
     sf::Texture* player;
     sf::Texture* eq;
+    sf::Texture* popUp;
 
     sf::Texture* sand;
     sf::Texture* water;
@@ -30,11 +31,13 @@ class TextureLoader
     sf::Texture* branch;
     sf::Texture* rock;
 public:
+    vector<sf::Texture*> items;
     TextureLoader(){};
     void load()
     {
         player=new sf::Texture();
         eq=new sf::Texture();
+        popUp=new sf::Texture();
         sand=new sf::Texture();
         water=new sf::Texture();
         stone=new sf::Texture();
@@ -51,6 +54,7 @@ public:
         bush=new sf::Texture();
         if(player->loadFromFile("resources/textures/player.png")) cout<<"Wczytano teksture gracza"<<endl;
         if(eq->loadFromFile("resources/textures/eq.png")) cout<<"Wczytano teksture ekwipunku"<<endl;
+        if(popUp->loadFromFile("resources/textures/popup.png")) cout<<"Wczytano teksture popupu"<<endl;
         if(sand->loadFromFile("resources/textures/sand.png")) cout<<"Wczytano teksture piasku"<<endl;
         if(water->loadFromFile("resources/textures/water.png")) cout<<"Wczytano teksture wody"<<endl;
         if(stone->loadFromFile("resources/textures/stone.png")) cout<<"Wczytano teksture kamienia"<<endl;
@@ -65,6 +69,8 @@ public:
         if(branch->loadFromFile("resources/textures/branch.png")) cout<<"Wczytano teksture galazki"<<endl;
         if(rock->loadFromFile("resources/textures/rock.png")) cout<<"Wczytano teksture kamyka"<<endl;
         if(bush->loadFromFile("resources/textures/bush.png")) cout<<"Wczytano teksture krzaka"<<endl;
+        items.push_back(branch);
+        items.push_back(rock);
     }
 
     void chooseTexture(Block& block,int i,int j,int offsetX,int offsetY,blockType type,float value);
@@ -95,6 +101,16 @@ public:
             i.setTexture(*rock);
             break;
         }
+    }
+
+    sf::Texture* getPopUpTexture()
+    {
+        return popUp;
+    }
+
+    sf::Texture* getItemTexture(int id)
+    {
+        return items[id];
     }
 };
 
