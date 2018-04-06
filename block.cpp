@@ -53,9 +53,9 @@ void Block::draw(sf::RenderWindow& window)
         window.draw(*object);
     else
     {
-        for(auto& i:items)
+        for(int i=items.size()-1;i>=0;i--)
         {
-            i->draw(window);
+            items[i]->draw(window);
         }
     }
 };

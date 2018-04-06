@@ -7,9 +7,9 @@ Game::Game(sf::RenderWindow& win)
     cout<<"wylosowano seed mapy"<<endl;
 
     txtLoader = new TextureLoader();
-    world = new World(txtLoader);
     evHandler = new EventHandler(win);
-    iface = new Interface();
+    iface = new Interface(txtLoader);
+    world = new World(txtLoader,iface);
     view = new sf::View();
     cout<<"txt loader i world stworzony"<<endl;
 
@@ -22,7 +22,7 @@ Game::Game(sf::RenderWindow& win)
     cout<<"ustawiono teksture gracza"<<endl;
 
     view->setCenter(world->getPlayer().getPosition().x+BLOCK_SIZE/2,world->getPlayer().getPosition().y+BLOCK_SIZE/2);
-    view->setSize(sf::Vector2f(1920/2,1080/2));
+    view->setSize(sf::Vector2f(960,540));
     window->setView(*view);
     cout<<"gra stworzona"<<endl;
 

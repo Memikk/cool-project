@@ -9,6 +9,8 @@ Player::Player()
     background.setFillColor(sf::Color(0,72,0));
     changeTextureRect(0);
     hpBar.setScale(3,3);
+    hungerBar.setScale(3,3);
+    thirstBar.setScale(3,3);
 }
 
 void Player::draw(sf::RenderWindow& window)

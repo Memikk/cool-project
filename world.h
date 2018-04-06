@@ -2,6 +2,7 @@
 #define WORLD_H_INCLUDED
 #include "block.h"
 #include "player.h"
+#include "interface.h"
 #include <vector>
 #include <iostream>
 #include "perlinNoise.hpp"
@@ -16,6 +17,7 @@ public:
     int ix,iy;
     int offsetX,offsetY;
     Chunk(int ix,int iy,siv::PerlinNoise& perlin,TextureLoader* tloader);
+    Block& randBlock(bool collision=false);
     void draw(sf::RenderWindow& window);
     bool operator==(const Chunk& chunk);
 };
@@ -30,13 +32,15 @@ class World
     vector<Chunk> chunks;
     vector<Entity*> entities;
     TextureLoader* txtLoader;
+    Interface* iface;
 public:
     int gameTime=18;
-    World(TextureLoader* tloader);
+    World(TextureLoader* tloader,Interface* intface);
     World(){};
     Player& getPlayer(){return player;};
     sf::Vector2i blockID(sf::Vector2f chunk,sf::Vector2f pos);
     void pickUpItem();
+    void dropItem(sf::Vector2f mpos);
     bool exist(int x,int y) const;
     Block* blockCollision(sf::Vector2f pos);
     Chunk* getChunk(int x,int y);

@@ -11,6 +11,7 @@ class TextureLoader
 {
     sf::Texture* player;
     sf::Texture* eq;
+    sf::Texture* popUp;
 
     sf::Texture* sand;
     sf::Texture* water;
@@ -26,15 +27,19 @@ class TextureLoader
     sf::Texture* pig;
 
     sf::Texture* hpBar;
+    sf::Texture* hungerBar;
+    sf::Texture* thirstBar;
 
     sf::Texture* branch;
     sf::Texture* rock;
 public:
+    vector<sf::Texture*> items;
     TextureLoader(){};
     void load()
     {
         player=new sf::Texture();
         eq=new sf::Texture();
+        popUp=new sf::Texture();
         sand=new sf::Texture();
         water=new sf::Texture();
         stone=new sf::Texture();
@@ -46,11 +51,14 @@ public:
         cow=new sf::Texture();
         pig=new sf::Texture();
         hpBar=new sf::Texture();
+        hungerBar=new sf::Texture();
+        thirstBar=new sf::Texture();
         branch=new sf::Texture();
         rock=new sf::Texture();
         bush=new sf::Texture();
         if(player->loadFromFile("resources/textures/player.png")) cout<<"Wczytano teksture gracza"<<endl;
         if(eq->loadFromFile("resources/textures/eq.png")) cout<<"Wczytano teksture ekwipunku"<<endl;
+        if(popUp->loadFromFile("resources/textures/popup.png")) cout<<"Wczytano teksture popupu"<<endl;
         if(sand->loadFromFile("resources/textures/sand.png")) cout<<"Wczytano teksture piasku"<<endl;
         if(water->loadFromFile("resources/textures/water.png")) cout<<"Wczytano teksture wody"<<endl;
         if(stone->loadFromFile("resources/textures/stone.png")) cout<<"Wczytano teksture kamienia"<<endl;
@@ -62,9 +70,13 @@ public:
         if(cow->loadFromFile("resources/textures/cow.png")) cout<<"Wczytano teksture krowy"<<endl;
         if(pig->loadFromFile("resources/textures/pig.png")) cout<<"Wczytano teksture swini"<<endl;
         if(hpBar->loadFromFile("resources/textures/hpBar.png")) cout<<"Wczytano teksture paska zycia"<<endl;
+        if(hungerBar->loadFromFile("resources/textures/hungerBar.png")) cout<<"Wczytano teksture paska g³odu"<<endl;
+        if(thirstBar->loadFromFile("resources/textures/thirstBar.png")) cout<<"Wczytano teksture paska pragnienia"<<endl;
         if(branch->loadFromFile("resources/textures/branch.png")) cout<<"Wczytano teksture galazki"<<endl;
         if(rock->loadFromFile("resources/textures/rock.png")) cout<<"Wczytano teksture kamyka"<<endl;
         if(bush->loadFromFile("resources/textures/bush.png")) cout<<"Wczytano teksture krzaka"<<endl;
+        items.push_back(branch);
+        items.push_back(rock);
     }
 
     void chooseTexture(Block& block,int i,int j,int offsetX,int offsetY,blockType type,float value);
@@ -80,6 +92,8 @@ public:
     {
         p.setTexture(*player);
         p.hpBar.setTexture(*hpBar);
+        p.hungerBar.setTexture(*hungerBar);
+        p.thirstBar.setTexture(*thirstBar);
         p.eq.setTexture(*eq);
         p.setScale(0.85,0.85);
     }
@@ -95,6 +109,16 @@ public:
             i.setTexture(*rock);
             break;
         }
+    }
+
+    sf::Texture* getPopUpTexture()
+    {
+        return popUp;
+    }
+
+    sf::Texture* getItemTexture(int id)
+    {
+        return items[id];
     }
 };
 
