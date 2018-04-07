@@ -12,6 +12,7 @@ class TextureLoader
     sf::Texture* player;
     sf::Texture* eq;
     sf::Texture* popUp;
+    sf::Texture* cursor;
 
     sf::Texture* sand;
     sf::Texture* water;
@@ -20,7 +21,8 @@ class TextureLoader
     sf::Texture* dirt;
     sf::Texture* tree;
     sf::Texture* bush;
-    sf::Texture* plants;
+    sf::Texture* wheat;
+    sf::Texture* carrot;
 
     sf::Texture* sheep;
     sf::Texture* cow;
@@ -40,13 +42,13 @@ public:
         player=new sf::Texture();
         eq=new sf::Texture();
         popUp=new sf::Texture();
+        cursor=new sf::Texture();
         sand=new sf::Texture();
         water=new sf::Texture();
         stone=new sf::Texture();
         grass=new sf::Texture();
         dirt=new sf::Texture();
         tree=new sf::Texture();
-        plants=new sf::Texture();
         sheep=new sf::Texture();
         cow=new sf::Texture();
         pig=new sf::Texture();
@@ -56,16 +58,18 @@ public:
         branch=new sf::Texture();
         rock=new sf::Texture();
         bush=new sf::Texture();
+        wheat=new sf::Texture();
+        carrot=new sf::Texture();
         if(player->loadFromFile("resources/textures/player.png")) cout<<"Wczytano teksture gracza"<<endl;
         if(eq->loadFromFile("resources/textures/eq.png")) cout<<"Wczytano teksture ekwipunku"<<endl;
         if(popUp->loadFromFile("resources/textures/popup.png")) cout<<"Wczytano teksture popupu"<<endl;
+        if(cursor->loadFromFile("resources/textures/cursor.png")) cout<<"Wczytano teksture kursora"<<endl;
         if(sand->loadFromFile("resources/textures/sand.png")) cout<<"Wczytano teksture piasku"<<endl;
         if(water->loadFromFile("resources/textures/water.png")) cout<<"Wczytano teksture wody"<<endl;
         if(stone->loadFromFile("resources/textures/stone.png")) cout<<"Wczytano teksture kamienia"<<endl;
         if(grass->loadFromFile("resources/textures/grass.png")) cout<<"Wczytano teksture trawy"<<endl;
         if(dirt->loadFromFile("resources/textures/dirt.png")) cout<<"Wczytano teksture ziemi"<<endl;
         if(tree->loadFromFile("resources/textures/tree.png")) cout<<"Wczytano teksture drzewa"<<endl;
-        if(plants->loadFromFile("resources/textures/plants.png")) cout<<"Wczytano teksture roslin"<<endl;
         if(sheep->loadFromFile("resources/textures/sheep.png")) cout<<"Wczytano teksture owcy"<<endl;
         if(cow->loadFromFile("resources/textures/cow.png")) cout<<"Wczytano teksture krowy"<<endl;
         if(pig->loadFromFile("resources/textures/pig.png")) cout<<"Wczytano teksture swini"<<endl;
@@ -75,6 +79,8 @@ public:
         if(branch->loadFromFile("resources/textures/branch.png")) cout<<"Wczytano teksture galazki"<<endl;
         if(rock->loadFromFile("resources/textures/rock.png")) cout<<"Wczytano teksture kamyka"<<endl;
         if(bush->loadFromFile("resources/textures/bush.png")) cout<<"Wczytano teksture krzaka"<<endl;
+        if(wheat->loadFromFile("resources/textures/wheat.png")) cout<<"Wczytano teksture pszenicy"<<endl;
+        if(carrot->loadFromFile("resources/textures/carrot.png")) cout<<"Wczytano teksture marchewki"<<endl;
         items.push_back(branch);
         items.push_back(rock);
     }
@@ -119,6 +125,11 @@ public:
     sf::Texture* getItemTexture(int id)
     {
         return items[id];
+    }
+
+    sf::Texture* getCursorTexture()
+    {
+        return cursor;
     }
 };
 

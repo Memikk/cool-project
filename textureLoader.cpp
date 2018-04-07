@@ -301,6 +301,12 @@ void TextureLoader::setTexture(Object& object,objectType type,int choice)
     case SAND:
         object.setTexture(*sand);
         break;
+    case WHEAT:
+        object.setTexture(*wheat);
+        break;
+    case CARROT:
+        object.setTexture(*carrot);
+        break;
     }
 }
 

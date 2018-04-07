@@ -69,6 +69,16 @@ Chunk::Chunk(int offX,int offY,siv::PerlinNoise& perlin,TextureLoader* txtLoader
                     blocks[i][j]->collision=true;
                     txtLoader->chooseTexture(*blocks[i][j]->object,i,j,offsetX,offsetY,BUSH,0,objectNoise);
                 }
+                else if(((choice3<0.30&&(int)(choice3*500)%189==0)||(choice3>=0.30&&(int)(choice3*188)%79==0))&&choice3<=0.64)
+                {
+                    blocks[i][j]->object = new Wheat();
+                    txtLoader->chooseTexture(*blocks[i][j]->object,i,j,offsetX,offsetY,WHEAT,0,objectNoise);
+                }
+                else if(((choice3<0.50&&(int)(choice3*500)%132==0)||(choice3>=0.50&&(int)(choice3*132)%32==0))&&choice3<=0.64)
+                {
+                    blocks[i][j]->object = new Carrot();
+                    txtLoader->chooseTexture(*blocks[i][j]->object,i,j,offsetX,offsetY,CARROT,0,objectNoise);
+                }
             }
 
             if(blocks[i][j]->object==nullptr)
@@ -237,9 +247,14 @@ void World::update(sf::RenderWindow& window)
     }
     else if(gameTime<6&&dayCounter>0)
         dayCounter-=0.2;
+
+    if(((gameTime>16&&gameTime<=21)||(gameTime>=3&&gameTime<8))&&redCounter<100) redCounter+=1;
+    else if((gameTime>21||gameTime<3||gameTime>=8)&&redCounter>0) redCounter-=1;
+
+
     if(gameTime==6)
         dayCounter=0;
-    daynight.setFillColor(sf::Color(0,dayCounter/20,0,dayCounter));
+    daynight.setFillColor(sf::Color(redCounter,0,0,dayCounter));
 
     ue.join();
 }
@@ -353,7 +368,6 @@ void World::pickUpItem()
 
 void World::dropItem(sf::Vector2f mpos)
 {
-    cout<<"DROP ITEM"<<endl;
     Chunk *c = nullptr;
     Block *b = nullptr;
     sf::Vector2i ids = blockID(sf::Vector2f(player.ci,player.cj),player.getPosition()+sf::Vector2f(15,25));
@@ -363,15 +377,10 @@ void World::dropItem(sf::Vector2f mpos)
         b = c->blocks[ids.x][ids.y];
     if(b==nullptr)
         return;
-    cout<<"PRZESZLO"<<endl;
     for(int i=0;i<player.eq.items.size();i++)
     {
-        cout<<"PETLA"<<endl;
-        cout<<"item="<<player.eq.items[i]->getPosition().x<<" "<<player.eq.items[i]->getPosition().y<<endl;
-        cout<<"myszka="<<mpos.x<<" "<<mpos.y<<endl;
         if(player.eq.items[i]->getGlobalBounds().contains(sf::Vector2f(mpos.x,mpos.y)))
         {
-            cout<<"ZAWIERA"<<endl;
             Item * temp = player.eq.items[i];
             player.eq.items.erase(player.eq.items.begin()+i);
             temp->setScale(10/6,10/6);
