@@ -34,9 +34,10 @@ class TextureLoader
 
     sf::Texture* branch;
     sf::Texture* rock;
+    sf::Texture* meat;
 public:
     vector<sf::Texture*> items;
-    TextureLoader(){};
+    TextureLoader() {};
     void load()
     {
         player=new sf::Texture();
@@ -57,32 +58,57 @@ public:
         thirstBar=new sf::Texture();
         branch=new sf::Texture();
         rock=new sf::Texture();
+        meat=new sf::Texture();
         bush=new sf::Texture();
         wheat=new sf::Texture();
         carrot=new sf::Texture();
-        if(player->loadFromFile("resources/textures/player.png")) cout<<"Wczytano teksture gracza"<<endl;
-        if(eq->loadFromFile("resources/textures/eq.png")) cout<<"Wczytano teksture ekwipunku"<<endl;
-        if(popUp->loadFromFile("resources/textures/popup.png")) cout<<"Wczytano teksture popupu"<<endl;
-        if(cursor->loadFromFile("resources/textures/cursor.png")) cout<<"Wczytano teksture kursora"<<endl;
-        if(sand->loadFromFile("resources/textures/sand.png")) cout<<"Wczytano teksture piasku"<<endl;
-        if(water->loadFromFile("resources/textures/water.png")) cout<<"Wczytano teksture wody"<<endl;
-        if(stone->loadFromFile("resources/textures/stone.png")) cout<<"Wczytano teksture kamienia"<<endl;
-        if(grass->loadFromFile("resources/textures/grass.png")) cout<<"Wczytano teksture trawy"<<endl;
-        if(dirt->loadFromFile("resources/textures/dirt.png")) cout<<"Wczytano teksture ziemi"<<endl;
-        if(tree->loadFromFile("resources/textures/tree.png")) cout<<"Wczytano teksture drzewa"<<endl;
-        if(sheep->loadFromFile("resources/textures/sheep.png")) cout<<"Wczytano teksture owcy"<<endl;
-        if(cow->loadFromFile("resources/textures/cow.png")) cout<<"Wczytano teksture krowy"<<endl;
-        if(pig->loadFromFile("resources/textures/pig.png")) cout<<"Wczytano teksture swini"<<endl;
-        if(hpBar->loadFromFile("resources/textures/hpBar.png")) cout<<"Wczytano teksture paska zycia"<<endl;
-        if(hungerBar->loadFromFile("resources/textures/hungerBar.png")) cout<<"Wczytano teksture paska g³odu"<<endl;
-        if(thirstBar->loadFromFile("resources/textures/thirstBar.png")) cout<<"Wczytano teksture paska pragnienia"<<endl;
-        if(branch->loadFromFile("resources/textures/branch.png")) cout<<"Wczytano teksture galazki"<<endl;
-        if(rock->loadFromFile("resources/textures/rock.png")) cout<<"Wczytano teksture kamyka"<<endl;
-        if(bush->loadFromFile("resources/textures/bush.png")) cout<<"Wczytano teksture krzaka"<<endl;
-        if(wheat->loadFromFile("resources/textures/wheat.png")) cout<<"Wczytano teksture pszenicy"<<endl;
-        if(carrot->loadFromFile("resources/textures/carrot.png")) cout<<"Wczytano teksture marchewki"<<endl;
+        if(player->loadFromFile("resources/textures/player.png"))
+            cout<<"Wczytano teksture gracza"<<endl;
+        if(eq->loadFromFile("resources/textures/eq.png"))
+            cout<<"Wczytano teksture ekwipunku"<<endl;
+        if(popUp->loadFromFile("resources/textures/popup.png"))
+            cout<<"Wczytano teksture popupu"<<endl;
+        if(cursor->loadFromFile("resources/textures/cursor.png"))
+            cout<<"Wczytano teksture kursora"<<endl;
+        if(sand->loadFromFile("resources/textures/sand.png"))
+            cout<<"Wczytano teksture piasku"<<endl;
+        if(water->loadFromFile("resources/textures/water.png"))
+            cout<<"Wczytano teksture wody"<<endl;
+        if(stone->loadFromFile("resources/textures/stone.png"))
+            cout<<"Wczytano teksture kamienia"<<endl;
+        if(grass->loadFromFile("resources/textures/grass.png"))
+            cout<<"Wczytano teksture trawy"<<endl;
+        if(dirt->loadFromFile("resources/textures/dirt.png"))
+            cout<<"Wczytano teksture ziemi"<<endl;
+        if(tree->loadFromFile("resources/textures/tree.png"))
+            cout<<"Wczytano teksture drzewa"<<endl;
+        if(sheep->loadFromFile("resources/textures/sheep.png"))
+            cout<<"Wczytano teksture owcy"<<endl;
+        if(cow->loadFromFile("resources/textures/cow.png"))
+            cout<<"Wczytano teksture krowy"<<endl;
+        if(pig->loadFromFile("resources/textures/pig.png"))
+            cout<<"Wczytano teksture swini"<<endl;
+        if(hpBar->loadFromFile("resources/textures/hpBar.png"))
+            cout<<"Wczytano teksture paska zycia"<<endl;
+        if(hungerBar->loadFromFile("resources/textures/hungerBar.png"))
+            cout<<"Wczytano teksture paska g³odu"<<endl;
+        if(thirstBar->loadFromFile("resources/textures/thirstBar.png"))
+            cout<<"Wczytano teksture paska pragnienia"<<endl;
+        if(branch->loadFromFile("resources/textures/branch.png"))
+            cout<<"Wczytano teksture galazki"<<endl;
+        if(rock->loadFromFile("resources/textures/rock.png"))
+            cout<<"Wczytano teksture kamyka"<<endl;
+        if(meat->loadFromFile("resources/textures/meat.png"))
+            cout<<"Wczytano teksture miesa"<<endl;
+        if(bush->loadFromFile("resources/textures/bush.png"))
+            cout<<"Wczytano teksture krzaka"<<endl;
+        if(wheat->loadFromFile("resources/textures/wheat.png"))
+            cout<<"Wczytano teksture pszenicy"<<endl;
+        if(carrot->loadFromFile("resources/textures/carrot.png"))
+            cout<<"Wczytano teksture marchewki"<<endl;
         items.push_back(branch);
         items.push_back(rock);
+        items.push_back(meat);
     }
 
     void chooseTexture(Block& block,int i,int j,int offsetX,int offsetY,blockType type,float value);
@@ -92,7 +118,7 @@ public:
 
     void chooseTexture(Block& block,vector<Block*> n);
 
-    void setTexture(Entity& entity,entityType);
+//    void setTexture(Entity& entity,entityType);
 
     void setPlayerTexture(Player& p)
     {
@@ -114,12 +140,34 @@ public:
         case 1:
             i.setTexture(*rock);
             break;
+        case 2:
+            i.setTexture(*meat);
+            break;
         }
     }
 
     sf::Texture* getPopUpTexture()
     {
         return popUp;
+    }
+
+    sf::Texture* getEntityTexture(int type)
+    {
+        switch(type)
+        {
+        case 0:
+            return sheep;
+            break;
+        case 1:
+            return cow;
+            break;
+        case 2:
+            return pig;
+            break;
+        default:
+            return nullptr;
+            break;
+        }
     }
 
     sf::Texture* getItemTexture(int id)

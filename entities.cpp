@@ -124,8 +124,16 @@ void Wolf::update(vector<Block*> collisions,vector<Entity*>& entities)
             Entity* temp=entities[i];
             if(temp!=nullptr)
             {
+                Item* it = new Item(2);
+                it->setTexture(*txtLoader->getItemTexture(2));
+
+                if(temp->block!=nullptr)
+                {
+                    it->setPosition(temp->block->getPosition());
+                    temp->block->items.push_back(it);
+                }
                 entities.erase(entities.begin()+i);
-                //delete temp;
+                delete temp;
             }
         }
     }

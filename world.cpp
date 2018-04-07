@@ -366,6 +366,33 @@ void World::pickUpItem()
     }
 }
 
+Block* World::getBlock(sf::Vector2f pos)
+{
+    int ox,oy;
+
+    if(pos.x>=0)
+        ox=pos.x/(CHUNK_SIZE*BLOCK_SIZE);
+    else
+        ox=floor(pos.x/(CHUNK_SIZE*BLOCK_SIZE));
+
+    if(pos.y>=0)
+        oy=pos.y/(CHUNK_SIZE*BLOCK_SIZE);
+    else
+        oy=floor(pos.y/(CHUNK_SIZE*BLOCK_SIZE));
+
+    Chunk *c = nullptr;
+    Block *b = nullptr;
+
+    sf::Vector2i ids = blockID(sf::Vector2f(ox,oy),pos+sf::Vector2f(15,25));
+
+    c = getChunk(ox,oy);
+    if(c!=nullptr&&ids.x>=0&&ids.x<16&&ids.x>=0&&ids.y<16)
+        b = c->blocks[ids.x][ids.y];
+    if(b==nullptr)
+        return nullptr;
+    return b;
+}
+
 void World::dropItem(sf::Vector2f mpos)
 {
     Chunk *c = nullptr;
@@ -395,22 +422,26 @@ void World::spawnEntities()
     if(spawningClock.getElapsedTime().asMilliseconds()>3000)
     {
         spawningClock.restart();
-        Entity *temp = new Sheep(vh::randElement(chunks).randBlock().getPosition());
-        txtLoader->setTexture(*temp,SHEEP);
+        Entity *temp = new Sheep(txtLoader,vh::randElement(chunks).randBlock().getPosition());
+        temp->setTexture(*txtLoader->getEntityTexture(SHEEP));
+        temp->setScale(0.5,0.5);
         temp->changeTextureRect(0);
         entities.push_back(temp);
-        Entity *temp2 = new Cow(vh::randElement(chunks).randBlock().getPosition());
-        txtLoader->setTexture(*temp2,COW);
+        Entity *temp2 = new Cow(txtLoader,vh::randElement(chunks).randBlock().getPosition());
+        temp2->setTexture(*txtLoader->getEntityTexture(COW));
+        temp2->setScale(0.75,0.75);
         temp2->changeTextureRect(0);
         entities.push_back(temp2);
-        Entity *temp3 = new Pig(vh::randElement(chunks).randBlock().getPosition());
-        txtLoader->setTexture(*temp3,PIG);
+        Entity *temp3 = new Pig(txtLoader,vh::randElement(chunks).randBlock().getPosition());
+        temp3->setTexture(*txtLoader->getEntityTexture(PIG));
+        temp3->setScale(0.75,0.75);
         temp3->changeTextureRect(0);
         entities.push_back(temp3);
-        if(rand()%4==0)
+        if(rand()%1==0)
         {
-            Entity *temp4 = new Wolf(vh::randElement(chunks).randBlock().getPosition());
-            txtLoader->setTexture(*temp4,WOLF);
+            Entity *temp4 = new Wolf(txtLoader,vh::randElement(chunks).randBlock().getPosition());
+            temp4->setTexture(*txtLoader->getEntityTexture(SHEEP));
+            temp4->setScale(0.5,0.5);
             temp4->changeTextureRect(0);
             temp4->setColor(sf::Color::Red);
             entities.push_back(temp4);
@@ -439,6 +470,7 @@ void World::draw(sf::RenderWindow& window)
     for(auto& e:entities)
     {
         window.draw(*e);
+        e->block=getBlock(e->getPosition());
     }
     window.draw(daynight);
 }

@@ -8,7 +8,6 @@ int main()
     sf::ContextSettings settings;
     //settings.antialiasingLevel=8;
     sf::RenderWindow window(sf::VideoMode(1920, 1080),"",sf::Style::Fullscreen,settings);
-    sf::View fixed = window.getView();
     window.setMouseCursorVisible(false);
     window.setVerticalSyncEnabled(true);
     window.setFramerateLimit(60);

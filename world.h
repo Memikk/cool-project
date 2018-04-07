@@ -44,6 +44,7 @@ public:
     void dropItem(sf::Vector2f mpos);
     bool exist(int x,int y) const;
     Block* blockCollision(sf::Vector2f pos);
+    Block* getBlock(sf::Vector2f pos);
     Chunk* getChunk(int x,int y);
     vector<Block*> getCollisions(sf::Vector2f pos);
     void spawnEntities();

@@ -310,31 +310,31 @@ void TextureLoader::setTexture(Object& object,objectType type,int choice)
     }
 }
 
-void TextureLoader::setTexture(Entity& entity,entityType type)
-{
-    sf::IntRect textureRect(0,BLOCK_SIZE,BLOCK_SIZE,BLOCK_SIZE);
-    entity.type=type;
-    entity.setTextureRect(textureRect);
-    switch(type)
-    {
-    case SHEEP:
-        entity.setTexture(*sheep,true);
-        entity.setScale(0.5,0.5);
-        break;
-    case COW:
-        entity.setTexture(*cow,true);
-        entity.setScale(0.75,0.75);
-        break;
-    case PIG:
-        entity.setTexture(*pig,true);
-        entity.setScale(0.75,0.75);
-        break;
-    default:
-        entity.setTexture(*sheep,true);
-        entity.setScale(0.5,0.5);
-        break;
-    }
-}
+//void TextureLoader::setTexture(Entity& entity,entityType type)
+//{
+//    sf::IntRect textureRect(0,BLOCK_SIZE,BLOCK_SIZE,BLOCK_SIZE);
+//    entity.type=type;
+//    entity.setTextureRect(textureRect);
+//    switch(type)
+//    {
+//    case SHEEP:
+//        entity.setTexture(*sheep,true);
+//        entity.setScale(0.5,0.5);
+//        break;
+//    case COW:
+//        entity.setTexture(*cow,true);
+//        entity.setScale(0.75,0.75);
+//        break;
+//    case PIG:
+//        entity.setTexture(*pig,true);
+//        entity.setScale(0.75,0.75);
+//        break;
+//    default:
+//        entity.setTexture(*sheep,true);
+//        entity.setScale(0.5,0.5);
+//        break;
+//    }
+//}
 
 
 

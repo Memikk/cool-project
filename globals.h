@@ -16,7 +16,7 @@
 using namespace std;
 
 class Block;
-//class TextureLoader;
+class TextureLoader;
 class Player;
 class Chunk;
 class World;
