@@ -7,7 +7,8 @@ PopUp::PopUp(sf::Texture* t)
 
 void PopUp::update()
 {
-    desiredPos=sf::Vector2f(base.x,base.y-40);
+    cout<<offset2<<endl;
+    desiredPos=sf::Vector2f(base.x,base.y-40-offset2);
     if(desiredPos.y<getPosition().y)
     {
         offset++;
@@ -45,6 +46,7 @@ Interface::Interface(TextureLoader* tLoader)
 {
     txtLoader=tLoader;
     font.loadFromFile("resources/fonts/sub.ttf");
+    cursor.setTexture(*txtLoader->getCursorTexture());
     gTime.setFont(font);
     gTime.setCharacterSize(45);
     gTime.setColor(sf::Color(222, 191, 94));
@@ -85,6 +87,8 @@ void Interface::update(Player& p,sf::RenderWindow& window)
                   window.getView().getSize().y/window.getSize().y*5);
     p.eq.setPosition(window.getView().getCenter().x-p.eq.getGlobalBounds().width/2.f,
                      window.getView().getCenter().y-p.eq.getGlobalBounds().height/2.f);
+    sf::View temp = window.getView();
+    cursor.setPosition(window.mapPixelToCoords(sf::Mouse::getPosition(window),window.getView()));
     if(p.eq.on)
     {
         for(int i=0; i<p.eq.items.size(); i++)
@@ -113,6 +117,10 @@ void Interface::update(Player& p,sf::RenderWindow& window)
 
 void Interface::popUp(int id)
 {
+    for(auto& pp:popUps)
+    {
+        pp.offset2+=40;
+    }
     switch(id)
     {
     case 0:
@@ -154,6 +162,7 @@ void Interface::draw(Player& p,sf::RenderWindow& window)
         window.draw(p);
         window.draw(p.item);
     }
+    window.draw(cursor);
 }
 
 

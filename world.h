@@ -26,6 +26,7 @@ class World
 {
     sf::RectangleShape daynight;
     float dayCounter=0;
+    float redCounter=0;
     int adder=2;
     siv::PerlinNoise perlin;
     Player player;

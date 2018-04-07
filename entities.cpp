@@ -122,8 +122,11 @@ void Wolf::update(vector<Block*> collisions,vector<Entity*>& entities)
         if(tempD<10)
         {
             Entity* temp=entities[i];
-            entities.erase(entities.begin()+i);
-            delete temp;
+            if(temp!=nullptr)
+            {
+                entities.erase(entities.begin()+i);
+                //delete temp;
+            }
         }
     }
     desiredPos=desiredTemp;

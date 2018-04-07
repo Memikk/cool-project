@@ -6,11 +6,14 @@
 
 class PopUp : public sf::Sprite
 {
-    sf::Vector2f desiredPos;
+    unsigned short lifespan=300;
+    unsigned short counter=0;
 public:
+    sf::Vector2f desiredPos;
     sf::Sprite item;
     sf::Vector2f base;
     int offset=0;
+    int offset2=0;
     PopUp(sf::Texture* t);
     void update();
 };
@@ -30,6 +33,7 @@ public:
 class Interface
 {
 public:
+    sf::Sprite cursor;
     sf::Font font;
     sf::Text gTime;
     TextureLoader* txtLoader;

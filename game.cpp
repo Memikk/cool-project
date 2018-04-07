@@ -7,6 +7,10 @@ Game::Game(sf::RenderWindow& win)
     cout<<"wylosowano seed mapy"<<endl;
 
     txtLoader = new TextureLoader();
+    txtLoader->load();
+    cout<<"zaladowano textury"<<endl;
+
+
     evHandler = new EventHandler(win);
     iface = new Interface(txtLoader);
     world = new World(txtLoader,iface);
@@ -16,8 +20,6 @@ Game::Game(sf::RenderWindow& win)
     window=&win;
     cout<<"ustawiono wskaznik na okno"<<endl;
 
-    txtLoader->load();
-    cout<<"zaladowano textury"<<endl;
     txtLoader->setPlayerTexture(world->getPlayer());
     cout<<"ustawiono teksture gracza"<<endl;
 
