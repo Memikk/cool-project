@@ -96,7 +96,7 @@ void Player::moving(vector<Block*>& collisions)
 
 void Player::changeTextureRect(int value)
 {
-    sf::IntRect t(0,BLOCK_SIZE*value,BLOCK_SIZE,BLOCK_SIZE);
+    sf::IntRect t(0,33*value,23,33);
     setTextureRect(t);
 }
 

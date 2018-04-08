@@ -25,10 +25,10 @@ Chunk::Chunk(int offX,int offY,siv::PerlinNoise& perlin,TextureLoader* txtLoader
                 blocks[i][j]->cover = new Sand();
                 txtLoader->chooseTexture(*blocks[i][j]->cover,i,j,offsetX,offsetY,SAND,0.64,objectNoise2);
             }
-            if(choice>0.25)
+            if(choice>0.30)
             {
                 blocks[i][j]->grass = new Grass();
-                txtLoader->chooseTexture(*blocks[i][j]->grass,i,j,offsetX,offsetY,GRASS,0.25,worldGenNoise);
+                txtLoader->chooseTexture(*blocks[i][j]->grass,i,j,offsetX,offsetY,GRASS,0.30,worldGenNoise);
             }
 
             if(choice>0.75)
@@ -295,7 +295,7 @@ Block* World::blockCollision(sf::Vector2f pos)
 vector<Block*> World::getCollisions(sf::Vector2f ppos)
 {
     vector<Block*> collisions;
-    ppos+=sf::Vector2f(25,25);
+    ppos+=sf::Vector2f(12,16);
     collisions.push_back(blockCollision(sf::Vector2f(ppos.x-BLOCK_SIZE,ppos.y-BLOCK_SIZE)));
     collisions.push_back(blockCollision(sf::Vector2f(ppos.x,ppos.y-BLOCK_SIZE)));
     collisions.push_back(blockCollision(sf::Vector2f(ppos.x+BLOCK_SIZE,ppos.y-BLOCK_SIZE)));
