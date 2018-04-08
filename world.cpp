@@ -74,7 +74,7 @@ Chunk::Chunk(int offX,int offY,siv::PerlinNoise& perlin,TextureLoader* txtLoader
                     blocks[i][j]->object = new Wheat();
                     txtLoader->chooseTexture(*blocks[i][j]->object,i,j,offsetX,offsetY,WHEAT,0,objectNoise);
                 }
-                else if(((choice3<0.50&&(int)(choice3*500)%132==0)||(choice3>=0.50&&(int)(choice3*132)%32==0))&&choice3<=0.64)
+                else if(((choice3<0.60&&(int)(choice3*500)%116==0)||(choice3>=0.50&&(int)(choice3*132)%26==0))&&choice3<=0.64)
                 {
                     blocks[i][j]->object = new Carrot();
                     txtLoader->chooseTexture(*blocks[i][j]->object,i,j,offsetX,offsetY,CARROT,0,objectNoise);
@@ -351,11 +351,30 @@ void World::pickUpItem()
         return;
     if(b==nullptr)
         return;
-    b->setFillColor(sf::Color::Cyan);
+
     if(b->cover!=nullptr)
         b->cover->setColor(sf::Color::Cyan);
+
     if(b->items.size()>0)
         item = b->items.back();
+    else if(b->object&&b->object->type==WHEAT)
+    {
+        item = new Item(3);
+        txtLoader->setItemTexture(*item,3);
+        b->object=nullptr;
+        iface->popUp(3);
+        player.eq.add(item);
+        return;
+    }
+    else if(b->object&&b->object->type==CARROT)
+    {
+        item = new Item(4);
+        txtLoader->setItemTexture(*item,4);
+        b->object=nullptr;
+        iface->popUp(4);
+        player.eq.add(item);
+        return;
+    }
     else
         return;
     if(item!=nullptr)
@@ -364,6 +383,7 @@ void World::pickUpItem()
         b->items.pop_back();
         player.eq.add(item);
     }
+
 }
 
 Block* World::getBlock(sf::Vector2f pos)

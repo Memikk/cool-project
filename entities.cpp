@@ -109,9 +109,9 @@ void Wolf::update(vector<Block*> collisions,vector<Entity*>& entities)
 {
     float tempD=999999;
     sf::Vector2f desiredTemp;
-    for(int i=0;i<entities.size();i++)
+    for(int i=entities.size()-1;i>=0;i--)
     {
-        float d=-1;
+        float d=0;
         if(entities[i]->type!=WOLF) d=vh::distance(getPosition(),entities[i]->getPosition());
         else continue;
         if(d<tempD)
@@ -119,7 +119,7 @@ void Wolf::update(vector<Block*> collisions,vector<Entity*>& entities)
             tempD=d;
             desiredTemp=entities[i]->getPosition();
         }
-        if(tempD<10)
+        if(d<10)
         {
             Entity* temp=entities[i];
             if(temp!=nullptr)
@@ -135,6 +135,7 @@ void Wolf::update(vector<Block*> collisions,vector<Entity*>& entities)
                 entities.erase(entities.begin()+i);
                 delete temp;
             }
+            break;
         }
     }
     desiredPos=desiredTemp;

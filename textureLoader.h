@@ -36,6 +36,8 @@ class TextureLoader
     sf::Texture* branch;
     sf::Texture* rock;
     sf::Texture* meat;
+    sf::Texture* wheatItem;
+    sf::Texture* carrotItem;
 public:
     vector<sf::Texture*> items;
     TextureLoader() {};
@@ -61,6 +63,8 @@ public:
         branch=new sf::Texture();
         rock=new sf::Texture();
         meat=new sf::Texture();
+        wheatItem=new sf::Texture();
+        carrotItem=new sf::Texture();
         bush=new sf::Texture();
         wheat=new sf::Texture();
         carrot=new sf::Texture();
@@ -102,6 +106,10 @@ public:
             cout<<"Wczytano teksture kamyka"<<endl;
         if(meat->loadFromFile("resources/textures/meat.png"))
             cout<<"Wczytano teksture miesa"<<endl;
+        if(wheatItem->loadFromFile("resources/textures/wheatItem.png"))
+            cout<<"Wczytano teksture pszenicy(przedmiot)"<<endl;
+        if(carrotItem->loadFromFile("resources/textures/carrotItem.png"))
+            cout<<"Wczytano teksture marchewki(przedmiot)"<<endl;
         if(bush->loadFromFile("resources/textures/bush.png"))
             cout<<"Wczytano teksture krzaka"<<endl;
         if(wheat->loadFromFile("resources/textures/wheat.png"))
@@ -113,6 +121,8 @@ public:
         items.push_back(branch);
         items.push_back(rock);
         items.push_back(meat);
+        items.push_back(wheatItem);
+        items.push_back(carrotItem);
     }
 
     void chooseTexture(Block& block,int i,int j,int offsetX,int offsetY,blockType type,float value);
@@ -146,6 +156,12 @@ public:
             break;
         case 2:
             i.setTexture(*meat);
+            break;
+        case 3:
+            i.setTexture(*wheatItem);
+            break;
+        case 4:
+            i.setTexture(*carrotItem);
             break;
         }
     }

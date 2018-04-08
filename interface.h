@@ -6,9 +6,8 @@
 
 class PopUp : public sf::Sprite
 {
-    unsigned short lifespan=300;
-    unsigned short counter=0;
 public:
+    float counter=255;
     sf::Vector2f desiredPos;
     sf::Sprite item;
     sf::Vector2f base;

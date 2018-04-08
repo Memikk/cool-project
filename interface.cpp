@@ -7,12 +7,14 @@ PopUp::PopUp(sf::Texture* t)
 
 void PopUp::update()
 {
-    cout<<offset2<<endl;
     desiredPos=sf::Vector2f(base.x,base.y-40-offset2);
     if(desiredPos.y<getPosition().y)
     {
         offset++;
     }
+    counter-=0.2;
+    setColor(sf::Color(255,255,255,counter));
+    item.setColor(sf::Color(255,255,255,counter));
 }
 
 FPS::FPS()
@@ -106,12 +108,17 @@ void Interface::update(Player& p,sf::RenderWindow& window)
                                        window.getView().getSize().y/16.4*yo);
         }
     }
-    for(auto& pp:popUps)
+    for(int i=popUps.size()-1; i>=0; i--)
     {
-        pp.base=sf::Vector2f(window.getView().getCenter().x+400,window.getView().getCenter().y+270);
-        pp.setPosition(window.getView().getCenter().x+400,window.getView().getCenter().y+270-pp.offset);
-        pp.item.setPosition(window.getView().getCenter().x+408,window.getView().getCenter().y+275-pp.offset);
-        pp.update();
+        if(popUps[i].counter<=0)
+            popUps.erase(popUps.begin()+i);
+        else
+        {
+            popUps[i].base=sf::Vector2f(window.getView().getCenter().x+400,window.getView().getCenter().y+270);
+            popUps[i].setPosition(window.getView().getCenter().x+400,window.getView().getCenter().y+270-popUps[i].offset);
+            popUps[i].item.setPosition(window.getView().getCenter().x+408,window.getView().getCenter().y+275-popUps[i].offset);
+            popUps[i].update();
+        }
     }
 }
 
@@ -121,25 +128,10 @@ void Interface::popUp(int id)
     {
         pp.offset2+=40;
     }
-    switch(id)
-    {
-    case 0:
-        popUps.push_back(PopUp(txtLoader->items[0]));
-        popUps.back().setTexture(*txtLoader->getPopUpTexture());
-        popUps.back().item.setTexture(*txtLoader->getItemTexture(0));
-        popUps.back().item.setScale(0.60,0.60);
-        break;
-    case 1:
-        popUps.push_back(PopUp(txtLoader->items[1]));
-        popUps.back().setTexture(*txtLoader->getPopUpTexture());
-        popUps.back().item.setTexture(*txtLoader->getItemTexture(1));
-        popUps.back().item.setScale(0.60,0.60);
-        break;
-    default:
-        popUps.push_back(PopUp(txtLoader->items[0]));
-        popUps.back().setTexture(*txtLoader->getPopUpTexture());
-        break;
-    }
+    popUps.push_back(PopUp(txtLoader->items[id]));
+    popUps.back().setTexture(*txtLoader->getPopUpTexture());
+    popUps.back().item.setTexture(*txtLoader->getItemTexture(id));
+    popUps.back().item.setScale(0.60,0.60);
 }
 
 void Interface::draw(Player& p,sf::RenderWindow& window)
