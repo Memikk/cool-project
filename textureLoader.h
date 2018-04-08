@@ -27,6 +27,7 @@ class TextureLoader
     sf::Texture* sheep;
     sf::Texture* cow;
     sf::Texture* pig;
+    sf::Texture* wolf;
 
     sf::Texture* hpBar;
     sf::Texture* hungerBar;
@@ -52,6 +53,7 @@ public:
         tree=new sf::Texture();
         sheep=new sf::Texture();
         cow=new sf::Texture();
+        wolf=new sf::Texture();
         pig=new sf::Texture();
         hpBar=new sf::Texture();
         hungerBar=new sf::Texture();
@@ -91,7 +93,7 @@ public:
         if(hpBar->loadFromFile("resources/textures/hpBar.png"))
             cout<<"Wczytano teksture paska zycia"<<endl;
         if(hungerBar->loadFromFile("resources/textures/hungerBar.png"))
-            cout<<"Wczytano teksture paska g³odu"<<endl;
+            cout<<"Wczytano teksture paska glodu"<<endl;
         if(thirstBar->loadFromFile("resources/textures/thirstBar.png"))
             cout<<"Wczytano teksture paska pragnienia"<<endl;
         if(branch->loadFromFile("resources/textures/branch.png"))
@@ -106,6 +108,8 @@ public:
             cout<<"Wczytano teksture pszenicy"<<endl;
         if(carrot->loadFromFile("resources/textures/carrot.png"))
             cout<<"Wczytano teksture marchewki"<<endl;
+        if(wolf->loadFromFile("resources/textures/wolf.png"))
+            cout<<"Wczytano teksture wilka"<<endl;
         items.push_back(branch);
         items.push_back(rock);
         items.push_back(meat);
@@ -163,6 +167,9 @@ public:
             break;
         case 2:
             return pig;
+            break;
+        case 3:
+            return wolf;
             break;
         default:
             return nullptr;

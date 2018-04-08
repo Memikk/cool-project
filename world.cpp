@@ -440,10 +440,10 @@ void World::spawnEntities()
         if(rand()%1==0)
         {
             Entity *temp4 = new Wolf(txtLoader,vh::randElement(chunks).randBlock().getPosition());
-            temp4->setTexture(*txtLoader->getEntityTexture(SHEEP));
-            temp4->setScale(0.5,0.5);
+            temp4->setTexture(*txtLoader->getEntityTexture(WOLF));
+            temp4->setScale(0.6,0.6);
             temp4->changeTextureRect(0);
-            temp4->setColor(sf::Color::Red);
+
             entities.push_back(temp4);
         }
     }
