@@ -2,7 +2,7 @@
 
 int BLOCK_SIZE=50;
 int CHUNK_SIZE=16;
-float speed=2.5;
+float speed=3;
 float zoom=1.0;
 sf::Clock animationClock;
 sf::Clock fpsClock;

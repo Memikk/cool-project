@@ -15,6 +15,10 @@ void EventHandler::checkEvents(World& world,sf::View& view)
         {
             world.dropItem(window->mapPixelToCoords(sf::Mouse::getPosition()));
         }
+        else if(event.type == sf::Event::MouseButtonPressed&&event.mouseButton.button==sf::Mouse::Left&&world.getPlayer().eq.on)
+        {
+            world.eat(window->mapPixelToCoords(sf::Mouse::getPosition()));
+        }
         else if(event.type == sf::Event::KeyPressed&&event.key.code == sf::Keyboard::E)
         {
             world.getPlayer().eq.on=!world.getPlayer().eq.on;

@@ -48,7 +48,9 @@ Interface::Interface(TextureLoader* tLoader)
 {
     txtLoader=tLoader;
     font.loadFromFile("resources/fonts/sub.ttf");
+
     cursor.setTexture(*txtLoader->getCursorTexture());
+
     gTime.setFont(font);
     gTime.setCharacterSize(45);
     gTime.setColor(sf::Color(222, 191, 94));
@@ -77,6 +79,9 @@ void Interface::update(Player& p,sf::RenderWindow& window)
                             window.getView().getCenter().y-window.getView().getSize().y/2+window.getView().getSize().y/6.7);
     p.thirstBar.setScale(window.getView().getSize().x/window.getSize().x*5,
                          window.getView().getSize().y/window.getSize().y*5);
+    p.hpCover.setPosition(p.hpBar.getPosition()+sf::Vector2f(33,5));
+    p.hungerCover.setPosition(p.hungerBar.getPosition()+sf::Vector2f(33,5));
+    p.thirstCover.setPosition(p.thirstBar.getPosition()+sf::Vector2f(33,5));
     fps.fps.setPosition(window.getView().getCenter().x-window.getView().getSize().x/2,
                         window.getView().getCenter().y-window.getView().getSize().y/2);
     fps.fps.setScale(window.getView().getSize().x/window.getSize().x,
@@ -139,6 +144,10 @@ void Interface::draw(Player& p,sf::RenderWindow& window)
     window.draw(p.hpBar);
     window.draw(p.hungerBar);
     window.draw(p.thirstBar);
+    window.draw(p.hpCover);
+    window.draw(p.hungerCover);
+    window.draw(p.thirstCover);
+
     window.draw(fps.fps);
     if(p.eq.on)
     {

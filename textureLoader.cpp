@@ -197,7 +197,11 @@ void TextureLoader::chooseTexture(Object& object,int i,int j,int offsetX,int off
     float t6=perlin.noise0_1((float)xp7*0.002,(float)yp7*0.002);
     float t7=perlin.noise0_1((float)xp8*0.002,(float)yp8*0.002);
 
-    if(t0<=value&&t1<=value&&t7<=value&&t6<=value&&t5<=value)
+    if(t1<=value&&t3<=value&&t5<=value&&t7<=value)
+    {
+        setTexture(object,type,16);
+    }
+    else if(t0<=value&&t1<=value&&t7<=value&&t6<=value&&t5<=value)
     {
         setTexture(object,type,10);
     }

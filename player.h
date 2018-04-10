@@ -9,15 +9,24 @@ using namespace std;
 
 class Player : public sf::Sprite
 {
-    int hp=100;
     sf::RectangleShape background;
     sf::Vector2f vel,acc;
     direction dir=DOWN;
 public:
+    int hp=100;
+    int hunger=100;
+    int thirst=100;
+    int counter=0;
+
     Equipment eq;
+
     sf::Sprite hpBar;
     sf::Sprite hungerBar;
     sf::Sprite thirstBar;
+    sf::RectangleShape hpCover;
+    sf::RectangleShape hungerCover;
+    sf::RectangleShape thirstCover;
+
     int ci,cj;
     sf::Vector2f centerOfBlock;
     bool animating=false;

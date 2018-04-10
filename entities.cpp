@@ -105,10 +105,30 @@ void Entity::update(vector<Block*> collisions)
     moving(collisions);
 }
 
-void Wolf::update(vector<Block*> collisions,vector<Entity*>& entities)
+void Wolf::update(vector<Block*> collisions,vector<Entity*>& entities,Player& player)
 {
     float tempD=999999;
     sf::Vector2f desiredTemp;
+    float playerDistance=vh::distance(getPosition(),player.getPosition());
+
+    if(attackCooldown==110) player.setColor(sf::Color::White);
+    if(attackCooldown>0) attackCooldown--;
+
+    if(playerDistance<150&&player.hp!=0)
+    {
+        desiredPos=player.getPosition();
+        moving(collisions);
+        if(attackCooldown==0&&playerDistance<20)
+        {
+            player.hp-=damage;
+            player.setColor(sf::Color::Red);
+            player.hpCover.setSize(sf::Vector2f(120-player.hp*1.2,player.hpCover.getSize().y));
+            cout<<"PLAYER HP="<<player.hp<<endl;
+            attackCooldown=2*60;
+        }
+        return;
+    }
+
     for(int i=entities.size()-1;i>=0;i--)
     {
         float d=0;
@@ -125,6 +145,7 @@ void Wolf::update(vector<Block*> collisions,vector<Entity*>& entities)
             if(temp!=nullptr)
             {
                 Item* it = new Item(2);
+                it->food=true;
                 it->setTexture(*txtLoader->getItemTexture(2));
 
                 if(temp->block!=nullptr)

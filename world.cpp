@@ -215,7 +215,7 @@ void World::updateEntities(const sf::View& view)
         {
             if(e->type==WOLF)
             {
-                static_cast<Wolf*>(e)->update(getCollisions(e->getPosition()),entities);
+                static_cast<Wolf*>(e)->update(getCollisions(e->getPosition()),entities,player);
             }
             else
                 e->update(getCollisions(e->getPosition()));
@@ -243,18 +243,20 @@ void World::update(sf::RenderWindow& window)
     }
     if((gameTime>21||gameTime<3)&&dayCounter<140)
     {
-        dayCounter+=0.2;
+        dayCounter+=0.1;
     }
-    else if(gameTime<6&&dayCounter>0)
-        dayCounter-=0.2;
+    else if(gameTime<8&&dayCounter>0)
+        dayCounter-=0.1;
 
-    if(((gameTime>16&&gameTime<=21)||(gameTime>=3&&gameTime<8))&&redCounter<100) redCounter+=1;
-    else if((gameTime>21||gameTime<3||gameTime>=8)&&redCounter>0) redCounter-=1;
+    if(((gameTime>16&&gameTime<=21)||(gameTime>=3&&gameTime<8))&&redCounter<100)
+        redCounter+=1;
+    else if((gameTime>21||gameTime<3||gameTime>=8)&&redCounter>0)
+        redCounter-=1;
 
 
-    if(gameTime==6)
+    if(gameTime==8)
         dayCounter=0;
-    daynight.setFillColor(sf::Color(redCounter,0,0,dayCounter));
+    daynight.setFillColor(sf::Color(0,0,0,dayCounter));
 
     ue.join();
 }
@@ -372,6 +374,7 @@ void World::pickUpItem()
         txtLoader->setItemTexture(*item,4);
         b->object=nullptr;
         iface->popUp(4);
+        item->food=true;
         player.eq.add(item);
         return;
     }
@@ -424,7 +427,7 @@ void World::dropItem(sf::Vector2f mpos)
         b = c->blocks[ids.x][ids.y];
     if(b==nullptr)
         return;
-    for(int i=0;i<player.eq.items.size();i++)
+    for(int i=0; i<player.eq.items.size(); i++)
     {
         if(player.eq.items[i]->getGlobalBounds().contains(sf::Vector2f(mpos.x,mpos.y)))
         {
@@ -433,6 +436,25 @@ void World::dropItem(sf::Vector2f mpos)
             temp->setScale(10/6,10/6);
             temp->setPosition(b->getPosition());
             b->items.push_back(temp);
+        }
+    }
+}
+
+void World::eat(sf::Vector2f mpos)
+{
+    if(player.hunger<=90)
+    {
+        for(int i=0; i<player.eq.items.size(); i++)
+        {
+            if(player.eq.items[i]->getGlobalBounds().contains(sf::Vector2f(mpos.x,mpos.y)))
+            {
+                player.hunger+=10;
+                player.hungerCover.setSize(sf::Vector2f(120-player.hunger*1.2,player.hungerCover.getSize().y));
+                Item *temp = player.eq.items[i];
+                player.eq.items.erase(player.eq.items.begin()+i);
+                delete temp;
+                break;
+            }
         }
     }
 }

@@ -42,6 +42,7 @@ public:
     sf::Vector2i blockID(sf::Vector2f chunk,sf::Vector2f pos);
     void pickUpItem();
     void dropItem(sf::Vector2f mpos);
+    void eat(sf::Vector2f mpos);
     bool exist(int x,int y) const;
     Block* blockCollision(sf::Vector2f pos);
     Block* getBlock(sf::Vector2f pos);

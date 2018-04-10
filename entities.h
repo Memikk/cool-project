@@ -44,9 +44,11 @@ public:
 };
 class Wolf : public Entity
 {
+    int damage=10;
+    int attackCooldown=2*60;
 public:
     void hunt(vector<Entity*>& entities);
-    void update(vector<Block*> collisions,vector<Entity*>& entities);
+    void update(vector<Block*> collisions,vector<Entity*>& entities,Player& p);
     Wolf(TextureLoader* tloader):Entity(tloader,WOLF){};
     Wolf(TextureLoader* tloader,sf::Vector2f pos):Entity(tloader,pos,WOLF){};
 };

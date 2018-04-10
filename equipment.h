@@ -7,6 +7,7 @@ using namespace std;
 class Item : public sf::Sprite
 {
 public:
+    bool food=false;
     int id;
     Item(int id):id(id){};
     void draw(sf::RenderWindow& window){window.draw(*this);};
