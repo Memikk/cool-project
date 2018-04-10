@@ -36,6 +36,7 @@ class World
     Interface* iface;
 public:
     int gameTime=18;
+    int days=0;
     World(TextureLoader* tloader,Interface* intface);
     World(){};
     Player& getPlayer(){return player;};

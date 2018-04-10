@@ -238,7 +238,10 @@ void World::update(sf::RenderWindow& window)
         dayClock.restart();
         gameTime++;
         if(gameTime>23)
+        {
             gameTime=0;
+            days++;
+        }
         cout<<gameTime<<":00"<<endl;
     }
     if((gameTime>21||gameTime<3)&&dayCounter<140)
@@ -432,6 +435,7 @@ void World::dropItem(sf::Vector2f mpos)
         if(player.eq.items[i]->getGlobalBounds().contains(sf::Vector2f(mpos.x,mpos.y)))
         {
             Item * temp = player.eq.items[i];
+            iface->popUp(temp->id,true);
             player.eq.items.erase(player.eq.items.begin()+i);
             temp->setScale(10/6,10/6);
             temp->setPosition(b->getPosition());
@@ -451,6 +455,7 @@ void World::eat(sf::Vector2f mpos)
                 player.hunger+=10;
                 player.hungerCover.setSize(sf::Vector2f(120-player.hunger*1.2,player.hungerCover.getSize().y));
                 Item *temp = player.eq.items[i];
+                iface->popUp(temp->id,true);
                 player.eq.items.erase(player.eq.items.begin()+i);
                 delete temp;
                 break;
@@ -466,7 +471,6 @@ void World::drink()
         vector<Block*> collisions = getCollisions(player.getPosition()+sf::Vector2f(12,16));
         if(collisions[1]!=nullptr&&collisions[3]!=nullptr&&collisions[5]!=nullptr&&collisions[7]!=nullptr)
         {
-            cerr<<"TEST"<<endl;
             if((collisions[1]->object&&collisions[1]->object->type==WATER)||
                (collisions[3]->object&&collisions[3]->object->type==WATER)||
                (collisions[5]->object&&collisions[5]->object->type==WATER)||

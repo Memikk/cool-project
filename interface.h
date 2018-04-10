@@ -35,12 +35,14 @@ public:
     sf::Sprite cursor;
     sf::Font font;
     sf::Text gTime;
+    sf::Text days;
     TextureLoader* txtLoader;
     vector<PopUp> popUps;
     FPS fps;
     Interface(TextureLoader* tLoader);
-    void popUp(int id);
+    void popUp(int id,bool drop=false);
     void setTime(int t);
+    void setDays(int d);
     void update(Player& p,sf::RenderWindow& window);
     void draw(Player& p,sf::RenderWindow& window);
 };

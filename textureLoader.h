@@ -11,7 +11,8 @@ class TextureLoader
 {
     sf::Texture* player;
     sf::Texture* eq;
-    sf::Texture* popUp;
+    sf::Texture* popUpPick;
+    sf::Texture* popUpDrop;
     sf::Texture* cursor;
 
     sf::Texture* sand;
@@ -45,7 +46,8 @@ public:
     {
         player=new sf::Texture();
         eq=new sf::Texture();
-        popUp=new sf::Texture();
+        popUpPick=new sf::Texture();
+        popUpDrop=new sf::Texture();
         cursor=new sf::Texture();
         sand=new sf::Texture();
         water=new sf::Texture();
@@ -72,8 +74,10 @@ public:
             cout<<"Wczytano teksture gracza"<<endl;
         if(eq->loadFromFile("resources/textures/eq.png"))
             cout<<"Wczytano teksture ekwipunku"<<endl;
-        if(popUp->loadFromFile("resources/textures/popup.png"))
-            cout<<"Wczytano teksture popupu"<<endl;
+        if(popUpPick->loadFromFile("resources/textures/popup.png"))
+            cout<<"Wczytano teksture powiadomienia o podniesieniu przedmiotu"<<endl;
+        if(popUpDrop->loadFromFile("resources/textures/popupdrop.png"))
+            cout<<"Wczytano teksture powiadomienia o upuszczeniu przedmiotu"<<endl;
         if(cursor->loadFromFile("resources/textures/cursor.png"))
             cout<<"Wczytano teksture kursora"<<endl;
         if(sand->loadFromFile("resources/textures/sand.png"))
@@ -166,9 +170,14 @@ public:
         }
     }
 
-    sf::Texture* getPopUpTexture()
+    sf::Texture* getPopUpPickTexture()
     {
-        return popUp;
+        return popUpPick;
+    }
+
+    sf::Texture* getPopUpDropTexture()
+    {
+        return popUpDrop;
     }
 
     sf::Texture* getEntityTexture(int type)

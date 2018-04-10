@@ -57,11 +57,24 @@ Interface::Interface(TextureLoader* tLoader)
     gTime.setOutlineColor(sf::Color(103, 87, 25));
     gTime.setOutlineThickness(4);
     gTime.setString("6:00");
+
+    days.setFont(font);
+    days.setCharacterSize(36);
+    days.setScale(0.5,0.5);
+    days.setColor(sf::Color(222, 191, 94));
+    days.setOutlineColor(sf::Color(103, 87, 25));
+    days.setOutlineThickness(4);
+    days.setString("Day 0");
 }
 
 void Interface::setTime(int t)
 {
     gTime.setString(std::to_string(t)+":00");
+}
+
+void Interface::setDays(int d)
+{
+    days.setString("Day "+std::to_string(d));
 }
 
 void Interface::update(Player& p,sf::RenderWindow& window)
@@ -95,7 +108,11 @@ void Interface::update(Player& p,sf::RenderWindow& window)
     p.eq.setPosition(window.getView().getCenter().x-p.eq.getGlobalBounds().width/2.f,
                      window.getView().getCenter().y-p.eq.getGlobalBounds().height/2.f);
     sf::View temp = window.getView();
+
     cursor.setPosition(window.mapPixelToCoords(sf::Mouse::getPosition(window),window.getView()));
+
+    days.setPosition(window.getView().getCenter().x-days.getGlobalBounds().width/2,
+                     window.getView().getCenter().y-244);
     if(p.eq.on)
     {
         for(int i=0; i<p.eq.items.size(); i++)
@@ -127,14 +144,15 @@ void Interface::update(Player& p,sf::RenderWindow& window)
     }
 }
 
-void Interface::popUp(int id)
+void Interface::popUp(int id,bool drop)
 {
     for(auto& pp:popUps)
     {
         pp.offset2+=40;
     }
     popUps.push_back(PopUp(txtLoader->items[id]));
-    popUps.back().setTexture(*txtLoader->getPopUpTexture());
+    if(drop) popUps.back().setTexture(*txtLoader->getPopUpDropTexture());
+    else popUps.back().setTexture(*txtLoader->getPopUpPickTexture());
     popUps.back().item.setTexture(*txtLoader->getItemTexture(id));
     popUps.back().item.setScale(0.60,0.60);
 }
@@ -158,6 +176,7 @@ void Interface::draw(Player& p,sf::RenderWindow& window)
         }
     }
     window.draw(gTime);
+    window.draw(days);
     for(auto& p:popUps)
     {
         window.draw(p);

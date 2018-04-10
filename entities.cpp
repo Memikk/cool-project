@@ -114,7 +114,7 @@ void Wolf::update(vector<Block*> collisions,vector<Entity*>& entities,Player& pl
     if(attackCooldown==110) player.setColor(sf::Color::White);
     if(attackCooldown>0) attackCooldown--;
 
-    if(playerDistance<150&&player.hp!=0)
+    if(playerDistance<150&&player.hp>0)
     {
         desiredPos=player.getPosition();
         moving(collisions);

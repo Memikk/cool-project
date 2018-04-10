@@ -44,6 +44,7 @@ void Game::update()
     //cout<<"AKTUALIZUJE SWIAT"<<endl;
     world->update(*window);
     iface->setTime(world->gameTime);
+    iface->setDays(world->days);
 
     std::thread upThread(&Interface::update,iface,world->getPlayer(),*window);
 
