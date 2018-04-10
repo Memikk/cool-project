@@ -11,6 +11,10 @@ void EventHandler::checkEvents(World& world,sf::View& view)
         {
             if(world.getPlayer().eq.items.size()<20) world.pickUpItem();
         }
+        else if(event.type == sf::Event::KeyPressed&&event.key.code == sf::Keyboard::LShift)
+        {
+            world.drink();
+        }
         else if(event.type == sf::Event::MouseButtonPressed&&event.mouseButton.button==sf::Mouse::Right&&world.getPlayer().eq.on)
         {
             world.dropItem(window->mapPixelToCoords(sf::Mouse::getPosition()));

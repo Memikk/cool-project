@@ -43,6 +43,7 @@ public:
     void pickUpItem();
     void dropItem(sf::Vector2f mpos);
     void eat(sf::Vector2f mpos);
+    void drink();
     bool exist(int x,int y) const;
     Block* blockCollision(sf::Vector2f pos);
     Block* getBlock(sf::Vector2f pos);

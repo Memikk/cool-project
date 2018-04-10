@@ -459,6 +459,26 @@ void World::eat(sf::Vector2f mpos)
     }
 }
 
+void World::drink()
+{
+    if(player.thirst<=90)
+    {
+        vector<Block*> collisions = getCollisions(player.getPosition()+sf::Vector2f(12,16));
+        if(collisions[1]!=nullptr&&collisions[3]!=nullptr&&collisions[5]!=nullptr&&collisions[7]!=nullptr)
+        {
+            cerr<<"TEST"<<endl;
+            if((collisions[1]->object&&collisions[1]->object->type==WATER)||
+               (collisions[3]->object&&collisions[3]->object->type==WATER)||
+               (collisions[5]->object&&collisions[5]->object->type==WATER)||
+               (collisions[7]->object&&collisions[7]->object->type==WATER))
+            {
+                player.thirst+=10;
+                player.thirstCover.setSize(sf::Vector2f(120-player.thirst*1.2,player.thirstCover.getSize().y));
+            }
+        }
+    }
+}
+
 void World::spawnEntities()
 {
     if(spawningClock.getElapsedTime().asMilliseconds()>3000)

@@ -38,16 +38,16 @@ void Player::update(vector<Block*>& collisions)
     animate(collisions);
     //cout<<"PO ANIMACJI GRACZA"<<endl;
     counter++;
-    if(counter==1*60)
+    if(counter==4*60)
     {
         if(hunger>50&&thirst>50&&hp<100)
         {
             hp+=5;
         }
         if(hunger>0)hunger--;
-        else hp-=5;
+        else if(hp>0)hp-=5;
         if(thirst>0)thirst--;
-        else hp-=5;
+        else if(hp>0)hp-=5;
         hpCover.setSize(sf::Vector2f(120-hp*1.2,hpCover.getSize().y));
         hungerCover.setSize(sf::Vector2f(120-hunger*1.2,hungerCover.getSize().y));
         thirstCover.setSize(sf::Vector2f(120-thirst*1.2,thirstCover.getSize().y));
