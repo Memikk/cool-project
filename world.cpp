@@ -452,13 +452,16 @@ void World::eat(sf::Vector2f mpos)
         {
             if(player.eq.items[i]->getGlobalBounds().contains(sf::Vector2f(mpos.x,mpos.y)))
             {
-                player.hunger+=10;
-                player.hungerCover.setSize(sf::Vector2f(120-player.hunger*1.2,player.hungerCover.getSize().y));
-                Item *temp = player.eq.items[i];
-                iface->popUp(temp->id,true);
-                player.eq.items.erase(player.eq.items.begin()+i);
-                delete temp;
-                break;
+                if(player.eq.items[i]->food)
+                {
+                    player.hunger+=10;
+                    player.hungerCover.setSize(sf::Vector2f(120-player.hunger*1.2,player.hungerCover.getSize().y));
+                    Item *temp = player.eq.items[i];
+                    iface->popUp(temp->id,true);
+                    player.eq.items.erase(player.eq.items.begin()+i);
+                    delete temp;
+                    break;
+                }
             }
         }
     }
@@ -468,13 +471,13 @@ void World::drink()
 {
     if(player.thirst<=90)
     {
-        vector<Block*> collisions = getCollisions(player.getPosition()+sf::Vector2f(12,16));
+        vector<Block*> collisions = getCollisions(player.getPosition());
         if(collisions[1]!=nullptr&&collisions[3]!=nullptr&&collisions[5]!=nullptr&&collisions[7]!=nullptr)
         {
             if((collisions[1]->object&&collisions[1]->object->type==WATER)||
-               (collisions[3]->object&&collisions[3]->object->type==WATER)||
-               (collisions[5]->object&&collisions[5]->object->type==WATER)||
-               (collisions[7]->object&&collisions[7]->object->type==WATER))
+                    (collisions[3]->object&&collisions[3]->object->type==WATER)||
+                    (collisions[5]->object&&collisions[5]->object->type==WATER)||
+                    (collisions[7]->object&&collisions[7]->object->type==WATER))
             {
                 player.thirst+=10;
                 player.thirstCover.setSize(sf::Vector2f(120-player.thirst*1.2,player.thirstCover.getSize().y));
@@ -515,9 +518,65 @@ void World::spawnEntities()
     }
 }
 
-void World::updateChunks()
+void World::mine()
 {
+    vector<Block*> collisions = getCollisions(player.getPosition());
+    if(player.dir==UP&&collisions[1]->object&&collisions[1]->object->destructable)
+    {
+        int id = collisions[1]->object->dropID;
+        collisions[1]->object=nullptr;
+        collisions[1]->collision=false;
 
+        if(id!=-1)
+        {
+            Item* n = new Item(id);
+            n->setPosition(collisions[1]->getPosition());
+            txtLoader->setItemTexture(*n,id);
+            collisions[1]->items.push_back(n);
+        }
+    }
+    else if(player.dir==RIGHT&&collisions[3]->object&&collisions[3]->object->destructable)
+    {
+        int id = collisions[3]->object->dropID;
+        collisions[3]->object=nullptr;
+        collisions[3]->collision=false;
+
+        if(id!=-1)
+        {
+            Item* n = new Item(id);
+            n->setPosition(collisions[3]->getPosition());
+            txtLoader->setItemTexture(*n,id);
+            collisions[3]->items.push_back(n);
+        }
+    }
+    else if(player.dir==DOWN&&collisions[5]->object&&collisions[5]->object->destructable)
+    {
+        int id = collisions[5]->object->dropID;
+        collisions[5]->object=nullptr;
+        collisions[5]->collision=false;
+
+        if(id!=-1)
+        {
+            Item* n = new Item(id);
+            n->setPosition(collisions[5]->getPosition());
+            txtLoader->setItemTexture(*n,id);
+            collisions[5]->items.push_back(n);
+        }
+    }
+    else if(player.dir==LEFT&&collisions[7]->object&&collisions[7]->object->destructable)
+    {
+        int id = collisions[7]->object->dropID;
+        collisions[7]->object=nullptr;
+        collisions[7]->collision=false;
+
+        if(id!=-1)
+        {
+            Item* n = new Item(id);
+            n->setPosition(collisions[7]->getPosition());
+            txtLoader->setItemTexture(*n,id);
+            collisions[7]->items.push_back(n);
+        }
+    }
 }
 
 void World::draw(sf::RenderWindow& window)

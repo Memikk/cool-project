@@ -36,8 +36,8 @@ sf::Vector2f vh::center(const Block& b)
 }
 sf::Vector2f vh::getSize(const sf::Sprite& s)
 {
-    return sf::Vector2f(s.getGlobalBounds().left+s.getGlobalBounds().width,
-                        s.getGlobalBounds().top+s.getGlobalBounds().height);
+    return sf::Vector2f(s.getGlobalBounds().width,
+                        s.getGlobalBounds().height);
 }
 sf::Vector2f vh::randomPos(int radius,const sf::Sprite& s)
 {

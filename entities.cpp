@@ -117,14 +117,17 @@ void Wolf::update(vector<Block*> collisions,vector<Entity*>& entities,Player& pl
     if(playerDistance<150&&player.hp>0)
     {
         desiredPos=player.getPosition();
-        moving(collisions);
-        if(attackCooldown==0&&playerDistance<20)
+        if(attackCooldown==0&&playerDistance<30)
         {
             player.hp-=damage;
             player.setColor(sf::Color::Red);
             player.hpCover.setSize(sf::Vector2f(120-player.hp*1.2,player.hpCover.getSize().y));
             cout<<"PLAYER HP="<<player.hp<<endl;
             attackCooldown=2*60;
+        }
+        else
+        {
+            moving(collisions);
         }
         return;
     }
@@ -154,7 +157,7 @@ void Wolf::update(vector<Block*> collisions,vector<Entity*>& entities,Player& pl
                     temp->block->items.push_back(it);
                 }
                 entities.erase(entities.begin()+i);
-                delete temp;
+                //delete temp;
             }
             break;
         }

@@ -27,5 +27,9 @@ void EventHandler::checkEvents(World& world,sf::View& view)
         {
             world.getPlayer().eq.on=!world.getPlayer().eq.on;
         }
+        else if(event.type == sf::Event::KeyPressed&&event.key.code == sf::Keyboard::LControl)
+        {
+            world.mine();
+        }
     }
 }

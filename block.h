@@ -12,7 +12,9 @@ enum objectType {NOTHING,TREE,STONE,PLANT,WATER,SAND,GRASS,BUSH,WHEAT,CARROT};
 class Object : public sf::Sprite
 {
 public:
+    int dropID=-1;
     bool side=true;
+    bool destructable=false;
     int column; // kolumna tekstury
     objectType type=NOTHING;
     Object() {};
@@ -38,6 +40,8 @@ public:
     Tree():Object()
     {
         type=TREE;
+        destructable=true;
+        dropID=5;
     };
 };
 
@@ -56,6 +60,8 @@ public:
     Stone():Object()
     {
         type=STONE;
+        destructable=true;
+        dropID=1;
     };
 };
 

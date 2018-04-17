@@ -11,8 +11,8 @@ class Player : public sf::Sprite
 {
     sf::RectangleShape background;
     sf::Vector2f vel,acc;
-    direction dir=DOWN;
 public:
+    direction dir=DOWN;
     int hp=100;
     int hunger=100;
     int thirst=100;

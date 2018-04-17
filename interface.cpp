@@ -64,7 +64,7 @@ Interface::Interface(TextureLoader* tLoader)
     days.setColor(sf::Color(222, 191, 94));
     days.setOutlineColor(sf::Color(103, 87, 25));
     days.setOutlineThickness(4);
-    days.setString("Day 0");
+    days.setString("Day 1");
 }
 
 void Interface::setTime(int t)
@@ -92,9 +92,16 @@ void Interface::update(Player& p,sf::RenderWindow& window)
                             window.getView().getCenter().y-window.getView().getSize().y/2+window.getView().getSize().y/6.7);
     p.thirstBar.setScale(window.getView().getSize().x/window.getSize().x*5,
                          window.getView().getSize().y/window.getSize().y*5);
-    p.hpCover.setPosition(p.hpBar.getPosition()+sf::Vector2f(33,5));
-    p.hungerCover.setPosition(p.hungerBar.getPosition()+sf::Vector2f(33,5));
-    p.thirstCover.setPosition(p.thirstBar.getPosition()+sf::Vector2f(33,5));
+    p.hpCover.setPosition(p.hpBar.getPosition()+sf::Vector2f(window.getSize().x/60u,window.getSize().y/200u));
+    p.hungerCover.setPosition(p.hungerBar.getPosition()+sf::Vector2f(window.getSize().x/60u,window.getSize().y/200u));
+    p.thirstCover.setPosition(p.thirstBar.getPosition()+sf::Vector2f(window.getSize().x/60u,window.getSize().y/200u));
+    p.hpCover.setScale(window.getView().getSize().x/window.getSize().x*2,
+                       window.getView().getSize().y/window.getSize().y*2);
+    p.hungerCover.setScale(window.getView().getSize().x/window.getSize().x*2,
+                       window.getView().getSize().y/window.getSize().y*2);
+    p.thirstCover.setScale(window.getView().getSize().x/window.getSize().x*2,
+                       window.getView().getSize().y/window.getSize().y*2);
+
     fps.fps.setPosition(window.getView().getCenter().x-window.getView().getSize().x/2,
                         window.getView().getCenter().y-window.getView().getSize().y/2);
     fps.fps.setScale(window.getView().getSize().x/window.getSize().x,
@@ -107,12 +114,21 @@ void Interface::update(Player& p,sf::RenderWindow& window)
                   window.getView().getSize().y/window.getSize().y*5);
     p.eq.setPosition(window.getView().getCenter().x-p.eq.getGlobalBounds().width/2.f,
                      window.getView().getCenter().y-p.eq.getGlobalBounds().height/2.f);
-    sf::View temp = window.getView();
 
     cursor.setPosition(window.mapPixelToCoords(sf::Mouse::getPosition(window),window.getView()));
 
     days.setPosition(window.getView().getCenter().x-days.getGlobalBounds().width/2,
-                     window.getView().getCenter().y-244);
+                     window.getView().getCenter().y-window.getView().getSize().y/2.2);
+
+    p.eq.itemsBar.setScale(window.getView().getSize().x/window.getSize().x*5,
+                  window.getView().getSize().y/window.getSize().y*5);
+    p.eq.itemsBar.setPosition(window.mapPixelToCoords(sf::Vector2i(window.getView().getSize().x-
+                                                                   vh::getSize(p.eq.itemsBar).x,
+                                                                   2*window.getView().getSize().y-
+                                                                   vh::getSize(p.eq.itemsBar).y*2.5),
+                                                      window.getView()));
+    //p.eq.itemsBar.setPosition(window.getView().getCenter().x-p.eq.getGlobalBounds().width/2.f,
+    //                          window.getView().getCenter().y-p.eq.getGlobalBounds().height/2.f);
     if(p.eq.on)
     {
         for(int i=0; i<p.eq.items.size(); i++)
@@ -142,6 +158,7 @@ void Interface::update(Player& p,sf::RenderWindow& window)
             popUps[i].update();
         }
     }
+
 }
 
 void Interface::popUp(int id,bool drop)
@@ -162,6 +179,7 @@ void Interface::draw(Player& p,sf::RenderWindow& window)
     window.draw(p.hpBar);
     window.draw(p.hungerBar);
     window.draw(p.thirstBar);
+    window.draw(p.eq.itemsBar);
     window.draw(p.hpCover);
     window.draw(p.hungerCover);
     window.draw(p.thirstCover);

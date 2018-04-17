@@ -16,7 +16,9 @@ public:
 class Equipment : public sf::Sprite
 {
 public:
+    sf::Sprite itemsBar;
     vector<Item*> items;
+    vector<Item*> bar;
     bool on=false;
     Equipment();
     void add(Item* item);

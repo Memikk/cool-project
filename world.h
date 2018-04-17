@@ -35,8 +35,8 @@ class World
     TextureLoader* txtLoader;
     Interface* iface;
 public:
-    int gameTime=18;
-    int days=0;
+    int gameTime=8;
+    int days=1;
     World(TextureLoader* tloader,Interface* intface);
     World(){};
     Player& getPlayer(){return player;};
@@ -45,6 +45,7 @@ public:
     void dropItem(sf::Vector2f mpos);
     void eat(sf::Vector2f mpos);
     void drink();
+    void mine();
     bool exist(int x,int y) const;
     Block* blockCollision(sf::Vector2f pos);
     Block* getBlock(sf::Vector2f pos);
