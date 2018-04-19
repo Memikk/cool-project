@@ -127,8 +127,11 @@ void Interface::update(Player& p,sf::RenderWindow& window)
                                                                    2*window.getView().getSize().y-
                                                                    vh::getSize(p.eq.itemsBar).y*2.5),
                                                       window.getView()));
-    //p.eq.itemsBar.setPosition(window.getView().getCenter().x-p.eq.getGlobalBounds().width/2.f,
-    //                          window.getView().getCenter().y-p.eq.getGlobalBounds().height/2.f);
+    for(int i=0;i<p.eq.slots.size();i++)
+    {
+        p.eq.slots[i].setPosition(window.mapPixelToCoords(sf::Vector2i(943+i%5*65,417+(i/5*65)),
+                                                          window.getView()));
+    }
     if(p.eq.on)
     {
         for(int i=0; i<p.eq.items.size(); i++)
@@ -193,6 +196,7 @@ void Interface::draw(Player& p,sf::RenderWindow& window)
             window.draw(*i);
         }
     }
+    if(p.eq.itemHolder!=nullptr) window.draw(*p.eq.itemHolder);
     window.draw(gTime);
     window.draw(days);
     for(auto& p:popUps)
@@ -200,7 +204,7 @@ void Interface::draw(Player& p,sf::RenderWindow& window)
         window.draw(p);
         window.draw(p.item);
     }
-    window.draw(cursor);
+    //window.draw(cursor);
 }
 
 

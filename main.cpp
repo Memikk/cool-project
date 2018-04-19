@@ -9,7 +9,7 @@ int main()
     //settings.antialiasingLevel=8;
     sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
     sf::RenderWindow window(desktop,"",sf::Style::Fullscreen,settings);
-    window.setMouseCursorVisible(false);
+    //window.setMouseCursorVisible(false);
     window.setVerticalSyncEnabled(true);
     window.setFramerateLimit(60);
 

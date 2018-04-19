@@ -16,6 +16,8 @@ public:
 class Equipment : public sf::Sprite
 {
 public:
+    Item* itemHolder=nullptr;
+    vector<sf::RectangleShape> slots;
     sf::Sprite itemsBar;
     vector<Item*> items;
     vector<Item*> bar;

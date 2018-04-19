@@ -261,6 +261,11 @@ void World::update(sf::RenderWindow& window)
         dayCounter=0;
     daynight.setFillColor(sf::Color(0,0,0,dayCounter));
 
+    if(player.eq.itemHolder!=nullptr)
+    {
+        player.eq.itemHolder->setPosition(window.mapPixelToCoords(sf::Mouse::getPosition(window)-sf::Vector2i(25,25)));
+    }
+
     ue.join();
 }
 
@@ -419,7 +424,7 @@ Block* World::getBlock(sf::Vector2f pos)
     return b;
 }
 
-void World::dropItem(sf::Vector2f mpos)
+void World::dropItemOnGround(sf::Vector2f mpos)
 {
     Chunk *c = nullptr;
     Block *b = nullptr;
@@ -442,6 +447,34 @@ void World::dropItem(sf::Vector2f mpos)
             b->items.push_back(temp);
         }
     }
+}
+
+void World::takeItem(sf::Vector2f mpos)
+{
+    for(int i=0; i<player.eq.items.size(); i++)
+    {
+        if(player.eq.items[i]->getGlobalBounds().contains(sf::Vector2f(mpos.x,mpos.y)))
+        {
+            player.eq.itemHolder = player.eq.items[i];
+            player.eq.items.erase(player.eq.items.begin()+i);
+            return;
+        }
+    }
+}
+
+void World::dropItemInEq(sf::Vector2f mpos)
+{
+    for(int i=0; i<player.eq.slots.size(); i++)
+    {
+        if(player.eq.slots[i].getGlobalBounds().contains(sf::Vector2f(mpos.x,mpos.y)))
+        {
+            player.eq.items.insert(player.eq.items.begin()+i,player.eq.itemHolder);
+            player.eq.itemHolder=nullptr;
+            return;
+        }
+    }
+    delete player.eq.itemHolder;
+    player.eq.itemHolder=nullptr;
 }
 
 void World::eat(sf::Vector2f mpos)
