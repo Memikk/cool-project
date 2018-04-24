@@ -24,7 +24,7 @@ Game::Game(sf::RenderWindow& win)
     cout<<"ustawiono teksture gracza"<<endl;
 
     view->setCenter(world->getPlayer().getPosition().x+BLOCK_SIZE/2,world->getPlayer().getPosition().y+BLOCK_SIZE/2);
-    view->setSize(sf::Vector2f(960,540));
+    view->setSize(sf::Vector2f(window->getSize().x/2,window->getSize().y/2));
     window->setView(*view);
     cout<<"gra stworzona"<<endl;
 

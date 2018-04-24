@@ -8,7 +8,7 @@ using namespace std;
 
 class Item;
 enum blockType {NOBLOCK,DIRT};
-enum objectType {NOTHING,TREE,STONE,PLANT,WATER,SAND,GRASS,BUSH,WHEAT,CARROT};
+enum objectType {NOTHING,TREE,STONE,PLANT,WATER,SAND,GRASS,BUSH,WHEAT,CARROT,WOODENFLOOR,WOODENWALL};
 class Object : public sf::Sprite
 {
 public:
@@ -101,6 +101,24 @@ class Carrot : public Object
     Carrot():Object()
     {
         type=CARROT;
+    };
+};
+
+class WoodenFloor : public Object
+{
+    public:
+    WoodenFloor():Object()
+    {
+        type=WOODENFLOOR;
+    };
+};
+
+class WoodenWall : public Object
+{
+    public:
+    WoodenWall():Object()
+    {
+        type=WOODENWALL;
     };
 };
 

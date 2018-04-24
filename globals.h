@@ -2,11 +2,9 @@
 #define GLOBALS_H_INCLUDED
 #define _USE_MATH_DEFINES
 #include <SFML/Graphics.hpp>
+#include "block.h"
 #include "perlinNoise.hpp"
 #include "thread.h"
-#ifndef BLOCK_H_INCLUDED
-#include "block.h"
-#endif // BLOCK_H_INCLUDED
 #include "equipment.h"
 #include <vector>
 #include <iostream>

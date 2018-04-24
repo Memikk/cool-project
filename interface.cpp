@@ -98,9 +98,9 @@ void Interface::update(Player& p,sf::RenderWindow& window)
     p.hpCover.setScale(window.getView().getSize().x/window.getSize().x*2,
                        window.getView().getSize().y/window.getSize().y*2);
     p.hungerCover.setScale(window.getView().getSize().x/window.getSize().x*2,
-                       window.getView().getSize().y/window.getSize().y*2);
+                           window.getView().getSize().y/window.getSize().y*2);
     p.thirstCover.setScale(window.getView().getSize().x/window.getSize().x*2,
-                       window.getView().getSize().y/window.getSize().y*2);
+                           window.getView().getSize().y/window.getSize().y*2);
 
     fps.fps.setPosition(window.getView().getCenter().x-window.getView().getSize().x/2,
                         window.getView().getCenter().y-window.getView().getSize().y/2);
@@ -121,17 +121,43 @@ void Interface::update(Player& p,sf::RenderWindow& window)
                      window.getView().getCenter().y-window.getView().getSize().y/2.2);
 
     p.eq.itemsBar.setScale(window.getView().getSize().x/window.getSize().x*5,
-                  window.getView().getSize().y/window.getSize().y*5);
+                           window.getView().getSize().y/window.getSize().y*5);
     p.eq.itemsBar.setPosition(window.mapPixelToCoords(sf::Vector2i(window.getView().getSize().x-
-                                                                   vh::getSize(p.eq.itemsBar).x,
-                                                                   2*window.getView().getSize().y-
-                                                                   vh::getSize(p.eq.itemsBar).y*2.5),
-                                                      window.getView()));
-    for(int i=0;i<p.eq.slots.size();i++)
+                              vh::getSize(p.eq.itemsBar).x,
+                              2*window.getView().getSize().y-
+                              vh::getSize(p.eq.itemsBar).y*2.5),
+                              window.getView()));
+
+//******************************************************************
+//SLOTY W EQ
+//******************************************************************
+    for(int i=0; i<20; i++)
     {
         p.eq.slots[i].setPosition(window.mapPixelToCoords(sf::Vector2i(943+i%5*65,417+(i/5*65)),
-                                                          window.getView()));
+                                  window.getView()));
     }
+    for(int i=20; i<25; i++)
+    {
+        p.eq.slots[i].setPosition(window.mapPixelToCoords(sf::Vector2i(805+i%5*65,739+(i/5*65)),
+                                  window.getView()));
+    }
+    for(int i=25; i<29; i++)
+    {
+        p.eq.slots[i].setPosition(window.mapPixelToCoords(sf::Vector2i(633+(i-25)%2*65,482+((i-25)/2*65)),
+                                  window.getView()));
+    }
+    p.eq.slots[29].setPosition(window.mapPixelToCoords(sf::Vector2i(853,513),
+                                  window.getView()));
+
+//******************************************************************
+//OBRAMOWANIE WYBRANEGO ITEMU
+
+    p.eq.itemFrame.setScale(window.getView().getSize().x/window.getSize().x*3.8,
+                           window.getView().getSize().y/window.getSize().y*3.8);
+    p.eq.itemFrame.setPosition(p.eq.slots[p.eq.selectedSlot+20].getPosition()-sf::Vector2f(6.8,6.8));
+
+//******************************************************************
+
     if(p.eq.on)
     {
         for(int i=0; i<p.eq.items.size(); i++)
@@ -149,6 +175,21 @@ void Interface::update(Player& p,sf::RenderWindow& window)
                                        window.getView().getSize().y/16.4*yo);
         }
     }
+
+    //RYSOWANIE ITEMOW NA PASKU SZYBKIEGO WYBORU
+    for(int i=0; i<p.eq.bar.size(); i++)
+    {
+        p.eq.bar[i]->setPosition(p.eq.slots[i+20].getPosition()-sf::Vector2f(4,4));
+    }
+    //******************************************
+
+    //RYSOWANIE ITEMOW W OKNIE CRAFTINGU
+    for(int i=0; i<p.eq.crafting.size(); i++)
+    {
+        p.eq.crafting[i]->setPosition(p.eq.slots[i+25].getPosition()-sf::Vector2f(4,4));
+    }
+    if(p.eq.itemFromCrafting) p.eq.itemFromCrafting->setPosition(p.eq.slots[29].getPosition()-sf::Vector2f(4,4));
+    //******************************************
     for(int i=popUps.size()-1; i>=0; i--)
     {
         if(popUps[i].counter<=0)
@@ -171,8 +212,10 @@ void Interface::popUp(int id,bool drop)
         pp.offset2+=40;
     }
     popUps.push_back(PopUp(txtLoader->items[id]));
-    if(drop) popUps.back().setTexture(*txtLoader->getPopUpDropTexture());
-    else popUps.back().setTexture(*txtLoader->getPopUpPickTexture());
+    if(drop)
+        popUps.back().setTexture(*txtLoader->getPopUpDropTexture());
+    else
+        popUps.back().setTexture(*txtLoader->getPopUpPickTexture());
     popUps.back().item.setTexture(*txtLoader->getItemTexture(id));
     popUps.back().item.setScale(0.60,0.60);
 }
@@ -183,6 +226,7 @@ void Interface::draw(Player& p,sf::RenderWindow& window)
     window.draw(p.hungerBar);
     window.draw(p.thirstBar);
     window.draw(p.eq.itemsBar);
+    window.draw(p.eq.itemFrame);
     window.draw(p.hpCover);
     window.draw(p.hungerCover);
     window.draw(p.thirstCover);
@@ -195,8 +239,27 @@ void Interface::draw(Player& p,sf::RenderWindow& window)
         {
             window.draw(*i);
         }
+        for(auto& i:p.eq.crafting)
+        {
+            window.draw(*i);
+        }
+        if(p.eq.itemFromCrafting) window.draw(*p.eq.itemFromCrafting);
     }
-    if(p.eq.itemHolder!=nullptr) window.draw(*p.eq.itemHolder);
+
+    for(auto& i:p.eq.bar)
+    {
+        window.draw(*i);
+    }
+
+    //RYSOWANIE SLOTOW - DEBUGGING
+//    for(auto& i:p.eq.slots)
+//    {
+//        window.draw(i);
+//    }
+    //****************************
+
+    if(p.eq.itemHolder!=nullptr)
+        window.draw(*p.eq.itemHolder);
     window.draw(gTime);
     window.draw(days);
     for(auto& p:popUps)

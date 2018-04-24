@@ -1,7 +1,7 @@
 #ifndef PLAYER_H_INCLUDED
 #define PLAYER_H_INCLUDED
 #include "globals.h"
-#include "equipment.h"
+
 #include <math.h>
 #include <iostream>
 

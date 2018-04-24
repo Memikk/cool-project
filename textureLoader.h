@@ -34,13 +34,21 @@ class TextureLoader
     sf::Texture* hungerBar;
     sf::Texture* thirstBar;
     sf::Texture* itemsBar;
+    sf::Texture* itemFrame;
 
     sf::Texture* branch;
     sf::Texture* log;
+    sf::Texture* planks;
     sf::Texture* rock;
     sf::Texture* meat;
     sf::Texture* wheatItem;
     sf::Texture* carrotItem;
+    sf::Texture* axe;
+    sf::Texture* pickaxe;
+    sf::Texture* woodenWallItem;
+
+    sf::Texture* woodenFloor;
+    sf::Texture* woodenWall;
 public:
     vector<sf::Texture*> items;
     TextureLoader() {};
@@ -65,8 +73,10 @@ public:
         hungerBar=new sf::Texture();
         thirstBar=new sf::Texture();
         itemsBar=new sf::Texture();
+        itemFrame=new sf::Texture();
         branch=new sf::Texture();
         log=new sf::Texture();
+        planks=new sf::Texture();
         rock=new sf::Texture();
         meat=new sf::Texture();
         wheatItem=new sf::Texture();
@@ -74,6 +84,11 @@ public:
         bush=new sf::Texture();
         wheat=new sf::Texture();
         carrot=new sf::Texture();
+        axe=new sf::Texture();
+        pickaxe=new sf::Texture();
+        woodenWallItem=new sf::Texture();
+        woodenFloor=new sf::Texture();
+        woodenWall=new sf::Texture();
         if(player->loadFromFile("resources/textures/player.png"))cout<<"Wczytano teksture gracza"<<endl;
         if(eq->loadFromFile("resources/textures/eq.png"))cout<<"Wczytano teksture ekwipunku"<<endl;
         if(popUpPick->loadFromFile("resources/textures/popup.png"))cout<<"Wczytano teksture powiadomienia o podniesieniu przedmiotu"<<endl;
@@ -92,8 +107,10 @@ public:
         if(hungerBar->loadFromFile("resources/textures/hungerBar.png"))cout<<"Wczytano teksture paska glodu"<<endl;
         if(thirstBar->loadFromFile("resources/textures/thirstBar.png"))cout<<"Wczytano teksture paska pragnienia"<<endl;
         if(itemsBar->loadFromFile("resources/textures/itemsBar.png"))cout<<"Wczytano teksture paska przedmiotow"<<endl;
+        if(itemFrame->loadFromFile("resources/textures/frame.png"))cout<<"Wczytano teksture obramowania wybranego przedmiotu"<<endl;
         if(branch->loadFromFile("resources/textures/branch.png"))cout<<"Wczytano teksture galazki"<<endl;
         if(log->loadFromFile("resources/textures/log.png"))cout<<"Wczytano teksture klody"<<endl;
+        if(planks->loadFromFile("resources/textures/planks.png"))cout<<"Wczytano teksture desek"<<endl;
         if(rock->loadFromFile("resources/textures/rock.png"))cout<<"Wczytano teksture kamyka"<<endl;
         if(meat->loadFromFile("resources/textures/meat.png"))cout<<"Wczytano teksture miesa"<<endl;
         if(wheatItem->loadFromFile("resources/textures/wheatItem.png"))cout<<"Wczytano teksture pszenicy(przedmiot)"<<endl;
@@ -102,12 +119,22 @@ public:
         if(wheat->loadFromFile("resources/textures/wheat.png"))cout<<"Wczytano teksture pszenicy"<<endl;
         if(carrot->loadFromFile("resources/textures/carrot.png"))cout<<"Wczytano teksture marchewki"<<endl;
         if(wolf->loadFromFile("resources/textures/wolf.png"))cout<<"Wczytano teksture wilka"<<endl;
+        if(axe->loadFromFile("resources/textures/axe.png"))cout<<"Wczytano teksture siekiery"<<endl;
+        if(pickaxe->loadFromFile("resources/textures/pickaxe.png"))cout<<"Wczytano teksture siekiery"<<endl;
+        if(woodenWallItem->loadFromFile("resources/textures/woodenWallItem.png"))cout<<"Wczytano teksture przedmiotu drewnianej sciany"<<endl;
+        if(woodenFloor->loadFromFile("resources/textures/woodenFloor.png"))cout<<"Wczytano teksture drewnianej podlogi"<<endl;
+        if(woodenWall->loadFromFile("resources/textures/woodenWall.png"))cout<<"Wczytano teksture drewnianej sciany"<<endl;
+
         items.push_back(branch); //0
         items.push_back(rock); //1
         items.push_back(meat); //2
         items.push_back(wheatItem); //3
         items.push_back(carrotItem); //4
         items.push_back(log); //5
+        items.push_back(axe); //6
+        items.push_back(planks); //7
+        items.push_back(pickaxe); //8
+        items.push_back(woodenWallItem); //9
     }
 
     void chooseTexture(Block& block,int i,int j,int offsetX,int offsetY,blockType type,float value);
@@ -127,6 +154,7 @@ public:
         p.thirstBar.setTexture(*thirstBar);
         p.eq.setTexture(*eq);
         p.eq.itemsBar.setTexture(*itemsBar);
+        p.eq.itemFrame.setTexture(*itemFrame);
         p.setScale(0.85,0.85);
     }
 
@@ -152,7 +180,15 @@ public:
         case 5:
             i.setTexture(*log);
             break;
+        case 6:
+            i.setTexture(*axe);
+            break;
         }
+    }
+
+    vector<sf::Texture*>& AllItems()
+    {
+        return items;
     }
 
     sf::Texture* getPopUpPickTexture()

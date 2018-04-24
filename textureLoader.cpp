@@ -311,6 +311,12 @@ void TextureLoader::setTexture(Object& object,objectType type,int choice)
     case CARROT:
         object.setTexture(*carrot);
         break;
+    case WOODENFLOOR:
+        object.setTexture(*woodenFloor);
+        break;
+    case WOODENWALL:
+        object.setTexture(*woodenWall);
+        break;
     }
 }
 

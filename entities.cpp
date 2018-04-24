@@ -147,7 +147,7 @@ void Wolf::update(vector<Block*> collisions,vector<Entity*>& entities,Player& pl
             Entity* temp=entities[i];
             if(temp!=nullptr)
             {
-                Item* it = new Item(2);
+                Item* it = new Item(ITEMS::MEAT);
                 it->food=true;
                 it->setTexture(*txtLoader->getItemTexture(2));
 

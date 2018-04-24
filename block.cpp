@@ -44,11 +44,15 @@ void Block::draw(sf::RenderWindow& window)
             window.draw(*grass);
         else if(cover==nullptr)
             window.draw(*grass);
+        grass->setColor(sf::Color::White);
     }
     else
         window.draw(*this);
     if(cover!=nullptr)
+    {
         window.draw(*cover);
+        cover->setColor(sf::Color::White);
+    }
     if(object!=nullptr)
         window.draw(*object);
     else

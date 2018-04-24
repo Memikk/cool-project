@@ -32,6 +32,33 @@ void Player::draw(sf::RenderWindow& window)
 
 void Player::update(vector<Block*>& collisions)
 {
+    if(eq.bar.size()>eq.selectedSlot&&eq.bar[eq.selectedSlot]->building)
+    {
+        if(dir==UP&&collisions[1]->object==nullptr)
+        {
+            if(collisions[1]->cover)collisions[1]->cover->setColor(sf::Color(0,255,0,50));
+            if(collisions[1]->grass)collisions[1]->grass->setColor(sf::Color(0,255,0,50));
+            if(collisions[1])collisions[1]->setFillColor(sf::Color(0,255,0,50));
+        }
+        if(dir==RIGHT&&collisions[3]->object==nullptr)
+        {
+            if(collisions[3]->cover)collisions[3]->cover->setColor(sf::Color(0,255,0,50));
+            if(collisions[3]->grass)collisions[3]->grass->setColor(sf::Color(0,255,0,50));
+            if(collisions[3])collisions[3]->setFillColor(sf::Color(0,255,0,50));
+        }
+        if(dir==DOWN&&collisions[5]->object==nullptr)
+        {
+            if(collisions[5]->cover)collisions[5]->cover->setColor(sf::Color(0,255,0,50));
+            if(collisions[5]->grass)collisions[5]->grass->setColor(sf::Color(0,255,0,50));
+            if(collisions[5])collisions[5]->setFillColor(sf::Color(0,255,0,50));
+        }
+        if(dir==LEFT&&collisions[7]->object==nullptr)
+        {
+            if(collisions[7]->cover)collisions[7]->cover->setColor(sf::Color(0,255,0,50));
+            if(collisions[7]->grass)collisions[7]->grass->setColor(sf::Color(0,255,0,50));
+            if(collisions[7])collisions[7]->setFillColor(sf::Color(0,255,0,50));
+        }
+    }
     //cout<<"--------------------PLAYER UPDATE-------------------"<<endl;
     moving(collisions);
     //cout<<"PO RUCHU GRACZA"<<endl;

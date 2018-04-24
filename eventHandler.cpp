@@ -36,6 +36,36 @@ void EventHandler::checkEvents(World& world,sf::View& view)
         else if(event.type == sf::Event::KeyPressed&&event.key.code == sf::Keyboard::LControl)
         {
             world.mine();
+            world.build();
+        }
+        if(event.type == sf::Event::KeyPressed&&(event.key.code==sf::Keyboard::Num1||
+                                                 event.key.code==sf::Keyboard::Num2||
+                                                 event.key.code==sf::Keyboard::Num3||
+                                                 event.key.code==sf::Keyboard::Num4||
+                                                 event.key.code==sf::Keyboard::Num5))
+        {
+            world.getPlayer().eq.changeSlot(static_cast<unsigned>(event.key.code-27));
         }
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
