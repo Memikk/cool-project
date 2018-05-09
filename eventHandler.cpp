@@ -24,6 +24,10 @@ void EventHandler::checkEvents(World& world,sf::View& view)
             world.takeItem(window->mapPixelToCoords(sf::Mouse::getPosition(*window)));
             window->setMouseCursorVisible(false);
         }
+        else if(event.type == sf::Event::MouseButtonPressed&&event.mouseButton.button==sf::Mouse::Left&&!world.getPlayer().eq.on)
+        {
+            world.build(*window);
+        }
         else if(event.type == sf::Event::MouseButtonReleased&&event.mouseButton.button==sf::Mouse::Left&&world.getPlayer().eq.on)
         {
             world.dropItemInEq(window->mapPixelToCoords(sf::Mouse::getPosition(*window)));
@@ -36,7 +40,6 @@ void EventHandler::checkEvents(World& world,sf::View& view)
         else if(event.type == sf::Event::KeyPressed&&event.key.code == sf::Keyboard::LControl)
         {
             world.mine();
-            world.build();
         }
         if(event.type == sf::Event::KeyPressed&&(event.key.code==sf::Keyboard::Num1||
                                                  event.key.code==sf::Keyboard::Num2||

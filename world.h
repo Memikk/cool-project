@@ -48,7 +48,7 @@ public:
     void eat(sf::Vector2f mpos);
     void drink();
     bool mine();
-    void build();
+    void build(sf::RenderWindow& window);
     bool exist(int x,int y) const;
     Block* blockCollision(sf::Vector2f pos);
     Block* getBlock(sf::Vector2f pos);

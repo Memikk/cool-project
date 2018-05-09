@@ -158,6 +158,11 @@ World::World(TextureLoader* tloader,Interface* intface)
     txtLoader=tloader;
     iface=intface;
     player.setPosition(0,0);
+
+    player.eq.items.push_back(new Item(ITEMS::WOODENWALLITEM));
+    player.eq.items.back()->building=true;
+    txtLoader->setItemTexture(*player.eq.items.back(),9);
+
     daynight.setFillColor(sf::Color(0,0,0,0));
     daynight.setSize(sf::Vector2f(1920,1080));
 }
@@ -264,6 +269,39 @@ void World::update(sf::RenderWindow& window)
     if(player.eq.itemHolder!=nullptr)
     {
         player.eq.itemHolder->setPosition(window.mapPixelToCoords(sf::Mouse::getPosition(window)-sf::Vector2i(25,25)));
+    }
+
+    if(player.eq.bar.size()>player.eq.selectedSlot&&player.eq.bar[player.eq.selectedSlot]->building)
+    {
+        Block* temp = getBlock(window.mapPixelToCoords(sf::Mouse::getPosition()-sf::Vector2i(33,50)));
+        if(temp)
+        {
+            if(temp->cover)
+            {
+                if(temp->collision)
+                    temp->cover->setColor(sf::Color::Red);
+                else
+                    temp->cover->setColor(sf::Color(0,100,255));
+            }
+            if(temp->object)
+            {
+                if(temp->collision)
+                    temp->object->setColor(sf::Color::Red);
+                else
+                    temp->object->setColor(sf::Color(0,100,255));
+            }
+            if(temp->grass)
+            {
+                if(temp->collision)
+                    temp->grass->setColor(sf::Color::Red);
+                else
+                    temp->grass->setColor(sf::Color(0,100,255));
+            }
+            if(temp->collision)
+                temp->setFillColor(sf::Color::Red);
+            else
+                temp->setFillColor(sf::Color(0,100,255));
+        }
     }
 
     ue.join();
@@ -455,7 +493,7 @@ void World::takeItem(sf::Vector2f mpos)
     {
         player.eq.itemHolder = player.eq.itemFromCrafting;
         player.eq.itemFromCrafting=nullptr;
-        for(int i=player.eq.crafting.size()-1;i>=0;i--)
+        for(int i=player.eq.crafting.size()-1; i>=0; i--)
         {
             delete player.eq.crafting[i];
             player.eq.crafting[i]=nullptr;
@@ -472,7 +510,7 @@ void World::takeItem(sf::Vector2f mpos)
             return;
         }
     }
-    for(int i=0;i<player.eq.bar.size();i++)
+    for(int i=0; i<player.eq.bar.size(); i++)
     {
         if(player.eq.bar[i]->getGlobalBounds().contains(sf::Vector2f(mpos.x,mpos.y)))
         {
@@ -481,7 +519,7 @@ void World::takeItem(sf::Vector2f mpos)
             return;
         }
     }
-    for(int i=0;i<player.eq.crafting.size();i++)
+    for(int i=0; i<player.eq.crafting.size(); i++)
     {
         if(player.eq.crafting[i]->getGlobalBounds().contains(sf::Vector2f(mpos.x,mpos.y)))
         {
@@ -495,7 +533,8 @@ void World::takeItem(sf::Vector2f mpos)
 
 void World::dropItemInEq(sf::Vector2f mpos)
 {
-    if(player.eq.itemHolder==nullptr) return;
+    if(player.eq.itemHolder==nullptr)
+        return;
 
     for(int i=0; i<player.eq.slots.size(); i++)
     {
@@ -613,8 +652,10 @@ bool World::mine()
     vector<Block*> collisions = getCollisions(player.getPosition());
     if(player.dir==UP&&collisions[1]->object&&collisions[1]->object->destructable)
     {
-        if(collisions[1]->object->type==TREE&&(player.eq.bar.size()<=player.eq.selectedSlot||player.eq.bar[player.eq.selectedSlot]->id!=ITEMS::AXE)) return true;
-        if(collisions[1]->object->type==STONE&&(player.eq.bar.size()<=player.eq.selectedSlot||player.eq.bar[player.eq.selectedSlot]->id!=ITEMS::PICKAXE)) return true;
+        if(collisions[1]->object->type==TREE&&(player.eq.bar.size()<=player.eq.selectedSlot||player.eq.bar[player.eq.selectedSlot]->id!=ITEMS::AXE))
+            return true;
+        if(collisions[1]->object->type==STONE&&(player.eq.bar.size()<=player.eq.selectedSlot||player.eq.bar[player.eq.selectedSlot]->id!=ITEMS::PICKAXE))
+            return true;
 
         int id = collisions[1]->object->dropID;
         collisions[1]->object=nullptr;
@@ -631,8 +672,10 @@ bool World::mine()
     }
     else if(player.dir==RIGHT&&collisions[3]->object&&collisions[3]->object->destructable)
     {
-        if(collisions[3]->object->type==TREE&&(player.eq.bar.size()<=player.eq.selectedSlot||player.eq.bar[player.eq.selectedSlot]->id!=ITEMS::AXE)) return true;
-        if(collisions[3]->object->type==STONE&&(player.eq.bar.size()<=player.eq.selectedSlot||player.eq.bar[player.eq.selectedSlot]->id!=ITEMS::PICKAXE)) return true;
+        if(collisions[3]->object->type==TREE&&(player.eq.bar.size()<=player.eq.selectedSlot||player.eq.bar[player.eq.selectedSlot]->id!=ITEMS::AXE))
+            return true;
+        if(collisions[3]->object->type==STONE&&(player.eq.bar.size()<=player.eq.selectedSlot||player.eq.bar[player.eq.selectedSlot]->id!=ITEMS::PICKAXE))
+            return true;
 
         int id = collisions[3]->object->dropID;
         collisions[3]->object=nullptr;
@@ -649,8 +692,10 @@ bool World::mine()
     }
     else if(player.dir==DOWN&&collisions[5]->object&&collisions[5]->object->destructable)
     {
-        if(collisions[5]->object->type==TREE&&(player.eq.bar.size()<=player.eq.selectedSlot||player.eq.bar[player.eq.selectedSlot]->id!=ITEMS::AXE)) return true;
-        if(collisions[5]->object->type==STONE&&(player.eq.bar.size()<=player.eq.selectedSlot||player.eq.bar[player.eq.selectedSlot]->id!=ITEMS::PICKAXE)) return true;
+        if(collisions[5]->object->type==TREE&&(player.eq.bar.size()<=player.eq.selectedSlot||player.eq.bar[player.eq.selectedSlot]->id!=ITEMS::AXE))
+            return true;
+        if(collisions[5]->object->type==STONE&&(player.eq.bar.size()<=player.eq.selectedSlot||player.eq.bar[player.eq.selectedSlot]->id!=ITEMS::PICKAXE))
+            return true;
 
         int id = collisions[5]->object->dropID;
         collisions[5]->object=nullptr;
@@ -667,8 +712,10 @@ bool World::mine()
     }
     else if(player.dir==LEFT&&collisions[7]->object&&collisions[7]->object->destructable)
     {
-        if(collisions[7]->object->type==TREE&&(player.eq.bar.size()<=player.eq.selectedSlot||player.eq.bar[player.eq.selectedSlot]->id!=ITEMS::AXE)) return true;
-        if(collisions[7]->object->type==STONE&&(player.eq.bar.size()<=player.eq.selectedSlot||player.eq.bar[player.eq.selectedSlot]->id!=ITEMS::PICKAXE)) return true;
+        if(collisions[7]->object->type==TREE&&(player.eq.bar.size()<=player.eq.selectedSlot||player.eq.bar[player.eq.selectedSlot]->id!=ITEMS::AXE))
+            return true;
+        if(collisions[7]->object->type==STONE&&(player.eq.bar.size()<=player.eq.selectedSlot||player.eq.bar[player.eq.selectedSlot]->id!=ITEMS::PICKAXE))
+            return true;
 
         int id = collisions[7]->object->dropID;
         collisions[7]->object=nullptr;
@@ -686,73 +733,26 @@ bool World::mine()
     return false;
 }
 
-void World::build()
+void World::build(sf::RenderWindow& window)
 {
-    vector<Block*> collisions = getCollisions(player.getPosition());
-    if(player.dir==UP&&collisions[1]->object==nullptr)
+    Block* temp = getBlock(window.mapPixelToCoords(sf::Mouse::getPosition()-sf::Vector2i(33,50)));
+    if(!temp||temp->object) return;
+    temp->object = new Object();
+    objectType t;
+    if(player.eq.bar.size()>player.eq.selectedSlot)
     {
-        if(player.eq.bar.size()>player.eq.selectedSlot&&player.eq.bar[player.eq.selectedSlot]->id==ITEMS::PLANKS)
+        if(player.eq.bar[player.eq.selectedSlot]->id==ITEMS::WOODENWALLITEM)
         {
-            collisions[1]->object=new WoodenFloor();
-            txtLoader->setTexture(*collisions[1]->object,WOODENFLOOR,0);
-            collisions[1]->object->setPosition(collisions[1]->getPosition());
+            t=objectType::WOODENWALL;
+            temp->collision=true;
         }
-        else if(player.eq.bar.size()>player.eq.selectedSlot&&player.eq.bar[player.eq.selectedSlot]->id==ITEMS::WOODENWALLITEM)
+        else if(player.eq.bar[player.eq.selectedSlot]->id==ITEMS::PLANKS)
         {
-            collisions[1]->object=new WoodenWall();
-            txtLoader->setTexture(*collisions[1]->object,WOODENWALL,0);
-            collisions[1]->object->setPosition(collisions[1]->getPosition());
-            collisions[1]->collision=true;
+            t=objectType::WOODENFLOOR;
         }
     }
-    else if(player.dir==RIGHT&&collisions[3]->object==nullptr)
-    {
-        if(player.eq.bar.size()>player.eq.selectedSlot&&player.eq.bar[player.eq.selectedSlot]->id==ITEMS::PLANKS)
-        {
-            collisions[3]->object=new WoodenFloor();
-            txtLoader->setTexture(*collisions[3]->object,WOODENFLOOR,0);
-            collisions[3]->object->setPosition(collisions[3]->getPosition());
-        }
-        else if(player.eq.bar.size()>player.eq.selectedSlot&&player.eq.bar[player.eq.selectedSlot]->id==ITEMS::WOODENWALLITEM)
-        {
-            collisions[3]->object=new WoodenWall();
-            txtLoader->setTexture(*collisions[3]->object,WOODENWALL,0);
-            collisions[3]->object->setPosition(collisions[3]->getPosition());
-            collisions[3]->collision=true;
-        }
-    }
-    else if(player.dir==DOWN&&collisions[5]->object==nullptr)
-    {
-        if(player.eq.bar.size()>player.eq.selectedSlot&&player.eq.bar[player.eq.selectedSlot]->id==ITEMS::PLANKS)
-        {
-            collisions[5]->object=new WoodenFloor();
-            txtLoader->setTexture(*collisions[5]->object,WOODENFLOOR,0);
-            collisions[5]->object->setPosition(collisions[5]->getPosition());
-        }
-        else if(player.eq.bar.size()>player.eq.selectedSlot&&player.eq.bar[player.eq.selectedSlot]->id==ITEMS::WOODENWALLITEM)
-        {
-            collisions[5]->object=new WoodenWall();
-            txtLoader->setTexture(*collisions[5]->object,WOODENWALL,0);
-            collisions[5]->object->setPosition(collisions[5]->getPosition());
-            collisions[5]->collision=true;
-        }
-    }
-    else if(player.dir==LEFT&&collisions[7]->object==nullptr)
-    {
-        if(player.eq.bar.size()>player.eq.selectedSlot&&player.eq.bar[player.eq.selectedSlot]->id==ITEMS::PLANKS)
-        {
-            collisions[7]->object=new WoodenFloor();
-            txtLoader->setTexture(*collisions[7]->object,WOODENFLOOR,0);
-            collisions[7]->object->setPosition(collisions[7]->getPosition());
-        }
-        else if(player.eq.bar.size()>player.eq.selectedSlot&&player.eq.bar[player.eq.selectedSlot]->id==ITEMS::WOODENWALLITEM)
-        {
-            collisions[7]->object=new WoodenWall();
-            txtLoader->setTexture(*collisions[7]->object,WOODENWALL,0);
-            collisions[7]->object->setPosition(collisions[7]->getPosition());
-            collisions[7]->collision=true;
-        }
-    }
+    txtLoader->setTexture(*temp->object,t,0);
+    temp->object->setPosition(temp->getPosition());
 }
 
 void World::draw(sf::RenderWindow& window)

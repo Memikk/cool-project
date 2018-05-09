@@ -222,6 +222,12 @@ void Interface::popUp(int id,bool drop)
 
 void Interface::draw(Player& p,sf::RenderWindow& window)
 {
+    if(p.eq.bar.size()&&p.eq.bar.size()>p.eq.selectedSlot&&p.eq.bar[p.eq.selectedSlot]->building&&p.eq.buildingDrawingTexture)
+    {
+        buildingDrawing.setPosition(window.mapPixelToCoords(sf::Mouse::getPosition()));
+        buildingDrawing.setTexture(*p.eq.buildingDrawingTexture);
+        window.draw(buildingDrawing);
+    }
     window.draw(p.hpBar);
     window.draw(p.hungerBar);
     window.draw(p.thirstBar);

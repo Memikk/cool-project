@@ -16,6 +16,7 @@ Equipment::Equipment()
 void Equipment::changeSlot(unsigned slot)
 {
     selectedSlot=slot;
+    if(bar.size()>selectedSlot&&bar[selectedSlot]->building) buildingDrawingTexture=bar[selectedSlot]->getTexture();
 }
 
 void Equipment::checkRecipes(vector<sf::Texture*>& v)

@@ -24,6 +24,7 @@ public:
 class Equipment : public sf::Sprite
 {
 public:
+    const sf::Texture* buildingDrawingTexture=nullptr;
     unsigned selectedSlot=0;
     Item* itemHolder=nullptr;
     Item* itemFromCrafting=nullptr;

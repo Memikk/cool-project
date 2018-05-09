@@ -183,6 +183,15 @@ public:
         case 6:
             i.setTexture(*axe);
             break;
+        case 7:
+            i.setTexture(*planks);
+            break;
+        case 8:
+            i.setTexture(*pickaxe);
+            break;
+        case 9:
+            i.setTexture(*woodenWallItem);
+            break;
         }
     }
 

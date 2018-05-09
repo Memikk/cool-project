@@ -32,6 +32,7 @@ public:
 class Interface
 {
 public:
+    sf::Sprite buildingDrawing;
     sf::Sprite cursor;
     sf::Font font;
     sf::Text gTime;
