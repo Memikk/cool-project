@@ -47,7 +47,7 @@ public:
     void dropItemInEq(sf::Vector2f mpos);
     void eat(sf::Vector2f mpos);
     void drink();
-    bool mine();
+    void mine(sf::RenderWindow& window);
     void build(sf::RenderWindow& window);
     bool exist(int x,int y) const;
     Block* blockCollision(sf::Vector2f pos);

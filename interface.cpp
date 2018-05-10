@@ -228,6 +228,7 @@ void Interface::draw(Player& p,sf::RenderWindow& window)
         buildingDrawing.setTexture(*p.eq.buildingDrawingTexture);
         window.draw(buildingDrawing);
     }
+
     window.draw(p.hpBar);
     window.draw(p.hungerBar);
     window.draw(p.thirstBar);

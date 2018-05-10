@@ -163,6 +163,14 @@ World::World(TextureLoader* tloader,Interface* intface)
     player.eq.items.back()->building=true;
     txtLoader->setItemTexture(*player.eq.items.back(),9);
 
+    player.eq.items.push_back(new Item(ITEMS::PICKAXE));
+    player.eq.items.back()->tool=true;
+    txtLoader->setItemTexture(*player.eq.items.back(),8);
+
+    player.eq.items.push_back(new Item(ITEMS::AXE));
+    player.eq.items.back()->tool=true;
+    txtLoader->setItemTexture(*player.eq.items.back(),6);
+
     daynight.setFillColor(sf::Color(0,0,0,0));
     daynight.setSize(sf::Vector2f(1920,1080));
 }
@@ -271,9 +279,12 @@ void World::update(sf::RenderWindow& window)
         player.eq.itemHolder->setPosition(window.mapPixelToCoords(sf::Mouse::getPosition(window)-sf::Vector2i(25,25)));
     }
 
-    if(player.eq.bar.size()>player.eq.selectedSlot&&player.eq.bar[player.eq.selectedSlot]->building)
+    Item* holdItem = nullptr;
+    if(player.eq.bar.size()>player.eq.selectedSlot)
+        holdItem=player.eq.bar[player.eq.selectedSlot];
+    Block* temp = getBlock(window.mapPixelToCoords(sf::Mouse::getPosition()-sf::Vector2i(33,50)));
+    if(holdItem&&holdItem->building)
     {
-        Block* temp = getBlock(window.mapPixelToCoords(sf::Mouse::getPosition()-sf::Vector2i(33,50)));
         if(temp)
         {
             if(temp->cover)
@@ -301,6 +312,26 @@ void World::update(sf::RenderWindow& window)
                 temp->setFillColor(sf::Color::Red);
             else
                 temp->setFillColor(sf::Color(0,100,255));
+        }
+    }
+    if(temp&&holdItem&&holdItem->tool)
+    {
+        if(holdItem->id==ITEMS::AXE)
+        {
+            if(temp->object&&
+               (temp->object->type==objectType::TREE||
+                temp->object->type==objectType::WOODENWALL||
+                temp->object->type==objectType::WOODENFLOOR))
+            {
+                temp->object->setColor(sf::Color(0,100,255));
+            }
+        }
+        if(holdItem->id==ITEMS::PICKAXE)
+        {
+            if(temp->object&&temp->object->type==objectType::STONE)
+            {
+                temp->object->setColor(sf::Color(0,100,255));
+            }
         }
     }
 
@@ -647,100 +678,43 @@ void World::spawnEntities()
     }
 }
 
-bool World::mine()
+void World::mine(sf::RenderWindow& window)
 {
-    vector<Block*> collisions = getCollisions(player.getPosition());
-    if(player.dir==UP&&collisions[1]->object&&collisions[1]->object->destructable)
-    {
-        if(collisions[1]->object->type==TREE&&(player.eq.bar.size()<=player.eq.selectedSlot||player.eq.bar[player.eq.selectedSlot]->id!=ITEMS::AXE))
-            return true;
-        if(collisions[1]->object->type==STONE&&(player.eq.bar.size()<=player.eq.selectedSlot||player.eq.bar[player.eq.selectedSlot]->id!=ITEMS::PICKAXE))
-            return true;
+    Item* holdItem = nullptr;
+    if(player.eq.bar.size()>player.eq.selectedSlot)
+        holdItem=player.eq.bar[player.eq.selectedSlot];
+    Block* temp = getBlock(window.mapPixelToCoords(sf::Mouse::getPosition()-sf::Vector2i(33,50)));
+    if(temp==nullptr) return;
 
-        int id = collisions[1]->object->dropID;
-        collisions[1]->object=nullptr;
-        collisions[1]->collision=false;
+    if((temp->object&&temp->object->type==objectType::TREE&&holdItem&&holdItem->id==ITEMS::AXE)||
+       (temp->object&&temp->object->type==objectType::WOODENFLOOR&&holdItem&&holdItem->id==ITEMS::AXE)||
+       (temp->object&&temp->object->type==objectType::WOODENWALL&&holdItem&&holdItem->id==ITEMS::AXE)||
+       (temp->object&&temp->object->type==objectType::STONE&&holdItem&&holdItem->id==ITEMS::PICKAXE))
+    {
+        int id = temp->object->dropID;
+        temp->object=nullptr;
+        temp->collision=false;
 
         if(id!=-1)
         {
             Item* n = new Item((ITEMS)id);
-            n->setPosition(collisions[1]->getPosition());
+            n->setPosition(temp->getPosition());
             txtLoader->setItemTexture(*n,id);
-            collisions[1]->items.push_back(n);
+            temp->items.push_back(n);
         }
-        return true;
     }
-    else if(player.dir==RIGHT&&collisions[3]->object&&collisions[3]->object->destructable)
-    {
-        if(collisions[3]->object->type==TREE&&(player.eq.bar.size()<=player.eq.selectedSlot||player.eq.bar[player.eq.selectedSlot]->id!=ITEMS::AXE))
-            return true;
-        if(collisions[3]->object->type==STONE&&(player.eq.bar.size()<=player.eq.selectedSlot||player.eq.bar[player.eq.selectedSlot]->id!=ITEMS::PICKAXE))
-            return true;
-
-        int id = collisions[3]->object->dropID;
-        collisions[3]->object=nullptr;
-        collisions[3]->collision=false;
-
-        if(id!=-1)
-        {
-            Item* n = new Item((ITEMS)id);
-            n->setPosition(collisions[3]->getPosition());
-            txtLoader->setItemTexture(*n,id);
-            collisions[3]->items.push_back(n);
-        }
-        return true;
-    }
-    else if(player.dir==DOWN&&collisions[5]->object&&collisions[5]->object->destructable)
-    {
-        if(collisions[5]->object->type==TREE&&(player.eq.bar.size()<=player.eq.selectedSlot||player.eq.bar[player.eq.selectedSlot]->id!=ITEMS::AXE))
-            return true;
-        if(collisions[5]->object->type==STONE&&(player.eq.bar.size()<=player.eq.selectedSlot||player.eq.bar[player.eq.selectedSlot]->id!=ITEMS::PICKAXE))
-            return true;
-
-        int id = collisions[5]->object->dropID;
-        collisions[5]->object=nullptr;
-        collisions[5]->collision=false;
-
-        if(id!=-1)
-        {
-            Item* n = new Item((ITEMS)id);
-            n->setPosition(collisions[5]->getPosition());
-            txtLoader->setItemTexture(*n,id);
-            collisions[5]->items.push_back(n);
-        }
-        return true;
-    }
-    else if(player.dir==LEFT&&collisions[7]->object&&collisions[7]->object->destructable)
-    {
-        if(collisions[7]->object->type==TREE&&(player.eq.bar.size()<=player.eq.selectedSlot||player.eq.bar[player.eq.selectedSlot]->id!=ITEMS::AXE))
-            return true;
-        if(collisions[7]->object->type==STONE&&(player.eq.bar.size()<=player.eq.selectedSlot||player.eq.bar[player.eq.selectedSlot]->id!=ITEMS::PICKAXE))
-            return true;
-
-        int id = collisions[7]->object->dropID;
-        collisions[7]->object=nullptr;
-        collisions[7]->collision=false;
-
-        if(id!=-1)
-        {
-            Item* n = new Item((ITEMS)id);
-            n->setPosition(collisions[7]->getPosition());
-            txtLoader->setItemTexture(*n,id);
-            collisions[7]->items.push_back(n);
-        }
-        return true;
-    }
-    return false;
 }
 
 void World::build(sf::RenderWindow& window)
 {
-    Block* temp = getBlock(window.mapPixelToCoords(sf::Mouse::getPosition()-sf::Vector2i(33,50)));
-    if(!temp||temp->object) return;
-    temp->object = new Object();
-    objectType t;
-    if(player.eq.bar.size()>player.eq.selectedSlot)
+    if(player.eq.bar.size()>player.eq.selectedSlot&&player.eq.bar[player.eq.selectedSlot]->building)
     {
+        Block* temp = getBlock(window.mapPixelToCoords(sf::Mouse::getPosition()-sf::Vector2i(33,50)));
+        if(!temp||temp->object)
+            return;
+        temp->object = new Object();
+        objectType t;
+
         if(player.eq.bar[player.eq.selectedSlot]->id==ITEMS::WOODENWALLITEM)
         {
             t=objectType::WOODENWALL;
@@ -750,9 +724,11 @@ void World::build(sf::RenderWindow& window)
         {
             t=objectType::WOODENFLOOR;
         }
+
+        txtLoader->setTexture(*temp->object,t,0);
+        temp->object->setPosition(temp->getPosition());
     }
-    txtLoader->setTexture(*temp->object,t,0);
-    temp->object->setPosition(temp->getPosition());
+
 }
 
 void World::draw(sf::RenderWindow& window)

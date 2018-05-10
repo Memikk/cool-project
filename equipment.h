@@ -10,12 +10,17 @@ class Item : public sf::Sprite
 public:
     bool food=false;
     bool building=false;
+    bool tool=false;
     ITEMS id;
     Item(ITEMS id):id(id)
     {
         if(id==ITEMS::PLANKS||id==ITEMS::WOODENWALLITEM)
         {
             building=true;
+        }
+        if(id==ITEMS::AXE||id==ITEMS::PICKAXE)
+        {
+            tool=true;
         }
     }
     void draw(sf::RenderWindow& window){window.draw(*this);};
