@@ -60,13 +60,13 @@ void Player::moving(vector<Block*>& collisions)
     bool movingX=true;
     bool movingY=true;
 
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::S))
     {
         changeTextureRect(0);
         vel.y=speed;
         dir=DOWN;
     }
-    else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+    else if(sf::Keyboard::isKeyPressed(sf::Keyboard::W))
     {
         changeTextureRect(2);
         vel.y=-speed;
@@ -82,13 +82,13 @@ void Player::moving(vector<Block*>& collisions)
             movingY=false;
     }
 
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::A))
     {
         changeTextureRect(1);
         vel.x=-speed;
         dir=LEFT;
     }
-    else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+    else if(sf::Keyboard::isKeyPressed(sf::Keyboard::D))
     {
         changeTextureRect(3);
         vel.x=speed;
