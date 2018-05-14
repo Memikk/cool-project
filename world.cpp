@@ -14,47 +14,64 @@ Chunk::Chunk(int offX,int offY,siv::PerlinNoise& perlin,TextureLoader* txtLoader
             int yp=offsetY+j*BLOCK_SIZE;
 
             float choice=worldGenNoise.noise0_1((float)xp*0.002,(float)yp*0.002);
+            float choice1=worldGenNoise.noise0_1((float)xp*0.0001,(float)yp*0.0001);
             float choice2=objectNoise.noise0_1((float)xp*0.002,(float)yp*0.002);
             float choice3=objectNoise2.noise0_1((float)xp*0.002,(float)yp*0.002);
 
             blocks[i][j] = new Dirt();
             txtLoader->chooseTexture(*blocks[i][j],i,j,offsetX,offsetY,DIRT,0.0);
 
-            if(choice3>0.64)
-            {
-                blocks[i][j]->cover = new Sand();
-                txtLoader->chooseTexture(*blocks[i][j]->cover,i,j,offsetX,offsetY,SAND,0.64,objectNoise2);
-            }
+//            if(choice3>0.64)
+//            {
+//                blocks[i][j]->cover = new Sand();
+//                txtLoader->chooseTexture(*blocks[i][j]->cover,i,j,offsetX,offsetY,SAND,0.64,objectNoise2);
+//            }
             if(choice>0.30)
             {
                 blocks[i][j]->grass = new Grass();
                 txtLoader->chooseTexture(*blocks[i][j]->grass,i,j,offsetX,offsetY,GRASS,0.30,worldGenNoise);
-            }
+                if(choice<0.5&&choice1<0.50)
+                {
+                    blocks[i][j]->object = new Water();
+                    txtLoader->chooseTexture(*blocks[i][j]->object,i,j,offsetX,offsetY,WATER,0,worldGenNoise);
+                }
 
-            if(choice>0.75)
+            }
+            if(choice<=0.30&&choice1<0.50)
             {
                 blocks[i][j]->object = new Water();
                 blocks[i][j]->collision = true;
-                txtLoader->chooseTexture(*blocks[i][j]->object,i,j,offsetX,offsetY,WATER,0.75,worldGenNoise);
+                txtLoader->chooseTexture(*blocks[i][j]->object,i,j,offsetX,offsetY,WATER,0,worldGenNoise);
             }
 
+//            if(choice2>0.70)
+//            {
+//                blocks[i][j]->grass = new Grass();
+//                blocks[i][j]->object = nullptr;
+//                txtLoader->chooseTexture(*blocks[i][j]->grass,i,j,offsetX,offsetY,GRASS,0.70,objectNoise);
+//            }
 
 
-            if(blocks[i][j]->object==nullptr)
+            if(blocks[i][j]->object==nullptr||blocks[i][j]->object->type==objectType::WATER)
             {
-                if(choice2>0.64)
+                if(choice>0.75)
                 {
                     blocks[i][j]->object = new Stone();
                     blocks[i][j]->collision=true;
-                    txtLoader->chooseTexture(*blocks[i][j]->object,i,j,offsetX,offsetY,STONE,0.64,objectNoise);
+                    txtLoader->chooseTexture(*blocks[i][j]->object,i,j,offsetX,offsetY,STONE,0.75,worldGenNoise);
                 }
-                else if((choice2<0.35||(choice2>=0.35&&(int)(choice2*234)%25==0))&&choice3<=0.64)
+            }
+            if(blocks[i][j]->object==nullptr)
+            {
+                if((choice2<0.50||(choice2>=0.35&&(int)(choice2*234)%25==0))&&choice3<=0.69)
                 {
                     if((int)(choice2*100)%3)
                     {
                         blocks[i][j]->object = new Tree();
                         blocks[i][j]->collision=true;
-                        txtLoader->chooseTexture(*blocks[i][j]->object,i,j,offsetX,offsetY,TREE,0,objectNoise);
+                        txtLoader->setTreeTexture(*blocks[i][j]->object);
+                        int tmp = (int)(choice1*choice2*choice3*2359)%4;
+                        blocks[i][j]->object->setTextureRect(sf::IntRect(0,50*tmp,50,50));
                     }
                     else if((int)(choice2*10)%2)
                     {
@@ -96,6 +113,15 @@ Chunk::Chunk(int offX,int offY,siv::PerlinNoise& perlin,TextureLoader* txtLoader
                 }
             }
 
+            if(blocks[i][j]->object==nullptr)
+            {
+                if((int)(choice*choice2*223)%17==0)
+                {
+                    blocks[i][j]->decoration = new Object();
+                    txtLoader->setDecorationTexture(*blocks[i][j]->decoration,(int)(choice2*choice3*543)%5);
+                }
+            }
+
             blocks[i][j]->setPosition(sf::Vector2f(xp,yp));
             if(blocks[i][j]->object!=nullptr)
                 blocks[i][j]->object->setPosition(sf::Vector2f(xp,yp));
@@ -103,6 +129,8 @@ Chunk::Chunk(int offX,int offY,siv::PerlinNoise& perlin,TextureLoader* txtLoader
                 blocks[i][j]->grass->setPosition(sf::Vector2f(xp,yp));
             if(blocks[i][j]->cover!=nullptr)
                 blocks[i][j]->cover->setPosition(sf::Vector2f(xp,yp));
+             if(blocks[i][j]->decoration!=nullptr)
+                blocks[i][j]->decoration->setPosition(sf::Vector2f(xp,yp));
             if(blocks[i][j]->items.size()>0&&blocks[i][j]->items.back()!=nullptr)
                 blocks[i][j]->items.back()->setPosition(sf::Vector2f(xp,yp));
         }
@@ -319,9 +347,9 @@ void World::update(sf::RenderWindow& window)
         if(holdItem->id==ITEMS::AXE)
         {
             if(temp->object&&
-               (temp->object->type==objectType::TREE||
-                temp->object->type==objectType::WOODENWALL||
-                temp->object->type==objectType::WOODENFLOOR))
+                    (temp->object->type==objectType::TREE||
+                     temp->object->type==objectType::WOODENWALL||
+                     temp->object->type==objectType::WOODENFLOOR))
             {
                 temp->object->setColor(sf::Color(0,100,255));
             }
@@ -684,12 +712,13 @@ void World::mine(sf::RenderWindow& window)
     if(player.eq.bar.size()>player.eq.selectedSlot)
         holdItem=player.eq.bar[player.eq.selectedSlot];
     Block* temp = getBlock(window.mapPixelToCoords(sf::Mouse::getPosition()-sf::Vector2i(33,50)));
-    if(temp==nullptr) return;
+    if(temp==nullptr)
+        return;
 
     if((temp->object&&temp->object->type==objectType::TREE&&holdItem&&holdItem->id==ITEMS::AXE)||
-       (temp->object&&temp->object->type==objectType::WOODENFLOOR&&holdItem&&holdItem->id==ITEMS::AXE)||
-       (temp->object&&temp->object->type==objectType::WOODENWALL&&holdItem&&holdItem->id==ITEMS::AXE)||
-       (temp->object&&temp->object->type==objectType::STONE&&holdItem&&holdItem->id==ITEMS::PICKAXE))
+            (temp->object&&temp->object->type==objectType::WOODENFLOOR&&holdItem&&holdItem->id==ITEMS::AXE)||
+            (temp->object&&temp->object->type==objectType::WOODENWALL&&holdItem&&holdItem->id==ITEMS::AXE)||
+            (temp->object&&temp->object->type==objectType::STONE&&holdItem&&holdItem->id==ITEMS::PICKAXE))
     {
         int id = temp->object->dropID;
         temp->object=nullptr;
@@ -710,7 +739,7 @@ void World::build(sf::RenderWindow& window)
     if(player.eq.bar.size()>player.eq.selectedSlot&&player.eq.bar[player.eq.selectedSlot]->building)
     {
         Block* temp = getBlock(window.mapPixelToCoords(sf::Mouse::getPosition()-sf::Vector2i(33,50)));
-        if(!temp||temp->object)
+        if(!temp||temp->collision)
             return;
         temp->object = new Object();
         objectType t;

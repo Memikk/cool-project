@@ -39,7 +39,16 @@ void Block::draw(sf::RenderWindow& window)
     if(grass!=nullptr)
     {
         if(grass->side)
-            window.draw(*this);
+        {
+            if(object!=nullptr&&object->getType()==objectType::WATER)
+            {
+                window.draw(*object);
+            }
+            else
+            {
+                window.draw(*this);
+            }
+        }
         if(cover!=nullptr&&cover->side)
             window.draw(*grass);
         else if(cover==nullptr)
@@ -53,8 +62,18 @@ void Block::draw(sf::RenderWindow& window)
         window.draw(*cover);
         cover->setColor(sf::Color::White);
     }
+    if(object==nullptr&&decoration)
+    {
+        window.draw(*decoration);
+    }
     if(object!=nullptr)
-        window.draw(*object);
+    {
+        if((object->getType()==objectType::WATER&&grass==nullptr)||object->getType()!=objectType::WATER)
+        {
+            window.draw(*object);
+        }
+
+    }
     else
     {
         for(int i=items.size()-1;i>=0;i--)

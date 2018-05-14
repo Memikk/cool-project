@@ -21,6 +21,7 @@ class TextureLoader
     sf::Texture* grass;
     sf::Texture* dirt;
     sf::Texture* tree;
+    sf::Texture* decoratives;
     sf::Texture* bush;
     sf::Texture* wheat;
     sf::Texture* carrot;
@@ -65,6 +66,7 @@ public:
         grass=new sf::Texture();
         dirt=new sf::Texture();
         tree=new sf::Texture();
+        decoratives=new sf::Texture();
         sheep=new sf::Texture();
         cow=new sf::Texture();
         wolf=new sf::Texture();
@@ -100,6 +102,7 @@ public:
         if(grass->loadFromFile("resources/textures/grass.png"))cout<<"Wczytano teksture trawy"<<endl;
         if(dirt->loadFromFile("resources/textures/dirt.png"))cout<<"Wczytano teksture ziemi"<<endl;
         if(tree->loadFromFile("resources/textures/tree.png"))cout<<"Wczytano teksture drzewa"<<endl;
+        if(decoratives->loadFromFile("resources/textures/decoratives.png"))cout<<"Wczytano teksture ozdob"<<endl;
         if(sheep->loadFromFile("resources/textures/sheep.png"))cout<<"Wczytano teksture owcy"<<endl;
         if(cow->loadFromFile("resources/textures/cow.png"))cout<<"Wczytano teksture krowy"<<endl;
         if(pig->loadFromFile("resources/textures/pig.png"))cout<<"Wczytano teksture swini"<<endl;
@@ -156,6 +159,16 @@ public:
         p.eq.itemsBar.setTexture(*itemsBar);
         p.eq.itemFrame.setTexture(*itemFrame);
         p.setScale(0.85,0.85);
+    }
+
+    void setTreeTexture(Object& obj)
+    {
+        obj.setTexture(*tree);
+    }
+    void setDecorationTexture(Object& obj,int choice)
+    {
+        obj.setTexture(*decoratives);
+        obj.setTextureRect(sf::IntRect(0,50*choice,50,50));
     }
 
     void setItemTexture(Item& i,int choice)

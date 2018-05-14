@@ -127,6 +127,7 @@ class Block : public sf::RectangleShape
 public:
     vector<Block*> collisions;
     bool side=true;
+    Object* decoration=nullptr;
     Object* object=nullptr;
     Object* grass=nullptr;
     Object* cover=nullptr;
