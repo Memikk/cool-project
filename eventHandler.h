@@ -8,7 +8,7 @@ struct EventHandler
     EventHandler(sf::RenderWindow& w):window(&w) {};
     sf::Event event;
     sf::RenderWindow* window;
-    void checkEvents(World& world,sf::View& view);
+    void checkEvents(World& world,sf::View& view,gameState& gs);
 };
 
 

@@ -20,6 +20,7 @@ class Chunk;
 class World;
 class PopUp;
 //class Interface;
+enum gameState{MENU,INGAME};
 enum direction{UP,RIGHT,DOWN,LEFT};
 extern siv::PerlinNoise worldGenNoise;
 extern siv::PerlinNoise objectNoise;

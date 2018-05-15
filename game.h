@@ -4,17 +4,30 @@
 #include "world.h"
 #include "globals.h"
 #include "interface.h"
+#include "saver.h"
 
-enum gameState{MENU,INGAME};
+class Menu
+{
+    sf::Texture* tmp;
+    sf::Sprite frame;
+    sf::RectangleShape background;
+    public:
+    Menu();
+    void draw(sf::RenderWindow& window);
+};
 
 class Game
 {
+    bool started=false;
     sf::RenderWindow* window;
     EventHandler* evHandler;
     TextureLoader* txtLoader;
     Interface* iface;
+    Saver* saver;
     World* world;
     sf::View* view;
+    Menu* menu;
+    gameState gs=MENU;
 public:
     Game(sf::RenderWindow& win);
     void update();

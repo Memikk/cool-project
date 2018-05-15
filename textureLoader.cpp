@@ -276,6 +276,9 @@ void TextureLoader::setTexture(Block& block,blockType type,int choice)
     case DIRT:
         block.setTexture(dirt);
         break;
+    case WATERB:
+        block.setTexture(water);
+        break;
     }
 }
 

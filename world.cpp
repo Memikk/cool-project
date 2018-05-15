@@ -32,8 +32,7 @@ Chunk::Chunk(int offX,int offY,siv::PerlinNoise& perlin,TextureLoader* txtLoader
                 txtLoader->chooseTexture(*blocks[i][j]->grass,i,j,offsetX,offsetY,GRASS,0.30,worldGenNoise);
                 if(choice<0.5&&choice1<0.50)
                 {
-                    blocks[i][j]->object = new Water();
-                    txtLoader->chooseTexture(*blocks[i][j]->object,i,j,offsetX,offsetY,WATER,0,worldGenNoise);
+                    txtLoader->chooseTexture(*blocks[i][j],i,j,offsetX,offsetY,WATERB,0.0);
                 }
 
             }
@@ -129,7 +128,7 @@ Chunk::Chunk(int offX,int offY,siv::PerlinNoise& perlin,TextureLoader* txtLoader
                 blocks[i][j]->grass->setPosition(sf::Vector2f(xp,yp));
             if(blocks[i][j]->cover!=nullptr)
                 blocks[i][j]->cover->setPosition(sf::Vector2f(xp,yp));
-             if(blocks[i][j]->decoration!=nullptr)
+            if(blocks[i][j]->decoration!=nullptr)
                 blocks[i][j]->decoration->setPosition(sf::Vector2f(xp,yp));
             if(blocks[i][j]->items.size()>0&&blocks[i][j]->items.back()!=nullptr)
                 blocks[i][j]->items.back()->setPosition(sf::Vector2f(xp,yp));
@@ -181,8 +180,9 @@ void Chunk::draw(sf::RenderWindow& window)
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~WORLD~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-World::World(TextureLoader* tloader,Interface* intface)
+World::World(TextureLoader* tloader,Interface* intface,Saver* s)
 {
+    saver=s;
     txtLoader=tloader;
     iface=intface;
     player.setPosition(0,0);
@@ -201,6 +201,98 @@ World::World(TextureLoader* tloader,Interface* intface)
 
     daynight.setFillColor(sf::Color(0,0,0,0));
     daynight.setSize(sf::Vector2f(1920,1080));
+}
+
+void World::start(sf::RenderWindow* window,sf::View* view)
+{
+    view->setCenter(getPlayer().getPosition().x+BLOCK_SIZE/2,getPlayer().getPosition().y+BLOCK_SIZE/2);
+    view->setSize(sf::Vector2f(window->getSize().x/2,window->getSize().y/2));
+    window->setView(*view);
+    cout<<"gra stworzona"<<endl;
+
+    //generateChunks();
+    loadChunks();
+}
+
+void World::loadChunks()
+{
+    fstream save("save1.txt",ios::in);
+    string line;
+
+    vector<vector<string>> chunkData(CHUNK_SIZE,vector<string>(CHUNK_SIZE,"x"));
+
+    Chunk* temp = new Chunk();
+
+    cerr<<"1"<<endl;
+
+    while(getline(save,line))
+    {
+        cerr<<"2"<<endl;
+        int x,y;
+        int offx=x*CHUNK_SIZE*BLOCK_SIZE;
+        int offy=y*CHUNK_SIZE*BLOCK_SIZE;
+        string tmp;
+        stringstream ss(line);
+        ss>>tmp;
+        if(tmp=="c")
+        {
+            ss>>x>>y;
+            Chunk* newchunk = new Chunk();
+            temp = newchunk;
+            temp->ix=x;
+            temp->iy=y;
+        }
+        else
+        {
+            cerr<<"3"<<endl;
+            temp->blocks = new Block**[CHUNK_SIZE];
+            for(int i=0;i<CHUNK_SIZE;i++)
+            {
+                temp->blocks[i] = new Block*[CHUNK_SIZE];
+                for(int j=0;j<CHUNK_SIZE;j++)
+                {
+                    int xp=offx+i*BLOCK_SIZE;
+                    int yp=offy+j*BLOCK_SIZE;
+                    float choice=worldGenNoise.noise0_1((float)xp*0.002,(float)yp*0.002);
+                    if(i!=0||j!=0) ss>>tmp;
+                    temp->blocks[i][j] = new Dirt();
+                    txtLoader->chooseTexture(*temp->blocks[i][j],i,j,offx,offy,DIRT,0.0);
+                    if(tmp!="g"&&tmp!="x")
+                    {
+                        temp->blocks[i][j]->object = new Object();
+                        temp->blocks[i][j]->object->setPosition(sf::Vector2f(xp,yp));
+                        if(tmp=="t")
+                        {
+                            txtLoader->setTreeTexture(*temp->blocks[i][j]->object);
+                            temp->blocks[i][j]->collision=true;
+                        }
+                        else if(tmp=="w")
+                        {
+                            txtLoader->chooseTexture(*temp->blocks[i][j]->object,i,j,offx,offy,WATER,0,worldGenNoise);
+                            temp->blocks[i][j]->collision=true;
+                        }
+                        else if(tmp=="b")
+                        {
+                            txtLoader->chooseTexture(*temp->blocks[i][j]->object,i,j,offx,offy,BUSH,0,worldGenNoise);
+                            temp->blocks[i][j]->collision=true;
+                        }
+                    }
+                    else if(tmp=="g"&&choice>0.30)
+                    {
+                        temp->blocks[i][j]->grass = new Object();
+                        txtLoader->chooseTexture(*temp->blocks[i][j]->grass,i,j,offx,offy,GRASS,0.30,worldGenNoise);
+                        temp->blocks[i][j]->grass->setPosition(sf::Vector2f(xp,yp));
+                    }
+                    temp->blocks[i][j]->setPosition(sf::Vector2f(xp,yp));
+                }
+            }
+            cerr<<"4"<<endl;
+            chunks.push_back(*temp);
+        }
+        cerr<<"5"<<endl;
+    }
+    cerr<<"6"<<endl;
+
 }
 
 void World::generateChunks()
@@ -229,6 +321,7 @@ void World::generateChunks()
             if(!exist(offsetX+i,offsetY+j))
             {
                 chunks.push_back(Chunk(offsetX+i,offsetY+j,perlin,txtLoader));
+                save(chunks.back());
             }
         }
     }
@@ -378,6 +471,22 @@ sf::Vector2i World::blockID(sf::Vector2f chunk,sf::Vector2f pos)
     iy=abs((pos.y-ty)/BLOCK_SIZE);
 
     return sf::Vector2i(ix,iy);
+}
+
+Chunk& World::getChunkFromPos(sf::Vector2f pos)
+{
+    int ox,oy;
+    if(pos.x>=0)
+        ox=pos.x/(CHUNK_SIZE*BLOCK_SIZE);
+    else
+        ox=floor(pos.x/(CHUNK_SIZE*BLOCK_SIZE));
+
+    if(pos.y>=0)
+        oy=pos.y/(CHUNK_SIZE*BLOCK_SIZE);
+    else
+        oy=floor(pos.y/(CHUNK_SIZE*BLOCK_SIZE));
+
+    return *getChunk(ox,oy);
 }
 
 Block* World::blockCollision(sf::Vector2f pos)
@@ -736,9 +845,10 @@ void World::mine(sf::RenderWindow& window)
 
 void World::build(sf::RenderWindow& window)
 {
+    Block* temp = nullptr;
     if(player.eq.bar.size()>player.eq.selectedSlot&&player.eq.bar[player.eq.selectedSlot]->building)
     {
-        Block* temp = getBlock(window.mapPixelToCoords(sf::Mouse::getPosition()-sf::Vector2i(33,50)));
+        temp = getBlock(window.mapPixelToCoords(sf::Mouse::getPosition()-sf::Vector2i(33,50)));
         if(!temp||temp->collision)
             return;
         temp->object = new Object();
@@ -757,7 +867,68 @@ void World::build(sf::RenderWindow& window)
         txtLoader->setTexture(*temp->object,t,0);
         temp->object->setPosition(temp->getPosition());
     }
+    if(temp)
+    {
+        save(getChunkFromPos(temp->getPosition()));
+        cerr<<"ZAPISZ ZMIANY"<<endl;
+    }
+}
 
+void World::save(Chunk& chunk)
+{
+    string number="c "+std::to_string(chunk.ix)+" "+std::to_string(chunk.iy);
+    cerr<<"CHUNK = "<<number<<endl;
+    string content;
+    for(int i=0; i<CHUNK_SIZE; i++)
+    {
+        for(int j=0; j<CHUNK_SIZE; j++)
+        {
+            Object* obj = chunk.blocks[i][j]->object;
+            if(!obj)
+            {
+                if(chunk.blocks[i][j]->grass)
+                {
+                    content+="g ";
+                }
+                else
+                {
+                    content+="x ";
+                }
+            }
+            else
+            {
+                if(obj->type==objectType::WOODENWALL)
+                {
+                    content+="o ";
+                }
+                else if(obj->type==objectType::TREE)
+                {
+                    content+="t ";
+                }
+                else if(obj->type==objectType::BUSH)
+                {
+                    content+="b ";
+                }
+                else if(obj->type==objectType::WATER)
+                {
+                    content+="w ";
+                }
+                else if(obj->type==objectType::WOODENFLOOR)
+                {
+                    content+="wf ";
+                }
+                else if(obj->type==objectType::STONE)
+                {
+                    content+="s ";
+                }
+                else
+                {
+                    content+="x ";
+                }
+            }
+        }
+    }
+    saver->add(number,content);
 }
 
 void World::draw(sf::RenderWindow& window)

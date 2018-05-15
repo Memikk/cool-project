@@ -1,0 +1,19 @@
+#ifndef SAVER_H_INCLUDED
+#define SAVER_H_INCLUDED
+#include <fstream>
+#include <vector>
+#include "globals.h"
+using namespace std;
+
+class Saver
+{
+    vector<pair<int,int>> savedChunks;
+    unsigned counter=1;
+    string name="save";
+public:
+    Saver();
+    void add(string number,string content);
+    void replace(fstream& save,string from,string to);
+};
+
+#endif // SAVER_H_INCLUDED

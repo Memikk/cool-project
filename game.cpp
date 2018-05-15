@@ -1,5 +1,22 @@
 #include "game.h"
 
+Menu::Menu()
+{
+    tmp = new sf::Texture();
+    tmp->loadFromFile("resources/textures/menuFrame.png");
+    frame.setTexture(*tmp);
+    frame.setPosition(sf::Vector2f(0,0));
+
+    background.setFillColor(sf::Color(222,191,94));
+    background.setSize(sf::Vector2f(1920,1080));
+}
+
+void Menu::draw(sf::RenderWindow& window)
+{
+    window.draw(background);
+    window.draw(frame);
+}
+
 Game::Game(sf::RenderWindow& win)
 {
     worldGenNoise.reseed(rand()*48325673492);
@@ -10,66 +27,71 @@ Game::Game(sf::RenderWindow& win)
     txtLoader->load();
     cout<<"zaladowano textury"<<endl;
 
-
+    saver = new Saver();
     evHandler = new EventHandler(win);
     iface = new Interface(txtLoader);
-    world = new World(txtLoader,iface);
+    world = new World(txtLoader,iface,saver);
     view = new sf::View();
     cout<<"txt loader i world stworzony"<<endl;
 
     window=&win;
     cout<<"ustawiono wskaznik na okno"<<endl;
 
+    menu = new Menu();
+
     txtLoader->setPlayerTexture(world->getPlayer());
     cout<<"ustawiono teksture gracza"<<endl;
 
-    view->setCenter(world->getPlayer().getPosition().x+BLOCK_SIZE/2,world->getPlayer().getPosition().y+BLOCK_SIZE/2);
-    view->setSize(sf::Vector2f(window->getSize().x/2,window->getSize().y/2));
-    window->setView(*view);
-    cout<<"gra stworzona"<<endl;
-
     iface->update(world->getPlayer(),*window);
 
-    world->generateChunks();
 }
 
 void Game::update()
 {
-    //cout<<"GENERUJE CHUNKI"<<endl;
-    std::thread chunkGeneratingThread(&World::generateChunks,world);
+    evHandler->checkEvents(*world,*view,gs);
+    if(gs==INGAME)
+    {
+        //cout<<"GENERUJE CHUNKI"<<endl;
+        std::thread chunkGeneratingThread(&World::generateChunks,world);
 
-    //cout<<"SPRAWDZAM EVENTY"<<endl;
-    evHandler->checkEvents(*world,*view);
+        //cout<<"AKTUALIZUJE SWIAT"<<endl;
+        world->update(*window);
+        iface->setTime(world->gameTime);
+        iface->setDays(world->days);
 
-    //cout<<"AKTUALIZUJE SWIAT"<<endl;
-    world->update(*window);
-    iface->setTime(world->gameTime);
-    iface->setDays(world->days);
+        std::thread upThread(&Interface::update,iface,world->getPlayer(),*window);
 
-    std::thread upThread(&Interface::update,iface,world->getPlayer(),*window);
+        //cout<<"USTAWIAM WIDOK"<<endl;
+        view->setCenter(vh::center(world->getPlayer()));
+        window->setView(*view);
 
-    //cout<<"USTAWIAM WIDOK"<<endl;
-    view->setCenter(vh::center(world->getPlayer()));
-    window->setView(*view);
+        //cout<<"DOLACZAM WATEK"<<endl;
+        upThread.join();
+        chunkGeneratingThread.join();
+    }
+    else
+    {
 
-    //cout<<"DOLACZAM WATEK"<<endl;
-    upThread.join();
-    chunkGeneratingThread.join();
+    }
 }
 
 void Game::draw()
 {
-
     //cout<<"CZYSZCZENIE"<<endl;
     window->clear();
 
-    //cout<<"WRZUCANIE JEDNOSTEK"<<endl;
-    world->spawnEntities();
+    if(gs==INGAME)
+    {
+        world->spawnEntities();
 
-    //cout<<"RYSOWANIE SWIATA"<<endl;
-    world->draw(*window);
+        world->draw(*window);
 
-    iface->draw(world->getPlayer(),*window);
+        iface->draw(world->getPlayer(),*window);
+    }
+    else if(gs==MENU)
+    {
+        menu->draw(*window);
+    }
 
     //cout<<"POKAZYWANIE"<<endl;
     window->display();

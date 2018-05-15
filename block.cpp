@@ -14,7 +14,6 @@ Block::Block(sf::Vector2f pos)
 {
     setSize(sf::Vector2f(BLOCK_SIZE,BLOCK_SIZE));
     setPosition(pos);
-    setFillColor(sf::Color::Transparent);
 }
 
 void Water::animate()
