@@ -14,25 +14,24 @@ void Saver::add(string number,string number2,string content)
 {
     fstream save("save1.txt");
     string tmp;
+    int c=0;
     bool found=false;
     do
     {
         getline(save,tmp,'\n');
-        cerr<<"TEST 1 = "<<tmp<<endl;
-        cerr<<"TEST 2 = "<<number<<endl;
+        c++;
         if(tmp==number)
         {
-            cerr<<"ROWNA SIE"<<endl;
-            cerr<<"DUPA"<<endl;
             getline(save,tmp,'\n');
-            cerr<<"DUPA2"<<endl;
+            c++;
             if(tmp==number2)
             {
                 getline(save,tmp,'\n');
+                c++;
                 if(tmp!=content)
                 {
                     cerr<<"ZAMIENIAMY"<<endl;
-                    replace(save,tmp,content);
+                    replace(save,c,content);
                 }
                 found=true;
                 break;
@@ -51,15 +50,17 @@ void Saver::add(string number,string number2,string content)
     save2.close();
 }
 
-void Saver::replace(fstream& save,string from,string to)
+void Saver::replace(fstream& save,int counter,string to)
 {
-    fstream temp("temp.txt");
+    ofstream temp("temp.txt");
     save.clear();
     save.seekg(0, ios::beg);
     string line;
+    int c=0;
     while(getline(save,line))
     {
-        if(line!=from)
+        c++;
+        if(c!=counter)
         {
             temp<<line<<endl;
         }
@@ -68,7 +69,9 @@ void Saver::replace(fstream& save,string from,string to)
             temp<<to<<endl;
         }
     }
-    remove("save1.txt");
+    save.close();
+    temp.close();
+    if(remove("save1.txt")!=0)cerr<<"NIE MOZNA USUNAC PLIKU"<<endl;
     rename("temp.txt","save1.txt");
 }
 

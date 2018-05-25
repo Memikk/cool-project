@@ -13,7 +13,7 @@ class Saver
 public:
     Saver();
     void add(string number,string number2,string content);
-    void replace(fstream& save,string from,string to);
+    void replace(fstream& save,int counter,string to);
 };
 
 #endif // SAVER_H_INCLUDED

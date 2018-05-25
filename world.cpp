@@ -221,8 +221,6 @@ void World::loadChunks()
     fstream save("save1.txt",ios::in);
     string line;
 
-    cerr<<"1"<<endl;
-
     while(getline(save,line))
     {
         line.erase(line.begin());
@@ -230,30 +228,50 @@ void World::loadChunks()
         int i,j;
         ss>>i;
         ss>>j;
-        cerr<<i<<" "<<j<<endl;
+
         if(exist(i,j))
         {
-            cerr<<"istnieje"<<endl;
             Chunk* temp = getChunk(i,j);
+
             getline(save,line);
             line.erase(line.begin());
             ss=stringstream(line);
             ss>>i;
             ss>>j;
-            cerr<<i<<" "<<j<<endl;
+
             getline(save,line);
             if(line[1]=='o')
             {
-                cerr<<"sciana"<<endl;
-                cerr<<i<<" "<<j<<endl;
+
                 temp->blocks[i][j]->object = new Object();
                 temp->blocks[i][j]->object->setPosition(temp->blocks[i][j]->getPosition());
                 txtLoader->setTexture(*temp->blocks[i][j]->object,WOODENWALL,0);
+                temp->blocks[i][j]->collision=true;
+            }
+            else if(line[1]=='f')
+            {
+
+                temp->blocks[i][j]->object = new Object();
+                temp->blocks[i][j]->object->setPosition(temp->blocks[i][j]->getPosition());
+                txtLoader->setTexture(*temp->blocks[i][j]->object,WOODENFLOOR,0);
+                temp->blocks[i][j]->collision=false;
+            }
+            else if(line[1]=='s')
+            {
+
+                temp->blocks[i][j]->object = new Object();
+                temp->blocks[i][j]->object->setPosition(temp->blocks[i][j]->getPosition());
+                txtLoader->setTexture(*temp->blocks[i][j]->object,STONE,0);
+                temp->blocks[i][j]->collision=true;
+            }
+            else if(line[1]=='x')
+            {
+                temp->blocks[i][j]->collision=false;
+                temp->blocks[i][j]->object = new Object();
+                temp->blocks[i][j]->collision=false;
             }
         }
     }
-    cerr<<"6"<<endl;
-
 }
 
 void World::generateChunks()
@@ -800,6 +818,7 @@ void World::mine(sf::RenderWindow& window)
             txtLoader->setItemTexture(*n,id);
             temp->items.push_back(n);
         }
+        save(getChunkFromPos(temp->getPosition()),sf::Vector2i(temp->i,temp->j));
     }
 }
 

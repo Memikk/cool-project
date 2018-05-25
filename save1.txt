@@ -1,5 +1,5 @@
-c 0 -1
-b 0 0
+c -1 -1
+b 15 13
 go 
 c -1 -1
 b 15 14
@@ -10,24 +10,180 @@ go
 c -1 -1
 b 14 15
 go 
-c 0 -1
-b 0 14
+c -1 0
+b 14 0
+go 
+c -1 0
+b 15 0
+gf 
+c -1 0
+b 14 1
+go 
+c -1 0
+b 14 2
+go 
+c 0 0
+b 2 1
+gf 
+c 0 0
+b 1 0
+gf 
+c 0 0
+b 2 2
+go 
+c -1 -1
+b 15 15
+gf 
+c -1 0
+b 15 2
+go 
+c 0 0
+b 0 2
+go 
+c 0 0
+b 1 2
+go 
+c 0 0
+b 3 2
+go 
+c 0 0
+b 3 1
+gf 
+c 0 0
+b 4 1
+gf 
+c 0 0
+b 4 2
+go 
+c 0 0
+b 3 0
+gf 
+c 0 0
+b 4 0
+go 
+c 0 0
+b 5 2
+go 
+c 0 0
+b 5 1
+go 
+c 0 0
+b 5 0
 go 
 c 0 -1
-b 1 14
+b 4 15
 go 
 c 0 -1
-b 2 14
+b 4 14
 go 
 c 0 -1
-b 2 15
+b 5 14
 go 
 c 0 -1
-b 0 13
+b 5 13
 go 
 c 0 -1
-b 0 12
+b 5 12
+go 
+c 0 -1
+b 5 11
+go 
+c 0 -1
+b 4 11
+go 
+c 0 -1
+b 3 11
+go 
+c 0 -1
+b 2 11
+go 
+c 0 -1
+b 1 11
 go 
 c 0 -1
 b 0 11
 go 
+c -1 -1
+b 15 11
+go 
+c -1 -1
+b 14 11
+go 
+c -1 -1
+b 14 12
+gf 
+c -1 0
+b 15 1
+gf 
+c 0 0
+b 0 1
+gf 
+c 0 -1
+b 0 15
+gf 
+c 0 -1
+b 0 14
+gf 
+c 0 0
+b 0 0
+gf 
+c 0 -1
+b 0 13
+gf 
+c -1 -1
+b 15 12
+gf 
+c -1 -1
+b 14 13
+gf 
+c 0 -1
+b 0 12
+gf 
+c 0 -1
+b 1 13
+gf 
+c 0 -1
+b 1 15
+gf 
+c 0 0
+b 1 1
+gf 
+c 0 -1
+b 1 14
+gf 
+c 0 -1
+b 2 15
+gf 
+c 0 -1
+b 3 15
+gf 
+c 0 -1
+b 2 14
+gf 
+c 0 -1
+b 3 14
+gf 
+c 0 -1
+b 3 13
+gf 
+c 0 -1
+b 2 13
+gf 
+c 0 -1
+b 1 12
+gf 
+c 0 -1
+b 2 12
+gf 
+c 0 -1
+b 3 12
+gf 
+c 0 -1
+b 4 12
+gf 
+c 0 -1
+b 4 13
+gf 
+c 0 0
+b 2 0
+gf 
