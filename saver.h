@@ -12,7 +12,7 @@ class Saver
     string name="save";
 public:
     Saver();
-    void add(string number,string content);
+    void add(string number,string number2,string content);
     void replace(fstream& save,string from,string to);
 };
 

@@ -69,7 +69,7 @@ public:
     void update(sf::RenderWindow& window);
     void draw(sf::RenderWindow& window);
     void start(sf::RenderWindow* window,sf::View* view);
-    void save(Chunk& chunk);
+    void save(Chunk& chunk,sf::Vector2i id);
 };
 
 #endif // WORLD_H_INCLUDED

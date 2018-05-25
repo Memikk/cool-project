@@ -19,8 +19,30 @@ void Menu::draw(sf::RenderWindow& window)
 
 Game::Game(sf::RenderWindow& win)
 {
-    worldGenNoise.reseed(rand()*48325673492);
-    objectNoise.reseed(rand()*53580345638);
+    fstream save1seed("save1seed.txt",ios::in);
+    string temp;
+    getline(save1seed,temp);
+    if(temp=="")
+    {
+        save1seed.close();
+        fstream s1s("save1seed.txt");
+        cerr<<"pusty seed"<<endl;
+        int s1=rand()*483232;
+        int s2=rand()*535638;
+        worldGenNoise.reseed(s1);
+        objectNoise.reseed(s2);
+        cerr<<s1<<" "<<std::to_string(s1)<<endl;
+        s1s<<std::to_string(s1)<<endl<<std::to_string(s2)<<endl;
+    }
+    else
+    {
+        cerr<<"wczytuje seed"<<endl;
+        worldGenNoise.reseed(stoi(temp));
+        getline(save1seed,temp);
+        objectNoise.reseed(stoi(temp));
+    }
+    save1seed.close();
+
     cout<<"wylosowano seed mapy"<<endl;
 
     txtLoader = new TextureLoader();

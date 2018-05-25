@@ -10,7 +10,7 @@ Saver::Saver()
 //    while(tmp.good());
 }
 
-void Saver::add(string number,string content)
+void Saver::add(string number,string number2,string content)
 {
     fstream save("save1.txt");
     string tmp;
@@ -23,14 +23,20 @@ void Saver::add(string number,string content)
         if(tmp==number)
         {
             cerr<<"ROWNA SIE"<<endl;
+            cerr<<"DUPA"<<endl;
             getline(save,tmp,'\n');
-            if(tmp!=content)
+            cerr<<"DUPA2"<<endl;
+            if(tmp==number2)
             {
-                cerr<<"ZAMIENIAMY"<<endl;
-                replace(save,tmp,content);
+                getline(save,tmp,'\n');
+                if(tmp!=content)
+                {
+                    cerr<<"ZAMIENIAMY"<<endl;
+                    replace(save,tmp,content);
+                }
+                found=true;
+                break;
             }
-            found=true;
-            break;
         }
     }
     while(tmp!="");
@@ -40,7 +46,7 @@ void Saver::add(string number,string content)
 
     if(!found)
     {
-        save2<<number<<endl<<content<<endl;
+        save2<<number<<endl<<number2<<endl<<content<<endl;
     }
     save2.close();
 }

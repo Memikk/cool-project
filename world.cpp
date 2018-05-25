@@ -19,6 +19,8 @@ Chunk::Chunk(int offX,int offY,siv::PerlinNoise& perlin,TextureLoader* txtLoader
             float choice3=objectNoise2.noise0_1((float)xp*0.002,(float)yp*0.002);
 
             blocks[i][j] = new Dirt();
+            blocks[i][j] -> i = i;
+            blocks[i][j] -> j = j;
             txtLoader->chooseTexture(*blocks[i][j],i,j,offsetX,offsetY,DIRT,0.0);
 
 //            if(choice3>0.64)
@@ -210,7 +212,7 @@ void World::start(sf::RenderWindow* window,sf::View* view)
     window->setView(*view);
     cout<<"gra stworzona"<<endl;
 
-    //generateChunks();
+    generateChunks();
     loadChunks();
 }
 
@@ -219,77 +221,36 @@ void World::loadChunks()
     fstream save("save1.txt",ios::in);
     string line;
 
-    vector<vector<string>> chunkData(CHUNK_SIZE,vector<string>(CHUNK_SIZE,"x"));
-
-    Chunk* temp = new Chunk();
-
     cerr<<"1"<<endl;
 
     while(getline(save,line))
     {
-        cerr<<"2"<<endl;
-        int x,y;
-        int offx=x*CHUNK_SIZE*BLOCK_SIZE;
-        int offy=y*CHUNK_SIZE*BLOCK_SIZE;
-        string tmp;
+        line.erase(line.begin());
         stringstream ss(line);
-        ss>>tmp;
-        if(tmp=="c")
+        int i,j;
+        ss>>i;
+        ss>>j;
+        cerr<<i<<" "<<j<<endl;
+        if(exist(i,j))
         {
-            ss>>x>>y;
-            Chunk* newchunk = new Chunk();
-            temp = newchunk;
-            temp->ix=x;
-            temp->iy=y;
-        }
-        else
-        {
-            cerr<<"3"<<endl;
-            temp->blocks = new Block**[CHUNK_SIZE];
-            for(int i=0;i<CHUNK_SIZE;i++)
+            cerr<<"istnieje"<<endl;
+            Chunk* temp = getChunk(i,j);
+            getline(save,line);
+            line.erase(line.begin());
+            ss=stringstream(line);
+            ss>>i;
+            ss>>j;
+            cerr<<i<<" "<<j<<endl;
+            getline(save,line);
+            if(line[1]=='o')
             {
-                temp->blocks[i] = new Block*[CHUNK_SIZE];
-                for(int j=0;j<CHUNK_SIZE;j++)
-                {
-                    int xp=offx+i*BLOCK_SIZE;
-                    int yp=offy+j*BLOCK_SIZE;
-                    float choice=worldGenNoise.noise0_1((float)xp*0.002,(float)yp*0.002);
-                    if(i!=0||j!=0) ss>>tmp;
-                    temp->blocks[i][j] = new Dirt();
-                    txtLoader->chooseTexture(*temp->blocks[i][j],i,j,offx,offy,DIRT,0.0);
-                    if(tmp!="g"&&tmp!="x")
-                    {
-                        temp->blocks[i][j]->object = new Object();
-                        temp->blocks[i][j]->object->setPosition(sf::Vector2f(xp,yp));
-                        if(tmp=="t")
-                        {
-                            txtLoader->setTreeTexture(*temp->blocks[i][j]->object);
-                            temp->blocks[i][j]->collision=true;
-                        }
-                        else if(tmp=="w")
-                        {
-                            txtLoader->chooseTexture(*temp->blocks[i][j]->object,i,j,offx,offy,WATER,0,worldGenNoise);
-                            temp->blocks[i][j]->collision=true;
-                        }
-                        else if(tmp=="b")
-                        {
-                            txtLoader->chooseTexture(*temp->blocks[i][j]->object,i,j,offx,offy,BUSH,0,worldGenNoise);
-                            temp->blocks[i][j]->collision=true;
-                        }
-                    }
-                    else if(tmp=="g"&&choice>0.30)
-                    {
-                        temp->blocks[i][j]->grass = new Object();
-                        txtLoader->chooseTexture(*temp->blocks[i][j]->grass,i,j,offx,offy,GRASS,0.30,worldGenNoise);
-                        temp->blocks[i][j]->grass->setPosition(sf::Vector2f(xp,yp));
-                    }
-                    temp->blocks[i][j]->setPosition(sf::Vector2f(xp,yp));
-                }
+                cerr<<"sciana"<<endl;
+                cerr<<i<<" "<<j<<endl;
+                temp->blocks[i][j]->object = new Object();
+                temp->blocks[i][j]->object->setPosition(temp->blocks[i][j]->getPosition());
+                txtLoader->setTexture(*temp->blocks[i][j]->object,WOODENWALL,0);
             }
-            cerr<<"4"<<endl;
-            chunks.push_back(*temp);
         }
-        cerr<<"5"<<endl;
     }
     cerr<<"6"<<endl;
 
@@ -309,7 +270,7 @@ void World::generateChunks()
     else
         offsetY=floor(player.getPosition().y/(CHUNK_SIZE*BLOCK_SIZE));
 
-    std::thread popChunksThread(&World::popChunks,*this,offsetX,offsetY);
+    //std::thread popChunksThread(&World::popChunks,*this,offsetX,offsetY);
 
     player.ci=offsetX;
     player.cj=offsetY;
@@ -321,11 +282,10 @@ void World::generateChunks()
             if(!exist(offsetX+i,offsetY+j))
             {
                 chunks.push_back(Chunk(offsetX+i,offsetY+j,perlin,txtLoader));
-                save(chunks.back());
             }
         }
     }
-    popChunksThread.join();
+    //popChunksThread.join();
 }
 
 void World::popChunks(int x,int y)
@@ -869,66 +829,65 @@ void World::build(sf::RenderWindow& window)
     }
     if(temp)
     {
-        save(getChunkFromPos(temp->getPosition()));
+        save(getChunkFromPos(temp->getPosition()),sf::Vector2i(temp->i,temp->j));
         cerr<<"ZAPISZ ZMIANY"<<endl;
     }
 }
 
-void World::save(Chunk& chunk)
+void World::save(Chunk& chunk,sf::Vector2i id)
 {
     string number="c "+std::to_string(chunk.ix)+" "+std::to_string(chunk.iy);
+    string number2="b "+std::to_string(id.x)+" "+std::to_string(id.y);
     cerr<<"CHUNK = "<<number<<endl;
     string content;
-    for(int i=0; i<CHUNK_SIZE; i++)
+    Object* obj = chunk.blocks[id.x][id.y]->object;
+
+    if(chunk.blocks[id.x][id.y]->grass)
     {
-        for(int j=0; j<CHUNK_SIZE; j++)
+        content+="g";
+    }
+    else
+    {
+        content+="x";
+    }
+
+    if(obj)
+    {
+        if(obj->type==objectType::WOODENWALL)
         {
-            Object* obj = chunk.blocks[i][j]->object;
-            if(!obj)
-            {
-                if(chunk.blocks[i][j]->grass)
-                {
-                    content+="g ";
-                }
-                else
-                {
-                    content+="x ";
-                }
-            }
-            else
-            {
-                if(obj->type==objectType::WOODENWALL)
-                {
-                    content+="o ";
-                }
-                else if(obj->type==objectType::TREE)
-                {
-                    content+="t ";
-                }
-                else if(obj->type==objectType::BUSH)
-                {
-                    content+="b ";
-                }
-                else if(obj->type==objectType::WATER)
-                {
-                    content+="w ";
-                }
-                else if(obj->type==objectType::WOODENFLOOR)
-                {
-                    content+="wf ";
-                }
-                else if(obj->type==objectType::STONE)
-                {
-                    content+="s ";
-                }
-                else
-                {
-                    content+="x ";
-                }
-            }
+            content+="o ";
+        }
+        else if(obj->type==objectType::TREE)
+        {
+            content+="t ";
+        }
+        else if(obj->type==objectType::BUSH)
+        {
+            content+="b ";
+        }
+        else if(obj->type==objectType::WATER)
+        {
+            content+="w ";
+        }
+        else if(obj->type==objectType::WOODENFLOOR)
+        {
+            content+="f ";
+        }
+        else if(obj->type==objectType::STONE)
+        {
+            content+="s ";
+        }
+        else
+        {
+            content+="x ";
         }
     }
-    saver->add(number,content);
+    else
+    {
+        content+="x ";
+    }
+
+    saver->add(number,number2,content);
 }
 
 void World::draw(sf::RenderWindow& window)
@@ -937,6 +896,8 @@ void World::draw(sf::RenderWindow& window)
     for(auto& c:chunks)
     {
         //cout<<"RYSOWANIE CHUNKA"<<endl;
+        if(c.ix>player.ci-2&&c.ix<player.ci+2&&
+           c.iy>player.cj-2&&c.iy<player.cj+2)
         c.draw(window);
         //cout<<"PO RYSOWANIU CHUNKA"<<endl;
     }
