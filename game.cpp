@@ -9,6 +9,13 @@ Menu::Menu()
 
     background.setFillColor(sf::Color(222,191,94));
     background.setSize(sf::Vector2f(1920,1080));
+
+    contBox.setPosition(690,350);
+    newBox.setPosition(690,515);
+    exitBox.setPosition(690,680);
+    contBox.setSize(sf::Vector2f(535,125));
+    newBox.setSize(sf::Vector2f(535,125));
+    exitBox.setSize(sf::Vector2f(535,125));
 }
 
 void Menu::draw(sf::RenderWindow& window)
@@ -64,13 +71,23 @@ Game::Game(sf::RenderWindow& win)
     txtLoader->setPlayerTexture(world->getPlayer());
     cout<<"ustawiono teksture gracza"<<endl;
 
+    fstream playerSave("save1player.txt");
+    float x,y;
+    playerSave>>x>>y;
+    world->getPlayer().setPosition(x,y);
+    cout<<"wczytano pozycje gracza"<<endl;
+
     iface->update(world->getPlayer(),*window);
 
 }
 
 void Game::update()
 {
-    evHandler->checkEvents(*world,*view,gs);
+    vector<sf::RectangleShape> boxes;
+    boxes.push_back(menu->contBox);
+    boxes.push_back(menu->newBox);
+    boxes.push_back(menu->exitBox);
+    evHandler->checkEvents(*world,*view,gs,boxes);
     if(gs==INGAME)
     {
         //cout<<"GENERUJE CHUNKI"<<endl;
@@ -91,9 +108,12 @@ void Game::update()
         upThread.join();
         chunkGeneratingThread.join();
     }
-    else
+    else if(gs==EXIT)
     {
-
+        fstream playerSave("save1player.txt",std::ofstream::out | std::ofstream::trunc);
+        playerSave<<world->getPlayer().getPosition().x<<" "<<world->getPlayer().getPosition().y;
+        playerSave.close();
+        window->close();
     }
 }
 

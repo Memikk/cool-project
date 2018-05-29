@@ -13,6 +13,7 @@ class Menu
     sf::RectangleShape background;
     public:
     Menu();
+    sf::RectangleShape contBox,newBox,exitBox;
     void draw(sf::RenderWindow& window);
 };
 

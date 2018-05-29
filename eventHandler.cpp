@@ -1,12 +1,12 @@
 #include "eventHandler.h"
 
-void EventHandler::checkEvents(World& world,sf::View& view,gameState& gs)
+void EventHandler::checkEvents(World& world,sf::View& view,gameState& gs,vector<sf::RectangleShape> boxes)
 {
     while(window->pollEvent(event))
     {
         if(event.type == sf::Event::Closed||
                 (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape))
-            window->close();
+            gs=EXIT;
         if(gs==INGAME)
         {
             if(event.type == sf::Event::KeyPressed&&event.key.code == sf::Keyboard::Space)
@@ -55,8 +55,20 @@ void EventHandler::checkEvents(World& world,sf::View& view,gameState& gs)
         {
             if(event.type == sf::Event::MouseButtonPressed&&event.mouseButton.button==sf::Mouse::Left)
             {
-                gs=INGAME;
-                world.start(window,&view);
+                if(boxes[0].getGlobalBounds().contains((sf::Vector2f)sf::Mouse::getPosition()))
+                {
+                    gs=INGAME;
+                    world.start(window,&view);
+                }
+                else if(boxes[1].getGlobalBounds().contains((sf::Vector2f)sf::Mouse::getPosition()))
+                {
+                    gs=INGAME;
+                    world.newStart(window,&view);
+                }
+                else if(boxes[2].getGlobalBounds().contains((sf::Vector2f)sf::Mouse::getPosition()))
+                {
+                    gs=EXIT;
+                }
             }
         }
     }

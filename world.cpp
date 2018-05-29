@@ -216,6 +216,34 @@ void World::start(sf::RenderWindow* window,sf::View* view)
     loadChunks();
 }
 
+void World::newStart(sf::RenderWindow* window,sf::View* view)
+{
+    view->setCenter(getPlayer().getPosition().x+BLOCK_SIZE/2,getPlayer().getPosition().y+BLOCK_SIZE/2);
+    view->setSize(sf::Vector2f(window->getSize().x/2,window->getSize().y/2));
+    window->setView(*view);
+    cout<<"gra stworzona"<<endl;
+
+    int s1=rand()*483232;
+    int s2=rand()*535638;
+    worldGenNoise.reseed(s1);
+    objectNoise.reseed(s2);
+
+    fstream s1s("save1seed.txt",std::ofstream::out | std::ofstream::trunc);
+    cerr<<s1<<" "<<std::to_string(s1)<<endl;
+    s1s<<std::to_string(s1)<<endl<<std::to_string(s2)<<endl;
+    s1s.close();
+
+    fstream cleaningChunks("save1.txt",std::ofstream::out | std::ofstream::trunc);
+    cleaningChunks.close();
+
+    fstream cleaningPlayer("save1player.txt",std::ofstream::out | std::ofstream::trunc);
+    cleaningPlayer.close();
+
+    player.setPosition(0,0);
+
+    generateChunks();
+}
+
 void World::loadChunks()
 {
     fstream save("save1.txt",ios::in);
@@ -916,8 +944,8 @@ void World::draw(sf::RenderWindow& window)
     {
         //cout<<"RYSOWANIE CHUNKA"<<endl;
         if(c.ix>player.ci-2&&c.ix<player.ci+2&&
-           c.iy>player.cj-2&&c.iy<player.cj+2)
-        c.draw(window);
+                c.iy>player.cj-2&&c.iy<player.cj+2)
+            c.draw(window);
         //cout<<"PO RYSOWANIU CHUNKA"<<endl;
     }
     //cout<<"PO WSZYSTKICH CHUNKACH"<<endl;
