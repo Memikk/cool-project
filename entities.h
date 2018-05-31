@@ -3,7 +3,7 @@
 #include "globals.h"
 #include "textureLoader.h"
 
-enum entityType{SHEEP,COW,PIG,WOLF};
+enum entityType{SHEEP,COW,PIG,WOLF,RABBIT};
 class Entity : public sf::Sprite
 {
 public:

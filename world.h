@@ -50,10 +50,11 @@ public:
     void dropItemOnGround(sf::Vector2f mpos);
     void takeItem(sf::Vector2f mpos);
     void dropItemInEq(sf::Vector2f mpos);
-    void eat(sf::Vector2f mpos);
+    void eat();
     void drink();
     void mine(sf::RenderWindow& window);
     void build(sf::RenderWindow& window);
+    void harvest(sf::RenderWindow& window);
     bool exist(int x,int y) const;
     Block* blockCollision(sf::Vector2f pos);
     Block* getBlock(sf::Vector2f pos);

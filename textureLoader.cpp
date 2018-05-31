@@ -296,6 +296,9 @@ void TextureLoader::setTexture(Object& object,objectType type,int choice)
     case BUSH:
         object.setTexture(*bush);
         break;
+    case BERRYBUSH:
+        object.setTexture(*berrybush);
+        break;
     case STONE:
         object.setTexture(*stone);
         break;;

@@ -4,7 +4,7 @@
 #include <vector>
 using namespace std;
 
-enum class ITEMS{BRANCH=0,ROCK,MEAT,WHEAT,CARROT,LOG,AXE,PLANKS,PICKAXE,WOODENWALLITEM};
+enum class ITEMS{BRANCH=0,ROCK,MEAT,WHEAT,CARROT,LOG,AXE,PLANKS,PICKAXE,WOODENWALLITEM,BERRIES};
 class Item : public sf::Sprite
 {
 public:

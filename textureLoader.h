@@ -23,6 +23,7 @@ class TextureLoader
     sf::Texture* tree;
     sf::Texture* decoratives;
     sf::Texture* bush;
+    sf::Texture* berrybush;
     sf::Texture* wheat;
     sf::Texture* carrot;
 
@@ -30,6 +31,7 @@ class TextureLoader
     sf::Texture* cow;
     sf::Texture* pig;
     sf::Texture* wolf;
+    sf::Texture* rabbit;
 
     sf::Texture* hpBar;
     sf::Texture* hungerBar;
@@ -44,6 +46,7 @@ class TextureLoader
     sf::Texture* meat;
     sf::Texture* wheatItem;
     sf::Texture* carrotItem;
+    sf::Texture* berries;
     sf::Texture* axe;
     sf::Texture* pickaxe;
     sf::Texture* woodenWallItem;
@@ -70,6 +73,7 @@ public:
         sheep=new sf::Texture();
         cow=new sf::Texture();
         wolf=new sf::Texture();
+        rabbit=new sf::Texture();
         pig=new sf::Texture();
         hpBar=new sf::Texture();
         hungerBar=new sf::Texture();
@@ -84,8 +88,10 @@ public:
         wheatItem=new sf::Texture();
         carrotItem=new sf::Texture();
         bush=new sf::Texture();
+        berrybush=new sf::Texture();
         wheat=new sf::Texture();
         carrot=new sf::Texture();
+        berries=new sf::Texture();
         axe=new sf::Texture();
         pickaxe=new sf::Texture();
         woodenWallItem=new sf::Texture();
@@ -119,9 +125,12 @@ public:
         if(wheatItem->loadFromFile("resources/textures/wheatItem.png"))cout<<"Wczytano teksture pszenicy(przedmiot)"<<endl;
         if(carrotItem->loadFromFile("resources/textures/carrotItem.png"))cout<<"Wczytano teksture marchewki(przedmiot)"<<endl;
         if(bush->loadFromFile("resources/textures/bush.png"))cout<<"Wczytano teksture krzaka"<<endl;
+        if(berrybush->loadFromFile("resources/textures/berrybush.png"))cout<<"Wczytano teksture krzaka z jagodami"<<endl;
         if(wheat->loadFromFile("resources/textures/wheat.png"))cout<<"Wczytano teksture pszenicy"<<endl;
         if(carrot->loadFromFile("resources/textures/carrot.png"))cout<<"Wczytano teksture marchewki"<<endl;
+        if(berries->loadFromFile("resources/textures/berries.png"))cout<<"Wczytano teksture jagod"<<endl;
         if(wolf->loadFromFile("resources/textures/wolf.png"))cout<<"Wczytano teksture wilka"<<endl;
+        if(rabbit->loadFromFile("resources/textures/rabbit.png"))cout<<"Wczytano teksture krolika"<<endl;
         if(axe->loadFromFile("resources/textures/axe.png"))cout<<"Wczytano teksture siekiery"<<endl;
         if(pickaxe->loadFromFile("resources/textures/pickaxe.png"))cout<<"Wczytano teksture siekiery"<<endl;
         if(woodenWallItem->loadFromFile("resources/textures/woodenWallItem.png"))cout<<"Wczytano teksture przedmiotu drewnianej sciany"<<endl;
@@ -138,6 +147,7 @@ public:
         items.push_back(planks); //7
         items.push_back(pickaxe); //8
         items.push_back(woodenWallItem); //9
+        items.push_back(berries); //10
     }
 
     void chooseTexture(Block& block,int i,int j,int offsetX,int offsetY,blockType type,float value);
@@ -238,6 +248,9 @@ public:
             break;
         case 3:
             return wolf;
+            break;
+        case 4:
+            return rabbit;
             break;
         default:
             return nullptr;

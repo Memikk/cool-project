@@ -9,7 +9,7 @@ Player::Player()
     background.setSize(sf::Vector2f(1920,1080));
     background.setFillColor(sf::Color(0,72,0));
 
-    changeTextureRect(0);
+    changeTextureRect(0,0);
 
     hpBar.setScale(3,3);
     hungerBar.setScale(3,3);
@@ -38,7 +38,7 @@ void Player::update(vector<Block*>& collisions)
     animate(collisions);
     //cout<<"PO ANIMACJI GRACZA"<<endl;
     counter++;
-    if(counter==5*60)
+    if(counter==1*60)
     {
         if(hunger>50&&thirst>50&&hp<100)
         {
@@ -60,15 +60,19 @@ void Player::moving(vector<Block*>& collisions)
     bool movingX=true;
     bool movingY=true;
 
+    aniCounter++;
+    int animationValue=(aniCounter/6)%4;
+    if(aniCounter>240) aniCounter=0;
+
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::S))
     {
-        changeTextureRect(0);
+        changeTextureRect(0,animationValue);
         vel.y=speed;
         dir=DOWN;
     }
     else if(sf::Keyboard::isKeyPressed(sf::Keyboard::W))
     {
-        changeTextureRect(2);
+        changeTextureRect(2,animationValue);
         vel.y=-speed;
         dir=UP;
     }
@@ -84,13 +88,13 @@ void Player::moving(vector<Block*>& collisions)
 
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::A))
     {
-        changeTextureRect(1);
+        changeTextureRect(1,animationValue);
         vel.x=-speed;
         dir=LEFT;
     }
     else if(sf::Keyboard::isKeyPressed(sf::Keyboard::D))
     {
-        changeTextureRect(3);
+        changeTextureRect(3,animationValue);
         vel.x=speed;
         dir=RIGHT;
     }
@@ -122,9 +126,9 @@ void Player::moving(vector<Block*>& collisions)
     }
 }
 
-void Player::changeTextureRect(int value)
+void Player::changeTextureRect(int value,int value2)
 {
-    sf::IntRect t(0,33*value,23,33);
+    sf::IntRect t(23*value2,33*value,23,33);
     setTextureRect(t);
 }
 
