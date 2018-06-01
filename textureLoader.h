@@ -22,6 +22,7 @@ class TextureLoader
     sf::Texture* dirt;
     sf::Texture* tree;
     sf::Texture* decoratives;
+    sf::Texture* animatedPlant;
     sf::Texture* bush;
     sf::Texture* berrybush;
     sf::Texture* wheat;
@@ -50,9 +51,13 @@ class TextureLoader
     sf::Texture* axe;
     sf::Texture* pickaxe;
     sf::Texture* woodenWallItem;
+    sf::Texture* stoneFloorItem;
+    sf::Texture* stoneWallItem;
 
     sf::Texture* woodenFloor;
     sf::Texture* woodenWall;
+    sf::Texture* stoneWall;
+    sf::Texture* stoneFloor;
 public:
     vector<sf::Texture*> items;
     TextureLoader() {};
@@ -97,6 +102,11 @@ public:
         woodenWallItem=new sf::Texture();
         woodenFloor=new sf::Texture();
         woodenWall=new sf::Texture();
+        stoneWallItem=new sf::Texture();
+        stoneFloorItem=new sf::Texture();
+        stoneFloor=new sf::Texture();
+        stoneWall=new sf::Texture();
+        animatedPlant=new sf::Texture();
         if(player->loadFromFile("resources/textures/player.png"))cout<<"Wczytano teksture gracza"<<endl;
         if(eq->loadFromFile("resources/textures/eq.png"))cout<<"Wczytano teksture ekwipunku"<<endl;
         if(popUpPick->loadFromFile("resources/textures/popup.png"))cout<<"Wczytano teksture powiadomienia o podniesieniu przedmiotu"<<endl;
@@ -136,6 +146,11 @@ public:
         if(woodenWallItem->loadFromFile("resources/textures/woodenWallItem.png"))cout<<"Wczytano teksture przedmiotu drewnianej sciany"<<endl;
         if(woodenFloor->loadFromFile("resources/textures/woodenFloor.png"))cout<<"Wczytano teksture drewnianej podlogi"<<endl;
         if(woodenWall->loadFromFile("resources/textures/woodenWall.png"))cout<<"Wczytano teksture drewnianej sciany"<<endl;
+        if(stoneWall->loadFromFile("resources/textures/stonewall.png"))cout<<"Wczytano teksture drewnianej sciany"<<endl;
+        if(stoneFloor->loadFromFile("resources/textures/stonefloor.png"))cout<<"Wczytano teksture drewnianej sciany"<<endl;
+        if(stoneWallItem->loadFromFile("resources/textures/stonewallitem.png"))cout<<"Wczytano teksture drewnianej sciany"<<endl;
+        if(stoneFloorItem->loadFromFile("resources/textures/stoneflooritem.png"))cout<<"Wczytano teksture drewnianej sciany"<<endl;
+        if(animatedPlant->loadFromFile("resources/textures/plant.png"))cout<<"Wczytano teksture roslinki"<<endl;
 
         items.push_back(branch); //0
         items.push_back(rock); //1
@@ -148,6 +163,8 @@ public:
         items.push_back(pickaxe); //8
         items.push_back(woodenWallItem); //9
         items.push_back(berries); //10
+        items.push_back(stoneWallItem); //11
+        items.push_back(stoneFloorItem); //12
     }
 
     void chooseTexture(Block& block,int i,int j,int offsetX,int offsetY,blockType type,float value);

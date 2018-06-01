@@ -18,8 +18,19 @@ Block::Block(sf::Vector2f pos)
 
 void Water::animate()
 {
-    if(animationClock.getElapsedTime().asMilliseconds()>500)
+    counter++;
+    if(counter==35)
     {
+        counter=0;
+        nextFrame();
+    }
+}
+void AnimatedPlant::animate()
+{
+    counter++;
+    if(counter==30)
+    {
+        counter=0;
         nextFrame();
     }
 }
@@ -29,6 +40,14 @@ void Water::nextFrame()
     sf::IntRect tRect(BLOCK_SIZE*frame,BLOCK_SIZE*column,BLOCK_SIZE,BLOCK_SIZE);
     frame++;
     if(frame>4)
+        frame=0;
+    setTextureRect(tRect);
+}
+void AnimatedPlant::nextFrame()
+{
+    sf::IntRect tRect(BLOCK_SIZE*frame,BLOCK_SIZE*column,BLOCK_SIZE,BLOCK_SIZE);
+    frame++;
+    if(frame>3)
         frame=0;
     setTextureRect(tRect);
 }

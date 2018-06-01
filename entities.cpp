@@ -3,10 +3,9 @@
 void Entity::wander()
 {
     int x,y;
-    x=(rand())%200;
-    x*=((rand()%2==0)?-1:1);
-    y=(rand())%200;
-    y*=((rand()%2==0)?-1:1);
+    x=(rand())%200-100;
+    y=(rand())%200-100;
+    cerr<<"x="<<x<<endl<<"y="<<y<<endl;
 
     desiredPos.x=x+getPosition().x;
     desiredPos.y=y+getPosition().y;
@@ -107,61 +106,75 @@ void Entity::update(vector<Block*> collisions)
 
 void Wolf::update(vector<Block*> collisions,vector<Entity*>& entities,Player& player)
 {
-    float tempD=999999;
-    sf::Vector2f desiredTemp;
-    float playerDistance=vh::distance(getPosition(),player.getPosition());
-
-    if(attackCooldown==110) player.setColor(sf::Color::White);
-    if(attackCooldown>0) attackCooldown--;
-
-    if(playerDistance<150&&player.hp>0)
+    hungry=(hungerCounter?false:true);
+    if(hungerCounter) hungerCounter--;
+    if(hungry)
     {
-        desiredPos=player.getPosition();
-        if(attackCooldown==0&&playerDistance<30)
-        {
-            player.hp-=damage;
-            player.setColor(sf::Color::Red);
-            player.hpCover.setSize(sf::Vector2f(120-player.hp*1.2,player.hpCover.getSize().y));
-            cout<<"PLAYER HP="<<player.hp<<endl;
-            attackCooldown=2*60;
-        }
-        else
-        {
-            moving(collisions);
-        }
-        return;
-    }
+        float tempD=999999;
+        sf::Vector2f desiredTemp;
+        float playerDistance=vh::distance(getPosition(),player.getPosition());
 
-    for(int i=entities.size()-1;i>=0;i--)
-    {
-        float d=0;
-        if(entities[i]->type!=WOLF) d=vh::distance(getPosition(),entities[i]->getPosition());
-        else continue;
-        if(d<tempD)
+        if(attackCooldown==110)
+            player.setColor(sf::Color::White);
+        if(attackCooldown>0)
+            attackCooldown--;
+
+        if(playerDistance<150&&player.hp>0)
         {
-            tempD=d;
-            desiredTemp=entities[i]->getPosition();
-        }
-        if(d<10)
-        {
-            Entity* temp=entities[i];
-            if(temp!=nullptr)
+            desiredPos=player.getPosition();
+            if(attackCooldown==0&&playerDistance<30)
             {
-                Item* it = new Item(ITEMS::MEAT);
-                it->food=true;
-                it->setTexture(*txtLoader->getItemTexture(2));
-
-                if(temp->block!=nullptr)
-                {
-                    it->setPosition(temp->block->getPosition());
-                    temp->block->items.push_back(it);
-                }
-                entities.erase(entities.begin()+i);
-                //delete temp;
+                player.hp-=damage;
+                player.setColor(sf::Color::Red);
+                player.hpCover.setSize(sf::Vector2f(120-player.hp*1.2,player.hpCover.getSize().y));
+                cout<<"PLAYER HP="<<player.hp<<endl;
+                attackCooldown=2*60;
             }
-            break;
+            else
+            {
+                moving(collisions);
+            }
+            return;
         }
+
+        for(int i=entities.size()-1; i>=0; i--)
+        {
+            float d=0;
+            if(entities[i]->type!=WOLF)
+                d=vh::distance(getPosition(),entities[i]->getPosition());
+            else
+                continue;
+            if(d<tempD)
+            {
+                tempD=d;
+                desiredTemp=entities[i]->getPosition();
+            }
+            if(d<10)
+            {
+                hungerCounter=7200;
+                Entity* temp=entities[i];
+                if(temp!=nullptr)
+                {
+                    Item* it = new Item(ITEMS::MEAT);
+                    it->food=true;
+                    it->setTexture(*txtLoader->getItemTexture(2));
+
+                    if(temp->block!=nullptr)
+                    {
+                        it->setPosition(temp->block->getPosition());
+                        temp->block->items.push_back(it);
+                    }
+                    entities.erase(entities.begin()+i);
+                    //delete temp;
+                }
+                break;
+            }
+        }
+        desiredPos=desiredTemp;
+        moving(collisions);
     }
-    desiredPos=desiredTemp;
-    moving(collisions);
+    else
+    {
+        static_cast<Entity*>(this)->update(collisions);
+    }
 }

@@ -44,6 +44,8 @@ public:
 };
 class Wolf : public Entity
 {
+    bool hungry=true;
+    int hungerCounter=0;
     int damage=10;
     int attackCooldown=2*60;
 public:
