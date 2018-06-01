@@ -199,7 +199,7 @@ void TextureLoader::chooseTexture(Object& object,int i,int j,int offsetX,int off
 
     if(t1<=value&&t3<=value&&t5<=value&&t7<=value)
     {
-        setTexture(object,type,16);
+        setTexture(object,type,13);
     }
     else if(t0<=value&&t1<=value&&t7<=value&&t6<=value&&t5<=value)
     {
@@ -296,6 +296,9 @@ void TextureLoader::setTexture(Object& object,objectType type,int choice)
     case BUSH:
         object.setTexture(*bush);
         break;
+    case BERRYBUSH:
+        object.setTexture(*berrybush);
+        break;
     case STONE:
         object.setTexture(*stone);
         break;;
@@ -319,6 +322,15 @@ void TextureLoader::setTexture(Object& object,objectType type,int choice)
         break;
     case WOODENWALL:
         object.setTexture(*woodenWall);
+        break;
+    case STONEWALL:
+        object.setTexture(*stoneWall);
+        break;
+    case STONEFLOOR:
+        object.setTexture(*stoneFloor);
+        break;
+    case ANIMATEDPLANT:
+        object.setTexture(*animatedPlant);
         break;
     }
 }

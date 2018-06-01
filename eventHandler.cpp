@@ -6,7 +6,10 @@ void EventHandler::checkEvents(World& world,sf::View& view,gameState& gs,vector<
     {
         if(event.type == sf::Event::Closed||
                 (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape))
-            gs=EXIT;
+        {
+            if(gs==ESCWINDOW) gs=INGAME;
+            else gs=ESCWINDOW;
+        }
         if(gs==INGAME)
         {
             if(event.type == sf::Event::KeyPressed&&event.key.code == sf::Keyboard::Space)
@@ -18,9 +21,13 @@ void EventHandler::checkEvents(World& world,sf::View& view,gameState& gs,vector<
             {
                 world.drink();
             }
-            else if(event.type == sf::Event::MouseButtonPressed&&event.mouseButton.button==sf::Mouse::Right&&world.getPlayer().eq.on)
+            else if(event.type == sf::Event::MouseButtonPressed&&event.mouseButton.button==sf::Mouse::Right)
             {
-                world.dropItemOnGround(window->mapPixelToCoords(sf::Mouse::getPosition(*window)));
+                if(world.getPlayer().eq.on)
+                {
+                    world.dropItemOnGround(window->mapPixelToCoords(sf::Mouse::getPosition(*window)));
+                }
+                world.eat();
             }
             else if(event.type == sf::Event::MouseButtonPressed&&event.mouseButton.button==sf::Mouse::Left&&world.getPlayer().eq.on)
             {
@@ -31,6 +38,7 @@ void EventHandler::checkEvents(World& world,sf::View& view,gameState& gs,vector<
             {
                 world.build(*window);
                 world.mine(*window);
+                world.harvest(*window);
             }
             else if(event.type == sf::Event::MouseButtonReleased&&event.mouseButton.button==sf::Mouse::Left&&world.getPlayer().eq.on)
             {
@@ -49,6 +57,20 @@ void EventHandler::checkEvents(World& world,sf::View& view,gameState& gs,vector<
                     event.key.code==sf::Keyboard::Num5))
             {
                 world.getPlayer().eq.changeSlot(static_cast<unsigned>(event.key.code-27));
+            }
+        }
+        else if(gs==ESCWINDOW)
+        {
+            if(event.type == sf::Event::MouseButtonPressed&&event.mouseButton.button==sf::Mouse::Left)
+            {
+                if(boxes[0].getGlobalBounds().contains(window->mapPixelToCoords(sf::Mouse::getPosition())))
+                {
+                    gs=INGAME;
+                }
+                else if(boxes[1].getGlobalBounds().contains(window->mapPixelToCoords(sf::Mouse::getPosition())))
+                {
+                    gs=EXIT;
+                }
             }
         }
         else

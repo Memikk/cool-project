@@ -4,7 +4,7 @@
 #include <vector>
 using namespace std;
 
-enum class ITEMS{BRANCH=0,ROCK,MEAT,WHEAT,CARROT,LOG,AXE,PLANKS,PICKAXE,WOODENWALLITEM};
+enum class ITEMS{BRANCH=0,ROCK,MEAT,WHEAT,CARROT,LOG,AXE,PLANKS,PICKAXE,WOODENWALLITEM,BERRIES,STONEWALLITEM,STONEFLOORITEM};
 class Item : public sf::Sprite
 {
 public:
@@ -14,7 +14,8 @@ public:
     ITEMS id;
     Item(ITEMS id):id(id)
     {
-        if(id==ITEMS::PLANKS||id==ITEMS::WOODENWALLITEM)
+        if(id==ITEMS::PLANKS||id==ITEMS::WOODENWALLITEM||
+           id==ITEMS::STONEWALLITEM||id==ITEMS::STONEFLOORITEM)
         {
             building=true;
         }

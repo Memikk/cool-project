@@ -65,6 +65,22 @@ void Equipment::checkRecipes(vector<sf::Texture*>& v)
         itemFromCrafting->setScale(0.65,0.65);
         itemFromCrafting->setPosition(slots[29].getPosition()-sf::Vector2f(3,3));
     }
+    else if(rocks=4&&crafting.size()==4)
+    {
+        Item* temp = new Item(ITEMS::STONEWALLITEM);
+        temp->setTexture(*v[11]);
+        itemFromCrafting=temp;
+        itemFromCrafting->setScale(0.65,0.65);
+        itemFromCrafting->setPosition(slots[29].getPosition()-sf::Vector2f(3,3));
+    }
+    else if(rocks=2&&crafting.size()==2)
+    {
+        Item* temp = new Item(ITEMS::STONEFLOORITEM);
+        temp->setTexture(*v[12]);
+        itemFromCrafting=temp;
+        itemFromCrafting->setScale(0.65,0.65);
+        itemFromCrafting->setPosition(slots[29].getPosition()-sf::Vector2f(3,3));
+    }
     else
     {
         delete itemFromCrafting;

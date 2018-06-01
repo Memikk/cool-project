@@ -17,6 +17,7 @@ public:
     int hunger=100;
     int thirst=100;
     int counter=0;
+    int aniCounter=0;
 
     Equipment eq;
 
@@ -36,7 +37,7 @@ public:
     void update(vector<Block*>& collisions);
     void moving(vector<Block*>& collisions);
     void animate(vector<Block*>& collisions);
-    void changeTextureRect(int value);
+    void changeTextureRect(int value,int value2);
 };
 
 #endif // PLAYER_H_INCLUDED

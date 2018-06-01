@@ -23,11 +23,6 @@ Chunk::Chunk(int offX,int offY,siv::PerlinNoise& perlin,TextureLoader* txtLoader
             blocks[i][j] -> j = j;
             txtLoader->chooseTexture(*blocks[i][j],i,j,offsetX,offsetY,DIRT,0.0);
 
-//            if(choice3>0.64)
-//            {
-//                blocks[i][j]->cover = new Sand();
-//                txtLoader->chooseTexture(*blocks[i][j]->cover,i,j,offsetX,offsetY,SAND,0.64,objectNoise2);
-//            }
             if(choice>0.30)
             {
                 blocks[i][j]->grass = new Grass();
@@ -44,13 +39,6 @@ Chunk::Chunk(int offX,int offY,siv::PerlinNoise& perlin,TextureLoader* txtLoader
                 blocks[i][j]->collision = true;
                 txtLoader->chooseTexture(*blocks[i][j]->object,i,j,offsetX,offsetY,WATER,0,worldGenNoise);
             }
-
-//            if(choice2>0.70)
-//            {
-//                blocks[i][j]->grass = new Grass();
-//                blocks[i][j]->object = nullptr;
-//                txtLoader->chooseTexture(*blocks[i][j]->grass,i,j,offsetX,offsetY,GRASS,0.70,objectNoise);
-//            }
 
 
             if(blocks[i][j]->object==nullptr||blocks[i][j]->object->type==objectType::WATER)
@@ -76,9 +64,18 @@ Chunk::Chunk(int offX,int offY,siv::PerlinNoise& perlin,TextureLoader* txtLoader
                     }
                     else if((int)(choice2*10)%2)
                     {
-                        blocks[i][j]->object = new Bush();
-                        blocks[i][j]->collision=true;
-                        txtLoader->chooseTexture(*blocks[i][j]->object,i,j,offsetX,offsetY,BUSH,0,objectNoise);
+                        if((int)(choice1*100)%10)
+                        {
+                            blocks[i][j]->object = new Bush();
+                            blocks[i][j]->collision=true;
+                            txtLoader->chooseTexture(*blocks[i][j]->object,i,j,offsetX,offsetY,BUSH,0,objectNoise);
+                        }
+                        else
+                        {
+                            blocks[i][j]->object = new BerryBush();
+                            blocks[i][j]->collision=true;
+                            txtLoader->chooseTexture(*blocks[i][j]->object,i,j,offsetX,offsetY,BERRYBUSH,0,objectNoise);
+                        }
                     }
                 }
                 else if(((choice3<0.25&&(int)(choice3*100)%3)||(choice3>=0.25&&(int)(choice3*187)%37==0))&&choice3<=0.64)
@@ -118,8 +115,17 @@ Chunk::Chunk(int offX,int offY,siv::PerlinNoise& perlin,TextureLoader* txtLoader
             {
                 if((int)(choice*choice2*223)%17==0)
                 {
-                    blocks[i][j]->decoration = new Object();
-                    txtLoader->setDecorationTexture(*blocks[i][j]->decoration,(int)(choice2*choice3*543)%5);
+                    if((int)(choice*choice3*323)%8)
+                    {
+                        blocks[i][j]->decoration = new Object();
+                        txtLoader->setDecorationTexture(*blocks[i][j]->decoration,(int)(choice2*choice3*543)%5);
+                    }
+                    else
+                    {
+                        blocks[i][j]->object = new AnimatedPlant();
+                        txtLoader->setTexture(*blocks[i][j]->object,ANIMATEDPLANT,0);
+                        blocks[i][j]->setTextureRect(sf::IntRect(0,0,50,50));
+                    }
                 }
             }
 
@@ -166,7 +172,8 @@ void Chunk::draw(sf::RenderWindow& window)
             //if(i==0||j==0)
             //blocks[i][j]->setFillColor(sf::Color::Black);
             blocks[i][j]->draw(window);
-            if(blocks[i][j]->object&&blocks[i][j]->object->type==WATER)
+            if(blocks[i][j]->object&&(blocks[i][j]->object->type==WATER||
+                                      blocks[i][j]->object->type==ANIMATEDPLANT))
             {
                 blocks[i][j]->object->animate();
             }
@@ -282,6 +289,22 @@ void World::loadChunks()
                 temp->blocks[i][j]->object = new Object();
                 temp->blocks[i][j]->object->setPosition(temp->blocks[i][j]->getPosition());
                 txtLoader->setTexture(*temp->blocks[i][j]->object,WOODENFLOOR,0);
+                temp->blocks[i][j]->collision=false;
+            }
+            else if(line[1]=='u')
+            {
+
+                temp->blocks[i][j]->object = new Object();
+                temp->blocks[i][j]->object->setPosition(temp->blocks[i][j]->getPosition());
+                txtLoader->setTexture(*temp->blocks[i][j]->object,STONEWALL,0);
+                temp->blocks[i][j]->collision=true;
+            }
+            else if(line[1]=='i')
+            {
+
+                temp->blocks[i][j]->object = new Object();
+                temp->blocks[i][j]->object->setPosition(temp->blocks[i][j]->getPosition());
+                txtLoader->setTexture(*temp->blocks[i][j]->object,STONEFLOOR,0);
                 temp->blocks[i][j]->collision=false;
             }
             else if(line[1]=='s')
@@ -441,12 +464,22 @@ void World::update(sf::RenderWindow& window)
                 temp->setFillColor(sf::Color(0,100,255));
         }
     }
-    if(temp&&holdItem&&holdItem->tool)
+    if(temp&&
+            temp->object&&
+            temp->object->type==objectType::BERRYBUSH&&
+            static_cast<BerryBush*>(temp->object)->fruit&&
+            vh::distance(temp->object->getPosition(),player.getPosition())<playerRange)
+    {
+        temp->object->setColor(sf::Color(0,100,255));
+    }
+    if(temp&&holdItem&&holdItem->tool&&vh::distance(player.getPosition(),temp->getPosition())<playerRange)
     {
         if(holdItem->id==ITEMS::AXE)
         {
             if(temp->object&&
                     (temp->object->type==objectType::TREE||
+                     temp->object->type==objectType::BUSH||
+                     temp->object->type==objectType::BERRYBUSH||
                      temp->object->type==objectType::WOODENWALL||
                      temp->object->type==objectType::WOODENFLOOR))
             {
@@ -455,7 +488,9 @@ void World::update(sf::RenderWindow& window)
         }
         if(holdItem->id==ITEMS::PICKAXE)
         {
-            if(temp->object&&temp->object->type==objectType::STONE)
+            if(temp->object&&(temp->object->type==objectType::STONE||
+                              temp->object->type==objectType::STONEWALL||
+                              temp->object->type==objectType::STONEFLOOR))
             {
                 temp->object->setColor(sf::Color(0,100,255));
             }
@@ -743,29 +778,22 @@ void World::dropItemInEq(sf::Vector2f mpos)
             return;
         }
     }
-    delete player.eq.itemHolder;
+    player.eq.items.push_back(player.eq.itemHolder);
     player.eq.itemHolder=nullptr;
 }
 
-void World::eat(sf::Vector2f mpos)
+void World::eat()
 {
     if(player.hunger<=90)
     {
-        for(int i=0; i<player.eq.items.size(); i++)
+        if(player.eq.bar[player.eq.selectedSlot]->food)
         {
-            if(player.eq.items[i]->getGlobalBounds().contains(sf::Vector2f(mpos.x,mpos.y)))
-            {
-                if(player.eq.items[i]->food)
-                {
-                    player.hunger+=10;
-                    player.hungerCover.setSize(sf::Vector2f(120-player.hunger*1.2,player.hungerCover.getSize().y));
-                    Item *temp = player.eq.items[i];
-                    iface->popUp((int)temp->id,true);
-                    player.eq.items.erase(player.eq.items.begin()+i);
-                    delete temp;
-                    break;
-                }
-            }
+            player.hunger+=10;
+            player.hungerCover.setSize(sf::Vector2f(120-player.hunger*1.2,player.hungerCover.getSize().y));
+            Item *temp = player.eq.bar[player.eq.selectedSlot];
+            iface->popUp((int)temp->id,true);
+            player.eq.bar.erase(player.eq.bar.begin()+player.eq.selectedSlot);
+            delete temp;
         }
     }
 }
@@ -791,25 +819,31 @@ void World::drink()
 
 void World::spawnEntities()
 {
-    if(spawningClock.getElapsedTime().asMilliseconds()>3000)
+    if(spawningClock.getElapsedTime().asMilliseconds()>1000)
     {
+        vector<int> choices{0,1,2,4};
         spawningClock.restart();
-        Entity *temp = new Sheep(txtLoader,vh::randElement(chunks).randBlock().getPosition());
-        temp->setTexture(*txtLoader->getEntityTexture(SHEEP));
-        temp->setScale(0.5,0.5);
-        temp->changeTextureRect(0);
-        entities.push_back(temp);
-        Entity *temp2 = new Cow(txtLoader,vh::randElement(chunks).randBlock().getPosition());
-        temp2->setTexture(*txtLoader->getEntityTexture(COW));
-        temp2->setScale(0.75,0.75);
-        temp2->changeTextureRect(0);
-        entities.push_back(temp2);
-        Entity *temp3 = new Pig(txtLoader,vh::randElement(chunks).randBlock().getPosition());
-        temp3->setTexture(*txtLoader->getEntityTexture(PIG));
-        temp3->setScale(0.75,0.75);
-        temp3->changeTextureRect(0);
-        entities.push_back(temp3);
-        if(rand()%1==0)
+        if(rand()%10)
+        {
+            entityType choice = static_cast<entityType>(choices[rand()%choices.size()]);
+            Entity *temp = new Entity(txtLoader,vh::randElement(chunks).randBlock().getPosition(),choice);
+            temp->setTexture(*txtLoader->getEntityTexture(choice));
+            if(choice==COW)
+            {
+                temp->setScale(0.6,0.6);
+            }
+            else if(choice==SHEEP)
+            {
+                temp->setScale(0.5,0.5);
+            }
+            else if(choice==PIG||choice==RABBIT)
+            {
+                temp->setScale(0.7,0.7);
+            }
+            temp->changeTextureRect(0);
+            entities.push_back(temp);
+        }
+        else
         {
             Entity *temp4 = new Wolf(txtLoader,vh::randElement(chunks).randBlock().getPosition());
             temp4->setTexture(*txtLoader->getEntityTexture(WOLF));
@@ -827,13 +861,19 @@ void World::mine(sf::RenderWindow& window)
     if(player.eq.bar.size()>player.eq.selectedSlot)
         holdItem=player.eq.bar[player.eq.selectedSlot];
     Block* temp = getBlock(window.mapPixelToCoords(sf::Mouse::getPosition()-sf::Vector2i(33,50)));
-    if(temp==nullptr)
+    if(temp==nullptr||vh::distance(player.getPosition(),temp->getPosition())>=playerRange)
         return;
 
     if((temp->object&&temp->object->type==objectType::TREE&&holdItem&&holdItem->id==ITEMS::AXE)||
+            (temp->object&&temp->object->type==objectType::BUSH&&holdItem&&holdItem->id==ITEMS::AXE)||
+            (temp->object&&temp->object->type==objectType::BERRYBUSH&&holdItem&&holdItem->id==ITEMS::AXE)||
             (temp->object&&temp->object->type==objectType::WOODENFLOOR&&holdItem&&holdItem->id==ITEMS::AXE)||
             (temp->object&&temp->object->type==objectType::WOODENWALL&&holdItem&&holdItem->id==ITEMS::AXE)||
-            (temp->object&&temp->object->type==objectType::STONE&&holdItem&&holdItem->id==ITEMS::PICKAXE))
+            (temp->object&&temp->object->type==objectType::STONE&&holdItem&&holdItem->id==ITEMS::PICKAXE)
+            ||
+            (temp->object&&temp->object->type==objectType::STONEFLOOR&&holdItem&&holdItem->id==ITEMS::PICKAXE)
+            ||
+            (temp->object&&temp->object->type==objectType::STONEWALL&&holdItem&&holdItem->id==ITEMS::PICKAXE))
     {
         int id = temp->object->dropID;
         temp->object=nullptr;
@@ -850,13 +890,38 @@ void World::mine(sf::RenderWindow& window)
     }
 }
 
+void World::harvest(sf::RenderWindow& window)
+{
+    cerr<<"harvest"<<endl;
+    Block* temp = getBlock(window.mapPixelToCoords(sf::Mouse::getPosition()-sf::Vector2i(33,50)));
+    if(temp&&
+            temp->object&&
+            temp->object->type==BERRYBUSH&&
+            static_cast<BerryBush*>(temp->object)->fruit&&
+            vh::distance(temp->object->getPosition(),player.getPosition())<playerRange)
+    {
+        cerr<<"berrybush"<<endl;
+        txtLoader->setTexture(*temp->object,BUSH,0);
+        static_cast<BerryBush*>(temp->object)->fruit=false;
+
+        Item * temp = new Item(ITEMS::BERRIES);
+        temp->food=true;
+        temp->setTexture(*txtLoader->getItemTexture(10));
+        iface->popUp((int)temp->id);
+
+        temp->setScale(10/6,10/6);
+
+        player.eq.items.push_back(temp);
+    }
+}
+
 void World::build(sf::RenderWindow& window)
 {
     Block* temp = nullptr;
     if(player.eq.bar.size()>player.eq.selectedSlot&&player.eq.bar[player.eq.selectedSlot]->building)
     {
         temp = getBlock(window.mapPixelToCoords(sf::Mouse::getPosition()-sf::Vector2i(33,50)));
-        if(!temp||temp->collision)
+        if(!temp||temp->collision||vh::distance(player.getPosition(),temp->getPosition())>=playerRange)
             return;
         temp->object = new Object();
         objectType t;
@@ -869,6 +934,15 @@ void World::build(sf::RenderWindow& window)
         else if(player.eq.bar[player.eq.selectedSlot]->id==ITEMS::PLANKS)
         {
             t=objectType::WOODENFLOOR;
+        }
+        else if(player.eq.bar[player.eq.selectedSlot]->id==ITEMS::STONEWALLITEM)
+        {
+            t=objectType::STONEWALL;
+            temp->collision=true;
+        }
+        else if(player.eq.bar[player.eq.selectedSlot]->id==ITEMS::STONEFLOORITEM)
+        {
+            t=objectType::STONEFLOOR;
         }
 
         txtLoader->setTexture(*temp->object,t,0);
@@ -903,6 +977,14 @@ void World::save(Chunk& chunk,sf::Vector2i id)
         if(obj->type==objectType::WOODENWALL)
         {
             content+="o ";
+        }
+        else if(obj->type==objectType::STONEWALL)
+        {
+            content+="u ";
+        }
+        else if(obj->type==objectType::STONEFLOOR)
+        {
+            content+="i ";
         }
         else if(obj->type==objectType::TREE)
         {
@@ -949,8 +1031,8 @@ void World::draw(sf::RenderWindow& window)
         //cout<<"PO RYSOWANIU CHUNKA"<<endl;
     }
     //cout<<"PO WSZYSTKICH CHUNKACH"<<endl;
-    if(animationClock.getElapsedTime().asMilliseconds()>500)
-        animationClock.restart();
+//    if(animationClock.getElapsedTime().asMilliseconds()>400)
+//        animationClock.restart();
     player.draw(window);
     for(auto& e:entities)
     {

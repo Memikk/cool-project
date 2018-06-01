@@ -20,7 +20,7 @@ class Chunk;
 class World;
 class PopUp;
 //class Interface;
-enum gameState{MENU,INGAME,EXIT};
+enum gameState{MENU,INGAME,EXIT,ESCWINDOW};
 enum direction{UP,RIGHT,DOWN,LEFT};
 extern siv::PerlinNoise worldGenNoise;
 extern siv::PerlinNoise objectNoise;
@@ -31,6 +31,7 @@ extern sf::Clock spawningClock;
 extern sf::Clock dayClock;
 extern float speed;
 extern float zoom;
+extern float playerRange;
 extern int BLOCK_SIZE;
 extern int CHUNK_SIZE;
 

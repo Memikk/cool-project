@@ -8,7 +8,7 @@ using namespace std;
 
 class Item;
 enum blockType {NOBLOCK,DIRT,WATERB};
-enum objectType {NOTHING,TREE,STONE,PLANT,WATER,SAND,GRASS,BUSH,WHEAT,CARROT,WOODENFLOOR,WOODENWALL};
+enum objectType {NOTHING,TREE,STONE,PLANT,WATER,SAND,GRASS,BUSH,BERRYBUSH,WHEAT,CARROT,WOODENFLOOR,WOODENWALL,STONEWALL,STONEFLOOR,ANIMATEDPLANT};
 class Object : public sf::Sprite
 {
 public:
@@ -54,6 +54,16 @@ public:
     };
 };
 
+class BerryBush : public Object
+{
+public:
+    bool fruit=true;
+    BerryBush():Object()
+    {
+        type=BERRYBUSH;
+    };
+};
+
 class Stone : public Object
 {
 public:
@@ -67,11 +77,25 @@ public:
 
 class Water : public Object
 {
+    int counter=0;
     int frame=0;
 public:
     Water():Object()
     {
         type=WATER;
+    }
+    void animate();
+    void nextFrame();
+};
+
+class AnimatedPlant : public Object
+{
+    int counter=0;
+    int frame=0;
+public:
+    AnimatedPlant():Object()
+    {
+        type=ANIMATEDPLANT;
     }
     void animate();
     void nextFrame();
@@ -135,7 +159,7 @@ public:
     int i,j;
     float offsetX,offsetY;
     blockType type=NOBLOCK;
-    int column; // kolumna tekstury
+    int column=0; // kolumna tekstury
     bool collision=false;
     bool base=true;
     Block();

@@ -3,7 +3,7 @@
 #include "globals.h"
 #include "textureLoader.h"
 
-enum entityType{SHEEP,COW,PIG,WOLF};
+enum entityType{SHEEP,COW,PIG,WOLF,RABBIT};
 class Entity : public sf::Sprite
 {
 public:
@@ -44,6 +44,8 @@ public:
 };
 class Wolf : public Entity
 {
+    bool hungry=true;
+    int hungerCounter=0;
     int damage=10;
     int attackCooldown=2*60;
 public:

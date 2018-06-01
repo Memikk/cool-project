@@ -2,10 +2,15 @@
 
 Menu::Menu()
 {
-    tmp = new sf::Texture();
-    tmp->loadFromFile("resources/textures/menuFrame.png");
-    frame.setTexture(*tmp);
+    menuFrame = new sf::Texture();
+    menuFrame->loadFromFile("resources/textures/menuFrame.png");
+    escMenuTexture = new sf::Texture();
+    escMenuTexture->loadFromFile("resources/textures/escmenu.png");
+    frame.setTexture(*menuFrame);
     frame.setPosition(sf::Vector2f(0,0));
+    escMenu.setTexture(*escMenuTexture);
+    escMenu.setPosition(sf::Vector2f(0,0));
+    escMenu.setScale(0.5,0.5);
 
     background.setFillColor(sf::Color(222,191,94));
     background.setSize(sf::Vector2f(1920,1080));
@@ -22,6 +27,17 @@ void Menu::draw(sf::RenderWindow& window)
 {
     window.draw(background);
     window.draw(frame);
+}
+
+void Menu::drawEscMenu(sf::RenderWindow& window)
+{
+    escMenu.setPosition(window.getView().getCenter().x-vh::getSize(escMenu).x/2,window.getView().getCenter().y-vh::getSize(escMenu).y/2);
+    contBox.setPosition(window.getView().getCenter().x-125,window.getView().getCenter().y-70);
+    contBox.setSize(sf::Vector2f(250,70));
+    newBox.setPosition(window.getView().getCenter().x-125,window.getView().getCenter().y+10);
+    newBox.setSize(sf::Vector2f(250,70));
+
+    window.draw(escMenu);
 }
 
 Game::Game(sf::RenderWindow& win)
@@ -88,7 +104,7 @@ void Game::update()
     boxes.push_back(menu->newBox);
     boxes.push_back(menu->exitBox);
     evHandler->checkEvents(*world,*view,gs,boxes);
-    if(gs==INGAME)
+    if(gs==INGAME||gs==ESCWINDOW)
     {
         //cout<<"GENERUJE CHUNKI"<<endl;
         std::thread chunkGeneratingThread(&World::generateChunks,world);
@@ -113,6 +129,7 @@ void Game::update()
         fstream playerSave("save1player.txt",std::ofstream::out | std::ofstream::trunc);
         playerSave<<world->getPlayer().getPosition().x<<" "<<world->getPlayer().getPosition().y;
         playerSave.close();
+        cerr<<"EXIT"<<endl;
         window->close();
     }
 }
@@ -122,13 +139,17 @@ void Game::draw()
     //cout<<"CZYSZCZENIE"<<endl;
     window->clear();
 
-    if(gs==INGAME)
+    if(gs==INGAME||gs==ESCWINDOW)
     {
         world->spawnEntities();
 
         world->draw(*window);
 
         iface->draw(world->getPlayer(),*window);
+        if(gs==ESCWINDOW)
+        {
+            menu->drawEscMenu(*window);
+        }
     }
     else if(gs==MENU)
     {
