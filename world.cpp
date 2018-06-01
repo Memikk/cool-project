@@ -71,7 +71,7 @@ Chunk::Chunk(int offX,int offY,siv::PerlinNoise& perlin,TextureLoader* txtLoader
                         blocks[i][j]->object = new Tree();
                         blocks[i][j]->collision=true;
                         txtLoader->setTreeTexture(*blocks[i][j]->object);
-                        int tmp = (int)(choice1*choice2*choice3*2359)%6;
+                        int tmp = (int)(choice1*choice2*choice3*2359)%7;
                         blocks[i][j]->object->setTextureRect(sf::IntRect(0,50*tmp,50,50));
                     }
                     else if((int)(choice2*10)%2)

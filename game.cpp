@@ -99,7 +99,7 @@ void Game::update()
         iface->setDays(world->days);
 
         std::thread upThread(&Interface::update,iface,world->getPlayer(),*window);
-
+        //iface->update(world->getPlayer(),*window);
         //cout<<"USTAWIAM WIDOK"<<endl;
         view->setCenter(vh::center(world->getPlayer()));
         window->setView(*view);
