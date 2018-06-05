@@ -53,6 +53,7 @@ public:
     void eat();
     void drink();
     void mine(sf::RenderWindow& window);
+    void attack(sf::RenderWindow& window);
     void build(sf::RenderWindow& window);
     void harvest(sf::RenderWindow& window);
     bool exist(int x,int y) const;

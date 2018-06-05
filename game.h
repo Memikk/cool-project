@@ -10,13 +10,16 @@ class Menu
 {
     sf::Texture* menuFrame;
     sf::Texture* escMenuTexture;
+    sf::Texture* endScreenTexture;
     sf::Sprite frame;
     sf::Sprite escMenu;
+    sf::Sprite endScreen;
     sf::RectangleShape background;
     public:
     Menu();
     sf::RectangleShape contBox,newBox,exitBox;
     void draw(sf::RenderWindow& window);
+    void drawDead(sf::RenderWindow& window);
     void drawEscMenu(sf::RenderWindow& window);
 };
 
@@ -36,6 +39,7 @@ public:
     Game(sf::RenderWindow& win);
     void update();
     void draw();
+
 };
 
 #endif // GAME_H_INCLUDED

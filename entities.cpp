@@ -5,7 +5,6 @@ void Entity::wander()
     int x,y;
     x=(rand())%200-100;
     y=(rand())%200-100;
-    cerr<<"x="<<x<<endl<<"y="<<y<<endl;
 
     desiredPos.x=x+getPosition().x;
     desiredPos.y=y+getPosition().y;

@@ -4,6 +4,7 @@
 #include "equipment.h"
 #include <vector>
 #include <iostream>
+#include <queue>
 using namespace std;
 
 class Item;
@@ -11,7 +12,11 @@ enum blockType {NOBLOCK,DIRT,WATERB};
 enum objectType {NOTHING,TREE,STONE,PLANT,WATER,SAND,GRASS,BUSH,BERRYBUSH,WHEAT,CARROT,WOODENFLOOR,WOODENWALL,STONEWALL,STONEFLOOR,ANIMATEDPLANT};
 class Object : public sf::Sprite
 {
+    sf::Vector2f startPosition;
+    sf::Vector2f comeback;
+    queue<sf::Vector2f> shakePos;
 public:
+    int hp=4;
     int dropID=-1;
     bool side=true;
     bool destructable=false;
@@ -19,6 +24,8 @@ public:
     objectType type=NOTHING;
     Object() {};
     virtual void animate(){};
+    void shake();
+    void update();
     objectType getType()
     {
         return type;
@@ -50,6 +57,7 @@ class Bush : public Object
 public:
     Bush():Object()
     {
+        hp=2;
         type=BUSH;
     };
 };
@@ -69,6 +77,7 @@ class Stone : public Object
 public:
     Stone():Object()
     {
+        hp=5;
         type=STONE;
         destructable=true;
         dropID=1;

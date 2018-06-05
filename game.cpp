@@ -6,6 +6,12 @@ Menu::Menu()
     menuFrame->loadFromFile("resources/textures/menuFrame.png");
     escMenuTexture = new sf::Texture();
     escMenuTexture->loadFromFile("resources/textures/escmenu.png");
+    endScreenTexture = new sf::Texture();
+    endScreenTexture->loadFromFile("resources/textures/endscreen.png");
+    endScreen.setTexture(*endScreenTexture);
+    endScreen.setPosition(sf::Vector2f(0,0));
+    endScreen.setScale(0.5,0.5);
+
     frame.setTexture(*menuFrame);
     frame.setPosition(sf::Vector2f(0,0));
     escMenu.setTexture(*escMenuTexture);
@@ -25,8 +31,13 @@ Menu::Menu()
 
 void Menu::draw(sf::RenderWindow& window)
 {
-    window.draw(background);
+    //window.draw(background);
     window.draw(frame);
+}
+
+void Menu::drawDead(sf::RenderWindow& window)
+{
+    window.draw(endScreen);
 }
 
 void Menu::drawEscMenu(sf::RenderWindow& window)
@@ -42,7 +53,11 @@ void Menu::drawEscMenu(sf::RenderWindow& window)
 
 Game::Game(sf::RenderWindow& win)
 {
+    fstream save1("save1.txt");
+    fstream save1player("save1player.txt");
     fstream save1seed("save1seed.txt",ios::in);
+    save1.close();
+    save1player.close();
     string temp;
     getline(save1seed,temp);
     if(temp=="")
@@ -90,6 +105,8 @@ Game::Game(sf::RenderWindow& win)
     fstream playerSave("save1player.txt");
     float x,y;
     playerSave>>x>>y;
+    playerSave.close();
+
     world->getPlayer().setPosition(x,y);
     cout<<"wczytano pozycje gracza"<<endl;
 
@@ -104,6 +121,10 @@ void Game::update()
     boxes.push_back(menu->newBox);
     boxes.push_back(menu->exitBox);
     evHandler->checkEvents(*world,*view,gs,boxes);
+    if(world->getPlayer().hp<=0&&gs!=DEAD)
+    {
+        gs=DEAD;
+    }
     if(gs==INGAME||gs==ESCWINDOW)
     {
         //cout<<"GENERUJE CHUNKI"<<endl;
@@ -127,8 +148,35 @@ void Game::update()
     else if(gs==EXIT)
     {
         fstream playerSave("save1player.txt",std::ofstream::out | std::ofstream::trunc);
-        playerSave<<world->getPlayer().getPosition().x<<" "<<world->getPlayer().getPosition().y;
+        playerSave<<world->getPlayer().getPosition().x<<" "<<world->getPlayer().getPosition().y<<endl;
+        for(auto& e:world->getPlayer().eq.items)
+        {
+            playerSave<<(int)e->id<<" ";
+        }
+        playerSave<<endl;
+        for(auto& e:world->getPlayer().eq.bar)
+        {
+            playerSave<<(int)e->id<<" ";
+        }
+        playerSave<<endl;
+        for(auto& e:world->getPlayer().eq.crafting)
+        {
+            playerSave<<(int)e->id<<" ";
+        }
         playerSave.close();
+
+        fstream daytime("save1seed.txt");
+        int x,y;
+        daytime>>x>>y;
+        daytime.close();
+
+        playerSave.open("save1seed.txt",std::ofstream::out | std::ofstream::trunc);
+        daytime.close();
+
+        daytime.open("save1seed.txt",ios::app);
+        daytime<<x<<endl<<y<<endl<<world->days<<" "<<world->gameTime;
+        daytime.close();
+
         cerr<<"EXIT"<<endl;
         window->close();
     }
@@ -154,6 +202,10 @@ void Game::draw()
     else if(gs==MENU)
     {
         menu->draw(*window);
+    }
+    else if(gs==DEAD)
+    {
+        menu->drawDead(*window);
     }
 
     //cout<<"POKAZYWANIE"<<endl;

@@ -39,6 +39,7 @@ void EventHandler::checkEvents(World& world,sf::View& view,gameState& gs,vector<
                 world.build(*window);
                 world.mine(*window);
                 world.harvest(*window);
+                world.attack(*window);
             }
             else if(event.type == sf::Event::MouseButtonReleased&&event.mouseButton.button==sf::Mouse::Left&&world.getPlayer().eq.on)
             {
@@ -73,6 +74,14 @@ void EventHandler::checkEvents(World& world,sf::View& view,gameState& gs,vector<
                 }
             }
         }
+        else if(gs==DEAD)
+        {
+            if(event.type == sf::Event::MouseButtonPressed||
+                (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape))
+            {
+                gs=EXIT;
+            }
+        }
         else
         {
             if(event.type == sf::Event::MouseButtonPressed&&event.mouseButton.button==sf::Mouse::Left)
@@ -80,7 +89,19 @@ void EventHandler::checkEvents(World& world,sf::View& view,gameState& gs,vector<
                 if(boxes[0].getGlobalBounds().contains((sf::Vector2f)sf::Mouse::getPosition()))
                 {
                     gs=INGAME;
-                    world.start(window,&view);
+                    fstream s("save1.txt");
+                    fstream s2("save1seed.txt");
+                    string temp1,temp2;
+                    s>>temp1;
+                    s2>>temp2;
+                    if(temp1!=""||temp2!="")
+                    {
+                        world.start(window,&view);
+                    }
+                    else
+                    {
+                        world.newStart(window,&view);
+                    }
                 }
                 else if(boxes[1].getGlobalBounds().contains((sf::Vector2f)sf::Mouse::getPosition()))
                 {
