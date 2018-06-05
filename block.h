@@ -20,7 +20,7 @@ public:
     int dropID=-1;
     bool side=true;
     bool destructable=false;
-    int column; // kolumna tekstury
+    int column=0; // kolumna tekstury
     objectType type=NOTHING;
     Object() {};
     virtual void animate(){};

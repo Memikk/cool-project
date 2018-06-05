@@ -123,8 +123,7 @@ Chunk::Chunk(int offX,int offY,siv::PerlinNoise& perlin,TextureLoader* txtLoader
                     else
                     {
                         blocks[i][j]->object = new AnimatedPlant();
-                        txtLoader->setTexture(*blocks[i][j]->object,ANIMATEDPLANT,0);
-                        blocks[i][j]->setTextureRect(sf::IntRect(0,0,50,50));
+                        txtLoader->setTexture(*blocks[i][j]->object,ANIMATEDPLANT,(int)(choice2*choice3*999)%2);
                     }
                 }
             }
@@ -200,8 +199,8 @@ World::World(TextureLoader* tloader,Interface* intface,Saver* s)
     iface=intface;
     player.setPosition(0,0);
 
-    daynight.setFillColor(sf::Color(0,0,0,0));
-    daynight.setSize(sf::Vector2f(1920,1080));
+    daynightTexture.loadFromFile("resources/textures/daynight.png");
+    daynight.setTexture(daynightTexture);
 }
 
 void World::start(sf::RenderWindow* window,sf::View* view)
@@ -445,52 +444,8 @@ void World::updateEntities(const sf::View& view)
     }
 }
 
-void World::update(sf::RenderWindow& window)
+void World::lightup(sf::RenderWindow& window)
 {
-    //cout<<"TWORZENIE KOLIZJI"<<endl;
-
-    std::thread ue(&World::updateEntities,*this,window.getView());
-
-    //cout<<"PLAYER UPDATE"<<endl;
-    vector<Block*> c=getCollisions(player.getPosition());
-    player.update(c);
-
-    daynight.setPosition(player.getPosition()-(sf::Vector2f)window.getSize()/2.f);
-    if(dayClock.getElapsedTime().asSeconds()>=10.f)
-    {
-        dayClock.restart();
-        gameTime++;
-        if(gameTime>23)
-        {
-            gameTime=0;
-            days++;
-        }
-        cout<<gameTime<<":00"<<endl;
-    }
-    if((gameTime>21||gameTime<3)&&dayCounter<140)
-    {
-        dayCounter+=0.1;
-    }
-    else if(gameTime<8&&dayCounter>0)
-        dayCounter-=0.1;
-
-    if(((gameTime>16&&gameTime<=21)||(gameTime>=3&&gameTime<8))&&redCounter<100)
-        redCounter+=1;
-    else if((gameTime>21||gameTime<3||gameTime>=8)&&redCounter>0)
-        redCounter-=1;
-
-
-    if(gameTime==8)
-        dayCounter=0;
-    daynight.setFillColor(sf::Color(0,0,0,dayCounter));
-
-    if(player.eq.itemHolder!=nullptr)
-    {
-        player.eq.itemHolder->setPosition(window.mapPixelToCoords(sf::Mouse::getPosition(window)-sf::Vector2i(25,25)));
-    }
-
-
-
     Item* holdItem = nullptr;
     if(player.eq.bar.size()>player.eq.selectedSlot)
         holdItem=player.eq.bar[player.eq.selectedSlot];
@@ -570,7 +525,54 @@ void World::update(sf::RenderWindow& window)
             }
         }
     }
+}
 
+void World::update(sf::RenderWindow& window)
+{
+    //cout<<"TWORZENIE KOLIZJI"<<endl;
+
+    std::thread ue(&World::updateEntities,*this,window.getView());
+    std::thread light(&World::lightup,*this,window);
+
+    //cout<<"PLAYER UPDATE"<<endl;
+    vector<Block*> c=getCollisions(player.getPosition());
+    player.update(c);
+
+    daynight.setPosition(player.getPosition()-(sf::Vector2f)window.getSize()/2.f);
+    if(dayClock.getElapsedTime().asSeconds()>=20.f)
+    {
+        dayClock.restart();
+        gameTime++;
+        if(gameTime>23)
+        {
+            gameTime=0;
+            days++;
+        }
+        cout<<gameTime<<":00"<<endl;
+    }
+    if((gameTime>21||gameTime<5)&&dayCounter<233)
+    {
+        dayCounter+=0.1;
+    }
+    else if(gameTime<8&&dayCounter>0)
+        dayCounter-=0.1;
+
+    if(((gameTime>16&&gameTime<=21)||(gameTime>=3&&gameTime<8))&&redCounter<100)
+        redCounter+=1;
+    else if((gameTime>21||gameTime<3||gameTime>=8)&&redCounter>0)
+        redCounter-=1;
+
+
+    if(gameTime==8)
+        dayCounter=0;
+    daynight.setColor(sf::Color(255,255,255,dayCounter));
+
+    if(player.eq.itemHolder!=nullptr)
+    {
+        player.eq.itemHolder->setPosition(window.mapPixelToCoords(sf::Mouse::getPosition(window)-sf::Vector2i(25,25)));
+    }
+
+    light.join();
     ue.join();
 }
 
@@ -893,38 +895,41 @@ void World::drink()
 
 void World::spawnEntities()
 {
-    if(spawningClock.getElapsedTime().asMilliseconds()>1000)
+    if(entities.size()<20)
     {
-        vector<int> choices{0,1,2,4};
-        spawningClock.restart();
-        if(rand()%10)
+        if(spawningClock.getElapsedTime().asMilliseconds()>1000)
         {
-            entityType choice = static_cast<entityType>(choices[rand()%choices.size()]);
-            Entity *temp = new Entity(txtLoader,vh::randElement(chunks).randBlock().getPosition(),choice);
-            temp->setTexture(*txtLoader->getEntityTexture(choice));
-            if(choice==COW)
+            vector<int> choices{0,1,2,4};
+            spawningClock.restart();
+            if(rand()%10)
             {
-                temp->setScale(0.6,0.6);
+                entityType choice = static_cast<entityType>(choices[rand()%choices.size()]);
+                Entity *temp = new Entity(txtLoader,vh::randElement(chunks).randBlock().getPosition(),choice);
+                temp->setTexture(*txtLoader->getEntityTexture(choice));
+                if(choice==COW)
+                {
+                    temp->setScale(0.6,0.6);
+                }
+                else if(choice==SHEEP)
+                {
+                    temp->setScale(0.5,0.5);
+                }
+                else if(choice==PIG||choice==RABBIT)
+                {
+                    temp->setScale(0.7,0.7);
+                }
+                temp->changeTextureRect(0);
+                entities.push_back(temp);
             }
-            else if(choice==SHEEP)
+            else
             {
-                temp->setScale(0.5,0.5);
-            }
-            else if(choice==PIG||choice==RABBIT)
-            {
-                temp->setScale(0.7,0.7);
-            }
-            temp->changeTextureRect(0);
-            entities.push_back(temp);
-        }
-        else
-        {
-            Entity *temp4 = new Wolf(txtLoader,vh::randElement(chunks).randBlock().getPosition());
-            temp4->setTexture(*txtLoader->getEntityTexture(WOLF));
-            temp4->setScale(0.6,0.6);
-            temp4->changeTextureRect(0);
+                Entity *temp4 = new Wolf(txtLoader,vh::randElement(chunks).randBlock().getPosition());
+                temp4->setTexture(*txtLoader->getEntityTexture(WOLF));
+                temp4->setScale(0.6,0.6);
+                temp4->changeTextureRect(0);
 
-            entities.push_back(temp4);
+                entities.push_back(temp4);
+            }
         }
     }
 }

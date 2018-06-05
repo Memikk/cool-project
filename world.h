@@ -29,7 +29,8 @@ public:
 class World
 {
     Saver* saver;
-    sf::RectangleShape daynight;
+    sf::Texture daynightTexture;
+    sf::Sprite daynight;
     float dayCounter=0;
     float redCounter=0;
     int adder=2;
@@ -56,6 +57,7 @@ public:
     void attack(sf::RenderWindow& window);
     void build(sf::RenderWindow& window);
     void harvest(sf::RenderWindow& window);
+    void lightup(sf::RenderWindow& window);
     bool exist(int x,int y) const;
     Block* blockCollision(sf::Vector2f pos);
     Block* getBlock(sf::Vector2f pos);

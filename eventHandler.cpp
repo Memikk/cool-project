@@ -94,7 +94,7 @@ void EventHandler::checkEvents(World& world,sf::View& view,gameState& gs,vector<
                     string temp1,temp2;
                     s>>temp1;
                     s2>>temp2;
-                    if(temp1!=""||temp2!="")
+                    if(temp2!="")
                     {
                         world.start(window,&view);
                     }

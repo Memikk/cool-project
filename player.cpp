@@ -38,7 +38,7 @@ void Player::update(vector<Block*>& collisions)
     animate(collisions);
     //cout<<"PO ANIMACJI GRACZA"<<endl;
     counter++;
-    if(counter==1*60)
+    if(counter==8*60)
     {
         if(hunger>50&&thirst>50&&hp<100)
         {
