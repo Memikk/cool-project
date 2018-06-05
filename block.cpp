@@ -1,5 +1,41 @@
 #include "block.h"
 
+void Object::shake()
+{
+    while(shakePos.size()) shakePos.pop();
+    shakePos.push(getPosition());
+    startPosition=getPosition();
+    comeback=startPosition;
+    for(int i=0;i<4;i++)
+    {
+        shakePos.push(getPosition()+sf::Vector2f(rand()%4-2,rand()%4-2));
+    }
+}
+
+void Object::update()
+{
+    if(shakePos.size())
+    {
+        float vx=(shakePos.front().x-startPosition.x)/2;
+        float vy=(shakePos.front().y-startPosition.y)/2;
+        if(vh::distance(getPosition(),shakePos.front())>0.01)
+        //if(getPosition()!=shakePos.front())
+        {
+            move(vx,vy);
+        }
+        else
+        {
+            setPosition(shakePos.front());
+            startPosition=shakePos.front();
+            shakePos.pop();
+        }
+        if(!shakePos.size())
+        {
+            setPosition(comeback);
+        }
+    }
+}
+
 Block::Block()
 {
     setSize(sf::Vector2f(BLOCK_SIZE,BLOCK_SIZE));

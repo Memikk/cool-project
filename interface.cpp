@@ -179,6 +179,8 @@ void Interface::update(Player& p,sf::RenderWindow& window)
     //RYSOWANIE ITEMOW NA PASKU SZYBKIEGO WYBORU
     for(int i=0; i<p.eq.bar.size(); i++)
     {
+        p.eq.bar[i]->setScale(window.getView().getSize().x/window.getSize().x*1.3,
+                                    window.getView().getSize().y/window.getSize().y*1.3);
         p.eq.bar[i]->setPosition(p.eq.slots[i+20].getPosition()-sf::Vector2f(4,4));
     }
     //******************************************
@@ -186,6 +188,8 @@ void Interface::update(Player& p,sf::RenderWindow& window)
     //RYSOWANIE ITEMOW W OKNIE CRAFTINGU
     for(int i=0; i<p.eq.crafting.size(); i++)
     {
+        p.eq.crafting[i]->setScale(window.getView().getSize().x/window.getSize().x*1.3,
+                                    window.getView().getSize().y/window.getSize().y*1.3);
         p.eq.crafting[i]->setPosition(p.eq.slots[i+25].getPosition()-sf::Vector2f(4,4));
     }
     if(p.eq.itemFromCrafting) p.eq.itemFromCrafting->setPosition(p.eq.slots[29].getPosition()-sf::Vector2f(4,4));

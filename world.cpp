@@ -179,7 +179,11 @@ void Chunk::draw(sf::RenderWindow& window)
             }
             blocks[i][j]->setFillColor(sf::Color::White);
             if(blocks[i][j]->object!=nullptr)
-                blocks[i][j]->object->setColor(sf::Color::White);
+                {
+                    blocks[i][j]->object->setColor(sf::Color::White);
+                    blocks[i][j]->object->update();
+
+                }
             //if(blocks[i][j]->grass!=nullptr) blocks[i][j]->grass->setColor(sf::Color::White);
             if(blocks[i][j]->cover!=nullptr)
                 blocks[i][j]->cover->setColor(sf::Color::White);
@@ -196,18 +200,6 @@ World::World(TextureLoader* tloader,Interface* intface,Saver* s)
     iface=intface;
     player.setPosition(0,0);
 
-    player.eq.items.push_back(new Item(ITEMS::WOODENWALLITEM));
-    player.eq.items.back()->building=true;
-    txtLoader->setItemTexture(*player.eq.items.back(),9);
-
-    player.eq.items.push_back(new Item(ITEMS::PICKAXE));
-    player.eq.items.back()->tool=true;
-    txtLoader->setItemTexture(*player.eq.items.back(),8);
-
-    player.eq.items.push_back(new Item(ITEMS::AXE));
-    player.eq.items.back()->tool=true;
-    txtLoader->setItemTexture(*player.eq.items.back(),6);
-
     daynight.setFillColor(sf::Color(0,0,0,0));
     daynight.setSize(sf::Vector2f(1920,1080));
 }
@@ -218,6 +210,63 @@ void World::start(sf::RenderWindow* window,sf::View* view)
     view->setSize(sf::Vector2f(window->getSize().x/2,window->getSize().y/2));
     window->setView(*view);
     cout<<"gra stworzona"<<endl;
+    fstream s1p("save1player.txt");
+    string t;
+    getline(s1p,t);
+
+    int temp;
+    getline(s1p,t);
+    stringstream ss(t);
+    while(ss>>temp)
+    {
+        cerr<<"in="<<temp<<endl;
+        player.eq.items.push_back(new Item((ITEMS)temp));
+        if((ITEMS)temp==ITEMS::STONEWALLITEM||(ITEMS)temp==ITEMS::STONEFLOORITEM||
+           (ITEMS)temp==ITEMS::WOODENWALLITEM||(ITEMS)temp==ITEMS::PLANKS)
+        {
+            player.eq.items.back()->building=true;
+        }
+        if((ITEMS)temp==ITEMS::PICKAXE||(ITEMS)temp==ITEMS::AXE)
+        {
+            player.eq.items.back()->tool=true;
+        }
+        txtLoader->setItemTexture(*player.eq.items.back(),temp);
+    }
+    getline(s1p,t);
+    ss=stringstream(t);
+    while(ss>>temp)
+    {
+        cerr<<"in="<<temp<<endl;
+        player.eq.bar.push_back(new Item((ITEMS)temp));
+        if((ITEMS)temp==ITEMS::STONEWALLITEM||(ITEMS)temp==ITEMS::STONEFLOORITEM||
+           (ITEMS)temp==ITEMS::WOODENWALLITEM||(ITEMS)temp==ITEMS::PLANKS)
+        {
+            player.eq.bar.back()->building=true;
+        }
+        if((ITEMS)temp==ITEMS::PICKAXE||(ITEMS)temp==ITEMS::AXE)
+        {
+            player.eq.bar.back()->tool=true;
+        }
+        txtLoader->setItemTexture(*player.eq.bar.back(),temp);
+    }
+    getline(s1p,t);
+    ss=stringstream(t);
+    while(ss>>temp)
+    {
+        cerr<<"in="<<temp<<endl;
+        player.eq.crafting.push_back(new Item((ITEMS)temp));
+        if((ITEMS)temp==ITEMS::STONEWALLITEM||(ITEMS)temp==ITEMS::STONEFLOORITEM||
+           (ITEMS)temp==ITEMS::WOODENWALLITEM||(ITEMS)temp==ITEMS::PLANKS)
+        {
+            player.eq.crafting.back()->building=true;
+        }
+        if((ITEMS)temp==ITEMS::PICKAXE||(ITEMS)temp==ITEMS::AXE)
+        {
+            player.eq.crafting.back()->tool=true;
+        }
+        txtLoader->setItemTexture(*player.eq.crafting.back(),temp);
+    }
+    s1p.close();
 
     generateChunks();
     loadChunks();
@@ -875,24 +924,32 @@ void World::mine(sf::RenderWindow& window)
             ||
             (temp->object&&temp->object->type==objectType::STONEWALL&&holdItem&&holdItem->id==ITEMS::PICKAXE))
     {
-        int id = temp->object->dropID;
-        temp->object=nullptr;
-        temp->collision=false;
-
-        if(id!=-1)
+        if(temp->object->hp>0)
         {
-            Item* n = new Item((ITEMS)id);
-            n->setPosition(temp->getPosition());
-            txtLoader->setItemTexture(*n,id);
-            temp->items.push_back(n);
+            temp->object->hp--;
+            temp->object->shake();
         }
-        save(getChunkFromPos(temp->getPosition()),sf::Vector2i(temp->i,temp->j));
+
+        if(temp->object->hp==0)
+        {
+            int id = temp->object->dropID;
+            temp->object=nullptr;
+            temp->collision=false;
+
+            if(id!=-1)
+            {
+                Item* n = new Item((ITEMS)id);
+                n->setPosition(temp->getPosition());
+                txtLoader->setItemTexture(*n,id);
+                temp->items.push_back(n);
+            }
+            save(getChunkFromPos(temp->getPosition()),sf::Vector2i(temp->i,temp->j));
+        }
     }
 }
 
 void World::harvest(sf::RenderWindow& window)
 {
-    cerr<<"harvest"<<endl;
     Block* temp = getBlock(window.mapPixelToCoords(sf::Mouse::getPosition()-sf::Vector2i(33,50)));
     if(temp&&
             temp->object&&
@@ -900,7 +957,6 @@ void World::harvest(sf::RenderWindow& window)
             static_cast<BerryBush*>(temp->object)->fruit&&
             vh::distance(temp->object->getPosition(),player.getPosition())<playerRange)
     {
-        cerr<<"berrybush"<<endl;
         txtLoader->setTexture(*temp->object,BUSH,0);
         static_cast<BerryBush*>(temp->object)->fruit=false;
 
@@ -947,6 +1003,12 @@ void World::build(sf::RenderWindow& window)
 
         txtLoader->setTexture(*temp->object,t,0);
         temp->object->setPosition(temp->getPosition());
+
+        //delete player.eq.bar[player.eq.selectedSlot];
+        Item* temp=player.eq.bar[player.eq.selectedSlot];
+        player.eq.bar.erase(player.eq.bar.begin()+player.eq.selectedSlot);
+        delete temp;
+        temp=nullptr;
     }
     if(temp)
     {

@@ -80,7 +80,19 @@ void EventHandler::checkEvents(World& world,sf::View& view,gameState& gs,vector<
                 if(boxes[0].getGlobalBounds().contains((sf::Vector2f)sf::Mouse::getPosition()))
                 {
                     gs=INGAME;
-                    world.start(window,&view);
+                    fstream s("save1.txt");
+                    fstream s2("save1seed.txt");
+                    string temp1,temp2;
+                    s>>temp1;
+                    s2>>temp2;
+                    if(temp1!=""||temp2!="")
+                    {
+                        world.start(window,&view);
+                    }
+                    else
+                    {
+                        world.newStart(window,&view);
+                    }
                 }
                 else if(boxes[1].getGlobalBounds().contains((sf::Vector2f)sf::Mouse::getPosition()))
                 {

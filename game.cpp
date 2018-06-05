@@ -42,7 +42,11 @@ void Menu::drawEscMenu(sf::RenderWindow& window)
 
 Game::Game(sf::RenderWindow& win)
 {
+    fstream save1("save1.txt");
+    fstream save1player("save1player.txt");
     fstream save1seed("save1seed.txt",ios::in);
+    save1.close();
+    save1player.close();
     string temp;
     getline(save1seed,temp);
     if(temp=="")
@@ -90,6 +94,8 @@ Game::Game(sf::RenderWindow& win)
     fstream playerSave("save1player.txt");
     float x,y;
     playerSave>>x>>y;
+    playerSave.close();
+
     world->getPlayer().setPosition(x,y);
     cout<<"wczytano pozycje gracza"<<endl;
 
@@ -127,7 +133,21 @@ void Game::update()
     else if(gs==EXIT)
     {
         fstream playerSave("save1player.txt",std::ofstream::out | std::ofstream::trunc);
-        playerSave<<world->getPlayer().getPosition().x<<" "<<world->getPlayer().getPosition().y;
+        playerSave<<world->getPlayer().getPosition().x<<" "<<world->getPlayer().getPosition().y<<endl;
+        for(auto& e:world->getPlayer().eq.items)
+        {
+            playerSave<<(int)e->id<<" ";
+        }
+        playerSave<<endl;
+        for(auto& e:world->getPlayer().eq.bar)
+        {
+            playerSave<<(int)e->id<<" ";
+        }
+        playerSave<<endl;
+        for(auto& e:world->getPlayer().eq.crafting)
+        {
+            playerSave<<(int)e->id<<" ";
+        }
         playerSave.close();
         cerr<<"EXIT"<<endl;
         window->close();

@@ -49,7 +49,7 @@ void Equipment::checkRecipes(vector<sf::Texture*>& v)
         itemFromCrafting->setScale(0.65,0.65);
         itemFromCrafting->setPosition(slots[29].getPosition()-sf::Vector2f(3,3));
     }
-    else if(planks==4&&crafting.size()==4)
+    else if(planks==2&&crafting.size()==2)
     {
         Item* temp = new Item(ITEMS::WOODENWALLITEM);
         temp->setTexture(*v[9]);
@@ -65,7 +65,7 @@ void Equipment::checkRecipes(vector<sf::Texture*>& v)
         itemFromCrafting->setScale(0.65,0.65);
         itemFromCrafting->setPosition(slots[29].getPosition()-sf::Vector2f(3,3));
     }
-    else if(rocks=4&&crafting.size()==4)
+    else if(rocks==4&&crafting.size()==4)
     {
         Item* temp = new Item(ITEMS::STONEWALLITEM);
         temp->setTexture(*v[11]);
@@ -73,7 +73,7 @@ void Equipment::checkRecipes(vector<sf::Texture*>& v)
         itemFromCrafting->setScale(0.65,0.65);
         itemFromCrafting->setPosition(slots[29].getPosition()-sf::Vector2f(3,3));
     }
-    else if(rocks=2&&crafting.size()==2)
+    else if(rocks==2&&crafting.size()==2)
     {
         Item* temp = new Item(ITEMS::STONEFLOORITEM);
         temp->setTexture(*v[12]);

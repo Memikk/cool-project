@@ -232,6 +232,15 @@ public:
         case 9:
             i.setTexture(*woodenWallItem);
             break;
+        case 10:
+            i.setTexture(*berries);
+            break;
+        case 11:
+            i.setTexture(*stoneWallItem);
+            break;
+        case 12:
+            i.setTexture(*stoneFloor);
+            break;
         }
     }
 
