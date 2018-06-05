@@ -39,6 +39,7 @@ void EventHandler::checkEvents(World& world,sf::View& view,gameState& gs,vector<
                 world.build(*window);
                 world.mine(*window);
                 world.harvest(*window);
+                world.attack(*window);
             }
             else if(event.type == sf::Event::MouseButtonReleased&&event.mouseButton.button==sf::Mouse::Left&&world.getPlayer().eq.on)
             {
@@ -71,6 +72,14 @@ void EventHandler::checkEvents(World& world,sf::View& view,gameState& gs,vector<
                 {
                     gs=EXIT;
                 }
+            }
+        }
+        else if(gs==DEAD)
+        {
+            if(event.type == sf::Event::MouseButtonPressed||
+                (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape))
+            {
+                gs=EXIT;
             }
         }
         else

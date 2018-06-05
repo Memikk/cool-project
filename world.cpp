@@ -179,11 +179,11 @@ void Chunk::draw(sf::RenderWindow& window)
             }
             blocks[i][j]->setFillColor(sf::Color::White);
             if(blocks[i][j]->object!=nullptr)
-                {
-                    blocks[i][j]->object->setColor(sf::Color::White);
-                    blocks[i][j]->object->update();
+            {
+                blocks[i][j]->object->setColor(sf::Color::White);
+                blocks[i][j]->object->update();
 
-                }
+            }
             //if(blocks[i][j]->grass!=nullptr) blocks[i][j]->grass->setColor(sf::Color::White);
             if(blocks[i][j]->cover!=nullptr)
                 blocks[i][j]->cover->setColor(sf::Color::White);
@@ -222,7 +222,7 @@ void World::start(sf::RenderWindow* window,sf::View* view)
         cerr<<"in="<<temp<<endl;
         player.eq.items.push_back(new Item((ITEMS)temp));
         if((ITEMS)temp==ITEMS::STONEWALLITEM||(ITEMS)temp==ITEMS::STONEFLOORITEM||
-           (ITEMS)temp==ITEMS::WOODENWALLITEM||(ITEMS)temp==ITEMS::PLANKS)
+                (ITEMS)temp==ITEMS::WOODENWALLITEM||(ITEMS)temp==ITEMS::PLANKS)
         {
             player.eq.items.back()->building=true;
         }
@@ -239,7 +239,7 @@ void World::start(sf::RenderWindow* window,sf::View* view)
         cerr<<"in="<<temp<<endl;
         player.eq.bar.push_back(new Item((ITEMS)temp));
         if((ITEMS)temp==ITEMS::STONEWALLITEM||(ITEMS)temp==ITEMS::STONEFLOORITEM||
-           (ITEMS)temp==ITEMS::WOODENWALLITEM||(ITEMS)temp==ITEMS::PLANKS)
+                (ITEMS)temp==ITEMS::WOODENWALLITEM||(ITEMS)temp==ITEMS::PLANKS)
         {
             player.eq.bar.back()->building=true;
         }
@@ -256,7 +256,7 @@ void World::start(sf::RenderWindow* window,sf::View* view)
         cerr<<"in="<<temp<<endl;
         player.eq.crafting.push_back(new Item((ITEMS)temp));
         if((ITEMS)temp==ITEMS::STONEWALLITEM||(ITEMS)temp==ITEMS::STONEFLOORITEM||
-           (ITEMS)temp==ITEMS::WOODENWALLITEM||(ITEMS)temp==ITEMS::PLANKS)
+                (ITEMS)temp==ITEMS::WOODENWALLITEM||(ITEMS)temp==ITEMS::PLANKS)
         {
             player.eq.crafting.back()->building=true;
         }
@@ -267,6 +267,16 @@ void World::start(sf::RenderWindow* window,sf::View* view)
         txtLoader->setItemTexture(*player.eq.crafting.back(),temp);
     }
     s1p.close();
+
+    fstream time("save1seed.txt");
+    int x;
+    getline(time,t);
+    getline(time,t);
+    time>>x;
+    days=x;
+    time>>x;
+    gameTime=x;
+    time.close();
 
     generateChunks();
     loadChunks();
@@ -438,6 +448,7 @@ void World::updateEntities(const sf::View& view)
 void World::update(sf::RenderWindow& window)
 {
     //cout<<"TWORZENIE KOLIZJI"<<endl;
+
     std::thread ue(&World::updateEntities,*this,window.getView());
 
     //cout<<"PLAYER UPDATE"<<endl;
@@ -478,10 +489,24 @@ void World::update(sf::RenderWindow& window)
         player.eq.itemHolder->setPosition(window.mapPixelToCoords(sf::Mouse::getPosition(window)-sf::Vector2i(25,25)));
     }
 
+
+
     Item* holdItem = nullptr;
     if(player.eq.bar.size()>player.eq.selectedSlot)
         holdItem=player.eq.bar[player.eq.selectedSlot];
     Block* temp = getBlock(window.mapPixelToCoords(sf::Mouse::getPosition()-sf::Vector2i(33,50)));
+
+    sf::Vector2f coords=window.mapPixelToCoords(sf::Mouse::getPosition(window));
+    for(auto& e:entities)
+    {
+        if(vh::distance(player.getPosition(),e->getPosition())<60&&e->getGlobalBounds().contains(coords)&&holdItem&&holdItem->id==ITEMS::AXE)
+        {
+            e->setColor(sf::Color(255,100,100));
+        }
+        else
+            e->setColor(sf::Color::White);
+    }
+
     if(holdItem&&holdItem->building)
     {
         if(temp)
@@ -900,6 +925,31 @@ void World::spawnEntities()
             temp4->changeTextureRect(0);
 
             entities.push_back(temp4);
+        }
+    }
+}
+
+void World::attack(sf::RenderWindow& window)
+{
+    Item* holdItem = nullptr;
+    if(player.eq.bar.size()>player.eq.selectedSlot)
+        holdItem=player.eq.bar[player.eq.selectedSlot];
+    sf::Vector2f coords=window.mapPixelToCoords(sf::Mouse::getPosition(window));
+    for(int i=entities.size()-1; i>=0; i--)
+    {
+        if(vh::distance(player.getPosition(),entities[i]->getPosition())<60&&entities[i]->getGlobalBounds().contains(coords)&&holdItem&&holdItem->id==ITEMS::AXE)
+        {
+            Item* it = new Item(ITEMS::MEAT);
+            it->food=true;
+            it->setTexture(*txtLoader->getItemTexture(2));
+
+            if(entities[i]->block!=nullptr)
+            {
+                it->setPosition(entities[i]->block->getPosition());
+                entities[i]->block->items.push_back(it);
+            }
+            entities.erase(entities.begin()+i);
+            break;
         }
     }
 }

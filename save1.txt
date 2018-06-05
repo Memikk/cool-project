@@ -1,168 +1,57 @@
-c 0 -1
-b 13 3
+c -1 0
+b 14 7
 gx 
-c 0 -1
-b 12 4
+c -1 0
+b 14 9
 gx 
-c 0 -1
-b 12 3
+c -2 3
+b 6 5
 gx 
-c 0 -1
-b 12 2
+c -2 3
+b 9 8
 gx 
-c 0 -1
-b 11 1
+c -2 3
+b 10 8
 gx 
-c 0 -1
-b 10 1
+c -2 3
+b 11 8
 gx 
-c 0 -2
-b 13 14
-gx 
-c 1 -2
-b 4 14
-gx 
-c 1 -2
-b 4 15
-gx 
-c 1 -1
-b 4 0
-gx 
-c 1 -1
-b 5 0
-gx 
-c 1 -1
-b 5 1
-gx 
-c 1 -1
-b 6 0
-gx 
-c 1 -1
-b 6 1
-gx 
-c 1 -1
-b 8 14
-gx 
-c 1 -1
-b 8 15
-gx 
-c 1 -1
-b 9 15
-gx 
-c 1 -1
-b 10 15
-gx 
-c 1 -1
-b 11 15
-gx 
-c 1 -1
-b 12 15
-gx 
-c 1 0
-b 12 0
-gx 
-c 1 0
-b 12 1
-gx 
-c 1 0
-b 12 2
-gx 
-c 1 0
-b 12 3
-gx 
-c 1 0
-b 12 4
-gx 
-c 1 0
-b 12 5
-gx 
-c 1 0
-b 12 6
-gx 
-c 1 0
-b 12 7
-gx 
-c 1 0
+c -2 3
 b 12 8
 gx 
-c 1 0
+c -2 3
 b 13 8
 gx 
-c 1 0
+c -2 3
 b 14 8
 gx 
-c 1 0
+c -2 3
 b 15 8
 gx 
-c 1 0
-b 13 7
+c -2 3
+b 15 9
 gx 
-c 1 0
-b 13 6
+c -1 3
+b 0 8
 gx 
-c 1 0
-b 11 7
+c -1 3
+b 1 8
 gx 
-c 1 0
-b 10 7
+c -1 3
+b 1 9
 gx 
-c 1 0
-b 10 6
+c -1 3
+b 2 9
 gx 
-c 1 0
-b 10 5
+c -1 3
+b 3 10
 gx 
-c 1 0
-b 10 4
+c -1 3
+b 3 11
 gx 
-c 1 0
-b 10 3
+c -1 3
+b 3 12
 gx 
-c 1 0
-b 10 2
+c -1 4
+b 1 1
 gx 
-c 1 0
-b 10 1
-gx 
-c 1 0
-b 10 0
-gx 
-c 1 0
-b 11 0
-gx 
-c 2 0
-b 2 2
-xi 
-c 2 0
-b 3 2
-xi 
-c 2 0
-b 9 4
-gx 
-c 2 0
-b 10 4
-gx 
-c 2 0
-b 10 3
-gx 
-c 2 0
-b 11 3
-gx 
-c 2 0
-b 11 4
-gx 
-c 2 0
-b 9 5
-gx 
-c 2 0
-b 10 5
-gx 
-c 2 0
-b 2 3
-gi 
-c 2 0
-b 3 3
-gi 
-c 2 0
-b 1 3
-xo 
